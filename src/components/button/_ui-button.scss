@@ -1,0 +1,28 @@
+
+.ui-button {
+  @include flex();
+  @include border-rounded();
+  @include padding();
+  cursor: pointer;
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+  &.fluid{
+    width:100%;
+  }
+
+  &:not(.alert, .warning) {
+    @include theme($color-green, true);
+  }
+
+  &.alert {
+    @include theme($color-red, true);
+  }
+
+  &.warning {
+    @include theme($color-yellow, true);
+  }
+
+}

@@ -1,0 +1,16 @@
+.ui-box{
+  @include theme($color-greenish-gray);
+  @include border;
+  display: flex;
+  padding: 0.5rem 1.5rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  &>div{
+    flex:1;
+  }
+
+}
+.ui-box.clickable:hover, a.ui-box:hover{
+  background-color: $color-greenish-light-gray;
+  cursor: pointer;
+}

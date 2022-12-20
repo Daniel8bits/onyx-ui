@@ -1,0 +1,161 @@
+
+.ui-datepicker {
+
+  $measure: .6rem 0;
+
+  @include flex(center, center, nowrap);
+
+  > .ui-popover {
+  
+    > .month-control {
+      @include flex(space-between);
+      @include padding();
+    }
+  
+    > .days-of-week {
+      @include flex();
+      margin: $measure;
+      cursor: default;
+      > div {
+        text-align: center;
+      }
+    }
+  
+    > .week {
+      @include flex();
+      > button {
+        padding: $measure;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        @include transition();
+  
+        &:hover {
+          background-color: $color-dark-green;
+          color: #000a;
+        }
+  
+        &.active {
+          @include theme($color-green);
+        }
+        &.from-other-month {
+          color: #fffa !important;
+        }
+      }
+  
+      &:nth-child(odd) {
+        > button:nth-child(odd):not(.active, :hover) {
+          @include theme($color-greenish-black)
+        }
+        > button:nth-child(even):not(.active, :hover) {
+          @include theme($color-greenish-gray)
+        }
+      }
+  
+      &:nth-child(even) {
+        > button:nth-child(odd):not(.active, :hover) {
+          @include theme($color-greenish-gray)
+        }
+        > button:nth-child(even):not(.active, :hover) {
+          @include theme($color-greenish-black)
+        }
+      }
+  
+    }
+
+    > .year-control {
+      margin: $measure;
+      @include flex();
+    }
+  
+    > .months {
+
+      border-top: 1px solid $color-green;
+      border-bottom: 1px solid $color-green;
+  
+      button {
+        width: 100%;
+        padding: $measure;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        @include transition();
+
+        &:hover {
+          @include theme($color-dark-green);
+          color: $color-greenish-gray;
+        }
+
+        &.active {
+          @include theme($color-green);
+        }
+
+        &:nth-child(odd):not(.active, :hover) {
+          @include theme($color-greenish-black);
+        }
+
+        &:nth-child(even):not(.active, :hover) {
+          @include theme($color-greenish-gray);
+        }
+      }
+    }
+
+    > .years-panel {
+
+      > .years-range-control {
+        @include flex(space-between);
+        @include padding();
+      }
+
+      > .years {
+
+        height: auto;
+        border-top: 1px solid $color-green;
+        border-bottom: 1px solid $color-green;
+
+        > .year-row {
+
+          > button {
+            padding: $measure;
+            cursor: pointer;
+            @include noBorder();
+            @include transition();
+
+            &:hover {
+              background-color: $color-dark-green;
+              color: #000a;
+            }
+      
+            &.active {
+              @include theme($color-green);
+            }
+          }
+
+          &:nth-child(odd) {
+            > button:nth-child(odd):not(.active, :hover) {
+              @include theme($color-greenish-black)
+            }
+            > button:nth-child(even):not(.active, :hover) {
+              @include theme($color-greenish-gray)
+            }
+          }
+      
+          &:nth-child(even) {
+            > button:nth-child(odd):not(.active, :hover) {
+              @include theme($color-greenish-gray)
+            }
+            > button:nth-child(even):not(.active, :hover) {
+              @include theme($color-greenish-black)
+            }
+          }
+        }
+
+      }
+    }
+
+  }
+
+
+}

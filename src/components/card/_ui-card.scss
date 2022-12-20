@@ -1,0 +1,34 @@
+.ui-card{
+    @include justContent;
+    @include flex(center, flex-start);
+    @include theme($color-greenish-gray);
+    @include border;
+    flex-direction: column;
+    width: 100%;
+    min-height: 16rem;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover{
+        background-color: $color-greenish-black;
+    }
+    &>img{
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 4px 4px 0 0;
+    }
+    &>.card-content{
+        padding: 0.5rem;
+        text-align: center;
+        > h3 {
+            color: $color-green;
+            text-align: left;
+            margin-bottom: .5rem;
+            font-size: 1.2rem;
+        }
+    }
+    &>div{
+        flex:1;
+    }
+}

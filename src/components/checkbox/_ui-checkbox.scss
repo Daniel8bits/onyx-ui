@@ -1,0 +1,24 @@
+
+.ui-checkbox {
+
+  @include flex-left();
+
+  > * {
+    color: $color-green;
+    cursor: pointer;
+  }
+  
+  > input {
+    display: none;
+  }
+
+  > svg {
+    font-size: 1.5rem;
+    padding-right: .5rem;
+  }
+  
+  > span {
+    margin-bottom: .1rem;
+  }
+
+}
