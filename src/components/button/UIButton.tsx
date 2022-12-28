@@ -1,28 +1,17 @@
 import React from 'react';
+import UIButtonBehavior from './UIButtonBehavior';
+import UIButtonTemplate from './UIButtonTemplate';
 
-interface UIButtonProps {
-  children: any
+export interface UIButtonProps {
+  children: React.ReactNode
   onAction?: () => void
-  template?: string
   className?: string
   submit?: boolean
   disabled?: boolean
 }
 
 const UIButton: React.FC<UIButtonProps> = (props) => {
-  const handleClick = (e: React.MouseEvent) => {
-    if(props.onAction) props?.onAction()
-  }
-  return (
-    <button 
-      className={`ui-button ${props.template ?? ''} ${props.className ?? ''}`}
-      type={props.submit ? "submit" : "button"}
-      onClick={handleClick}
-      disabled={props.disabled}
-    >
-      {props.children}
-    </button>
-  );
-};
+  return <UIButtonBehavior Template={UIButtonTemplate} {...props}   />
+}
 
 export default UIButton;

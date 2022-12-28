@@ -47,7 +47,7 @@ class UIDatePickerCore extends UIComponentCore {
   }
 
   private _setEvents() {
-    this._inputKeyDownEvent = () => {
+    this._inputKeyDownEvent = () => { console.log('dp event', this._value.get())
       const input = this._input.get()
       if(!input) return
       try {
@@ -76,8 +76,8 @@ class UIDatePickerCore extends UIComponentCore {
     const value = this._value.get()
     if(input && value) {
       input.value = value.getFormattedDate()
-      input.addEventListener('keydown', this._inputKeyDownEvent)
     }
+    input?.addEventListener('keydown', this._inputKeyDownEvent)
   }
 
   public destroy() {

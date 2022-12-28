@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import UITextField from '@components/textfield/UITextField';
+import UITextfield from '@components/textfield/UITextfield';
 
 export interface RowDataType {
     id: string,
@@ -235,7 +235,7 @@ const UITable: React.FC<UITableProps> = (props) => {
                     <td colSpan={props.document.getColumnsLength()}>
                         <div className='pagination'>
                             <MdChevronLeft onClick={props.document.previousPage} size={32} />
-                            <UITextField
+                            <UITextfield
                                 ref={refInput}
                                 id="page"
                                 defaultValue={String(props.document.getPageNumber())}

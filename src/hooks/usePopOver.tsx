@@ -15,7 +15,7 @@ export function getPopOver<T extends AnyObject = AnyObject>(id: string) {
 
 }
 
-function useModal<T extends AnyObject = AnyObject>(id: string) {
+function usePopOver<T extends AnyObject = AnyObject>(id: string) {
 
   const {data, open, close, setOpen, setParams} = usePopOverStore()
   const popover = data.filter(m => m[0] === id)[0]
@@ -30,4 +30,4 @@ function useModal<T extends AnyObject = AnyObject>(id: string) {
 
 }
 
-export default useModal
+export default usePopOver

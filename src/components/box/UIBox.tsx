@@ -1,19 +1,15 @@
 import React from 'react';
+import UIBoxBehavior from './UIBoxBehavior';
+import UIBoxTemplate from './UIBoxTemplate';
 
-interface UIBoxProps {
+export interface UIBoxProps {
   className?: string
   onClick?: () => void
   children: React.ReactNode
 }
 
 const UIBox: React.FC<UIBoxProps> = (props) => {
-  return (
-    <div 
-      className={`ui-box ${props.className ?? ""} ${props.onClick ? 'clickable' : ''}`} 
-      onClick={props.onClick}
-    >
-      {props.children}
-    </div>
-  )
+  return <UIBoxBehavior Template={UIBoxTemplate} {...props}   />
 }
+
 export default UIBox;

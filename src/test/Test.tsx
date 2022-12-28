@@ -3,6 +3,7 @@ import { UIComboItemData } from '@components/combobox/UIComboBoxCore';
 import UIDate from '@components/datepicker/UIDate';
 import UIDatePicker from '@components/datepicker/UIDatePicker';
 import UIScrollContainer from '@components/scrollContainer/UIScrollContainer';
+import UITextfield from '@components/textfield/UITextfield';
 import useNew from '@hooks/useNew';
 import React, { useState } from 'react';
 
@@ -32,6 +33,8 @@ const Test: React.FC<TestProps> = () => {
   return (
     <div className='test' style={{width: '30%', margin: '2rem'}}>
       <UIDatePicker id='test1' label='Test' value={date} onAction={setDate}  />
+      <br />
+      <UITextfield id='test3' mask={['Data: ', /\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}  />
       <br />
       <UIComboBox 
         id='test2' 
