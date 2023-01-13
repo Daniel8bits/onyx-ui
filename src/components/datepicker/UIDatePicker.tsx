@@ -1,12 +1,12 @@
 import React from 'react';
-import { UITextFieldProps } from '@components/textfield/UITextfield'
+import { UITextfieldProps } from '@components/textfield/UITextfield'
 
 import UIDate from './UIDate';
 import UIDatePickerTemplate from './UIDatePickerTemplate';
 import UIDatePickerBehavior from './UIDatePickerBehavior';
 
-export interface UIDatePickerProps extends Override<UITextFieldProps, {
-  value: UIDate
+export interface UIDatePickerProps extends Override<UITextfieldProps, {
+  value: Nullable<UIDate>
   onAction: StateSetter<Nullable<UIDate>>
 }> {
 }

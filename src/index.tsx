@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Test from '@test/Test';
 import '@style/main.scss'
+import init from '@components/init';
+
+init()
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -9,6 +11,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Test />
+    something
   </React.StrictMode>
 );
