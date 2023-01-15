@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import '@style/main.scss'
-import init from '@components/init';
+import CheckBox from '@components/checkbox/Checkbox';
 
-init()
+
+
+
+const Test: React.FC<JSX.IntrinsicAttributes> = () => {
+  const [value, setValue] = useState<boolean>(false);
+  return (
+    <div>
+      <CheckBox label='this is a checkbox' value={value} onAction={setValue}  />
+    </div>
+  )
+}
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,6 +22,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    something
+    <Test  />
   </React.StrictMode>
 );
