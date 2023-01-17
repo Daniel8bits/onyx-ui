@@ -1,32 +1,32 @@
-import UIComponentCore from '@components/UIComponentCore';
-import UIObservable, {Observable} from '@components/UIObservable';
+import ComponentCore from '@components/ComponentCore';
+import Observable, {Observable} from '@components/Observable';
 import ExtendedDate from './ExtendedDate';
 
 type ObservableProperties = 'minYear' | 'maxYear' | 'pivotYear' | 'yearsStep' | 'yearsRange' | 'value' | 'monthDays' | 'input';
 
-class DatePickerCore extends UIComponentCore {
-  private readonly _minYear: UIObservable<number>;
-  private readonly _maxYear: UIObservable<number>;
-  private readonly _pivotYear: UIObservable<number>;
-  private readonly _yearsStep: UIObservable<number>;
-  private readonly _yearsRange: UIObservable<number[]>;
-  private readonly _value: UIObservable<Nullable<ExtendedDate>>;
-  private readonly _monthDays: UIObservable<number[][]>;
-  private readonly _input: UIObservable<Nullable<HTMLInputElement>>;
+class DatePickerCore extends ComponentCore {
+  private readonly _minYear: Observable<number>;
+  private readonly _maxYear: Observable<number>;
+  private readonly _pivotYear: Observable<number>;
+  private readonly _yearsStep: Observable<number>;
+  private readonly _yearsRange: Observable<number[]>;
+  private readonly _value: Observable<Nullable<ExtendedDate>>;
+  private readonly _monthDays: Observable<number[][]>;
+  private readonly _input: Observable<Nullable<HTMLInputElement>>;
   private readonly _triggerAction: StateSetter<Nullable<ExtendedDate>>;
 
   private _inputKeyDownEvent!: () => void;
 
   constructor(value: Nullable<ExtendedDate>, triggerAction: StateSetter<Nullable<ExtendedDate>>) {
     super();
-    this._minYear = new UIObservable(this, 'minYear', 1915);
-    this._maxYear = new UIObservable(this, 'maxYear', new Date().getFullYear());
-    this._pivotYear = new UIObservable(this, 'pivotYear', this._maxYear.get());
-    this._yearsStep = new UIObservable(this, 'yearsStep', 28);
-    this._yearsRange = new UIObservable(this, 'yearsRange');
-    this._value = new UIObservable(this, 'value', value);
-    this._monthDays = new UIObservable(this, 'monthDays');
-    this._input = new UIObservable(this, 'input');
+    this._minYear = new Observable(this, 'minYear', 1915);
+    this._maxYear = new Observable(this, 'maxYear', new Date().getFullYear());
+    this._pivotYear = new Observable(this, 'pivotYear', this._maxYear.get());
+    this._yearsStep = new Observable(this, 'yearsStep', 28);
+    this._yearsRange = new Observable(this, 'yearsRange');
+    this._value = new Observable(this, 'value', value);
+    this._monthDays = new Observable(this, 'monthDays');
+    this._input = new Observable(this, 'input');
     this._triggerAction = triggerAction;
 
     this.setValue = this.setValue.bind(this);

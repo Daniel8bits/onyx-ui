@@ -4,7 +4,7 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Checkbox from './Checkbox';
 
-import MockBooleanStateToProps from '../../test/mocks/MockBooleanStateToProps';
+import MockStateToProps from '../../test/mocks/MockStateToProps';
 
 describe('UICheckbox Component', () => {
 	it('should render content', () => {
@@ -15,20 +15,21 @@ describe('UICheckbox Component', () => {
 
 	it('should change value', async () => {
 		render(
-			<MockBooleanStateToProps initialValue={false}>
+			<MockStateToProps initialValue={false}>
 				{(value, setValue) => <Checkbox label='checkbox' value={value} onAction={setValue} />}
-			</MockBooleanStateToProps>,
+			</MockStateToProps>,
 		);
 
 		const checkbox = screen.getByRole('checkbox');
+		const label = screen.getByText('checkbox');
 
 		expect(checkbox).not.toBeChecked();
 
-		userEvent.click(checkbox);
+		userEvent.click(label);
 
 		expect(checkbox).toBeChecked();
 
-		userEvent.click(checkbox);
+		userEvent.click(label);
 
 		expect(checkbox).not.toBeChecked();
 	});

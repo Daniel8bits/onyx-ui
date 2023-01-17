@@ -6,7 +6,7 @@ import DatePickerMonths from './months/DatePickerMonths';
 import DatePickerYears from './years/DatePickerYears';
 import DatePickerWeeks from './weeks/DatePickerWeeks';
 import PopOver from '@components/popover/PopOver';
-import UITextfield from '@components/textfield/UITextfield';
+import Textfield from '@components/textfield/Textfield';
 import {FaCalendarAlt} from 'react-icons/fa';
 
 export enum DatePickerPanels {
@@ -80,7 +80,7 @@ const DatePickerTemplate: React.FC<DatePickerTemplateProps> = props => {
       >
         {currentPanel}
       </PopOver>
-      <UITextfield {...inputTextProps}
+      <Textfield {...inputTextProps}
         id={`${id}_textfield`}
         ref={inputRef}
         mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}

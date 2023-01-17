@@ -19,8 +19,13 @@
       "rules": {
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/consistent-type-assertions": "off",
         "no-mixed-operators": "off",
-        "@typescript-eslint/no-confusing-void-expression": "off"
+        "no-trailing-spaces": "off",
+        "curly": "off"
       }
     }
   ],

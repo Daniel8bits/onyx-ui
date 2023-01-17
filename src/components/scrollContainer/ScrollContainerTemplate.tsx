@@ -1,16 +1,17 @@
-import { ScrollContainerProps } from "./ScrollContainer"
+import React from 'react';
+import {type ScrollContainerProps} from './ScrollContainer';
 
 export interface ScrollContainerTemplateProps extends ScrollContainerProps {
-  verticalScrollRef: ReactComponentRef<HTMLButtonElement>
-  horizontalScrollRef: ReactComponentRef<HTMLButtonElement>
-  containerRef: ReactComponentRef<HTMLDivElement>
-  contentRef: ReactComponentRef<HTMLDivElement>
-  width: number
-  height: number
-  doVerticalScroll: (e: React.MouseEvent) => void
+  verticalScrollRef: ReactComponentRef<HTMLButtonElement>;
+  horizontalScrollRef: ReactComponentRef<HTMLButtonElement>;
+  containerRef: ReactComponentRef<HTMLDivElement>;
+  contentRef: ReactComponentRef<HTMLDivElement>;
+  width: number;
+  height: number;
+  doVerticalScroll: (e: React.MouseEvent) => void;
 }
 
-const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = (props) => (
+const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = props => (
   <div 
     ref={props.containerRef} 
     className={`ui-scroll-container ${props.className ?? ''}`}
@@ -23,7 +24,7 @@ const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = (props) 
       className='controller' 
       style={{
         height: props.containerRef.current ? `${props.containerRef.current.offsetHeight}px` : 0,
-        top: props.containerRef.current ? `${props.containerRef.current.offsetTop}px` : 0
+        top: props.containerRef.current ? `${props.containerRef.current.offsetTop}px` : 0,
       }}
     >
       {props.height > 0 && <div className='vertical'>
@@ -35,10 +36,10 @@ const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = (props) 
         />
       </div>}
       {props.width > 0 && <div className='horizontal'>
-        <button ref={props.horizontalScrollRef} type='button' style={{width: props.width}}  />
+        <button ref={props.horizontalScrollRef} type='button' style={{width: props.width}} />
       </div>}
     </div>
   </div>
-)
+);
 
-export default ScrollContainerTemplate
+export default ScrollContainerTemplate;

@@ -1,11 +1,11 @@
 import React from 'react';
-import {type UITextfieldProps} from '@components/textfield/UITextfield';
+import {type TextfieldProps} from '@components/textfield/Textfield';
 
 import type ExtendedDate from './ExtendedDate';
 import DatePickerTemplate from './DatePickerTemplate';
 import DatePickerBehavior from './DatePickerBehavior';
 
-export interface DatePickerProps extends Override<UITextfieldProps, {
+export interface DatePickerProps extends Override<TextfieldProps, {
   value: Nullable<ExtendedDate>;
   onAction: StateSetter<Nullable<ExtendedDate>>;
 }> {

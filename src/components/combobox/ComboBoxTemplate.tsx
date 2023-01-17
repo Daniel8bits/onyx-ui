@@ -50,9 +50,7 @@ const ComboBoxTemplate: React.FC<ComboBoxTemplateProps> = props => {
                 key={item.value}
                 value={item.label}
                 active={item.value === props.value?.value}
-                onClick={() => {
- props.core.setValue(item);
-}}
+                onClick={() => props.core.setValue(item)}
               />
             ))}
         </div>
@@ -70,9 +68,7 @@ const ComboBoxTemplate: React.FC<ComboBoxTemplateProps> = props => {
                     key={item.value}
                     value={item.label}
                     active={item.value === props.value?.value}
-                    onClick={() => {
- props.core.setValue(item);
-}}
+                    onClick={() => props.core.setValue(item)}
                   />
                 ))}
             </div>
@@ -118,9 +114,7 @@ const ComboBoxTemplate: React.FC<ComboBoxTemplateProps> = props => {
         && <ComboBoxItem
           value=''
           active={props.value === null}
-          onClick={() => {
- props.core.setValue(null);
-}}
+          onClick={() => props.core.setValue(null)}
         />}
       {getOptions()}
     </PopOver>

@@ -1,13 +1,13 @@
-import React from 'react'
-import UITextfield from "@components/textfield/UITextfield"
-import { MdChevronLeft, MdChevronRight } from "react-icons/md"
-import { TableProps } from "./Table"
+import React from 'react';
+import Textfield from '@components/textfield/Textfield';
+import {MdChevronLeft, MdChevronRight} from 'react-icons/md';
+import {type TableProps} from './Table';
 
 export interface TableTemplateProps extends TableProps {
-  pagingInput: ReactComponentRef<HTMLInputElement>
+  pagingInput: ReactComponentRef<HTMLInputElement>;
 }
 
-const TableTemplate: React.FC<TableTemplateProps> = (props) => (
+const TableTemplate: React.FC<TableTemplateProps> = props => (
   <table className='ui-table'>
     <thead>
       <tr>
@@ -15,8 +15,8 @@ const TableTemplate: React.FC<TableTemplateProps> = (props) => (
       </tr>
     </thead>
     <tbody>
-      {props.document.loading && <tr><td colSpan={props.document.getColumnsLength()}>Carregando...</td></tr> ||
-        (props.document.getRowsLength() === 0 && <tr><td colSpan={props.document.getColumnsLength()}>Nenhum Dado Encontrado</td></tr>)}
+      {props.document.loading && <tr><td colSpan={props.document.getColumnsLength()}>Carregando...</td></tr>
+        || (props.document.getRowsLength() === 0 && <tr><td colSpan={props.document.getColumnsLength()}>Nenhum Dado Encontrado</td></tr>)}
       {props.document.rowMapping(row => (
         <tr
           onClick={() => props.document.triggerOnRowSelected(row)}
@@ -33,9 +33,9 @@ const TableTemplate: React.FC<TableTemplateProps> = (props) => (
         <td colSpan={props.document.getColumnsLength()}>
           <div className='pagination'>
             <MdChevronLeft onClick={props.document.previousPage} size={32} />
-            <UITextfield
+            <Textfield
               ref={props.pagingInput}
-              id="page"
+              id='page'
               defaultValue={String(props.document.getPageNumber())}
               onAction={value => props.document.setPage(Number(value))}
             />
@@ -46,6 +46,6 @@ const TableTemplate: React.FC<TableTemplateProps> = (props) => (
       </tr>
     </tfoot>
   </table>
-)
+);
 
-export default TableTemplate
+export default TableTemplate;
