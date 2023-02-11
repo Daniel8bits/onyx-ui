@@ -24,7 +24,7 @@ const ComboBoxItem: React.FC<ComboBoxItemProps> = props => (
 
 export interface ComboBoxTemplateProps extends ComboBoxProps {
   core: ComboBoxCore;
-  inputRef: ReactComponentRef<HTMLInputElement>;
+  inputRef: ReactElementRef<HTMLInputElement>;
 }
 
 const ComboBoxTemplate: React.FC<ComboBoxTemplateProps> = props => {

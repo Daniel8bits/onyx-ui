@@ -27,7 +27,7 @@ export interface TextfieldProps {
   onClickIcon?: () => void;
   onLoad?: (ref: React.RefObject<HTMLInputElement>) => void;
   iconContainerRef?: React.RefObject<HTMLDivElement>;
-  ref?: ReactComponentRef<HTMLInputElement>;
+  innerRef?: ReactElementRef<HTMLInputElement>;
 }
 
 const Textfield: React.FC<TextfieldProps> = props => <TextfieldBehavior Template={TextfieldTemplate} {...props} />;

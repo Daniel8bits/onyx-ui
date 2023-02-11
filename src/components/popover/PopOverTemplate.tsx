@@ -9,7 +9,7 @@ export interface PopOverTemplateProps extends PopOverProps {
     width: number;
     height: number | 'auto';
   };
-  popoverRef: ReactComponentRef<HTMLDivElement>;
+  popoverRef: ReactElementRef<HTMLDivElement>;
 }
 
 const PopOverTemplate: React.FC<PopOverTemplateProps> = props => (
@@ -20,14 +20,19 @@ const PopOverTemplate: React.FC<PopOverTemplateProps> = props => (
       top: `${props.rect.y}px`,
       width: `${props.rect.width}px`,
       height: props.rect.height === 'auto' ? props.rect.height : `${props.rect.height}px`,
+      visibility: props.open ? 'visible' : 'hidden',
     }}
     className={`ui-popover ${props.template ?? ''} ${props.open ? 'open' : ''} ${props.className ?? ''}`}
   >
-    {props.scroll && props.height !== 'auto' 
-      ? <ScrollContainer maxHeight={props.height - 16}>
+    {props.open && (
+      props.scroll && props.height !== 'auto' 
+      ? <ScrollContainer role='popover' maxHeight={props.height - 16}>
         {props.children}
       </ScrollContainer>
-      : props.children}
+      : <div role='popover'>
+        {props.children}
+      </div>
+    )}
   </div>
 );
 

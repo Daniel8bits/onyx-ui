@@ -22,7 +22,7 @@ export interface DatePickerPanelProps {
 
 export interface DatePickerTemplateProps extends DatePickerProps {
   core: DatePickerCore;
-  inputRef: ReactComponentRef<HTMLInputElement>;
+  inputRef: ReactElementRef<HTMLInputElement>;
 }
 
 const DatePickerTemplate: React.FC<DatePickerTemplateProps> = props => {
@@ -76,14 +76,14 @@ const DatePickerTemplate: React.FC<DatePickerTemplateProps> = props => {
         template='primary'
         width={popOverSize.width}
         height={popOverSize.height}
-        anchor={iconButtonRef as React.MutableRefObject<HTMLDivElement>}
+        anchor={iconButtonRef}
       >
         {currentPanel}
       </PopOver>
       <Textfield {...inputTextProps}
         id={`${id}_textfield`}
-        ref={inputRef}
-        mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+        innerRef={inputRef}
+        mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/]}
         icon={FaCalendarAlt}
         iconPosition='right'
         onKeyDown={onKeyDown}

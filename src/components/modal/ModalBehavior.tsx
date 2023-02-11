@@ -3,35 +3,32 @@ import {useModalStore} from '@store/store';
 import onClickOutside, {type OnClickOutsideCallbackRefObject} from '@utils/onClickOutside';
 import {type ModalProps} from './Modal';
 import {type ModalTemplateProps} from './ModalTemplate';
+import useClickOutside from '@hooks/useClickOutside';
 
 interface ModalBehaviorProps<T extends AnyObject = AnyObject> extends ModalProps<T> {
   Template: React.FC<ModalTemplateProps>;
 }
 
 function ModalBehavior<T extends AnyObject = AnyObject>(props: ModalBehaviorProps<T>) {
-  const {Template, open, ...templateProps} = props;
+  const {Template, ...templateProps} = props;
 
   const {data, create, destroy, close} = useModalStore();
 
   const currentOpenValue = ((): boolean => {
-    if (props.id) {
-      const modal = data.filter(m => m[0] === props.id)[0];
-      return (modal ? modal[1].open : false);
-    }
-
-    return open ?? false;
+    const modal = data.filter(m => m[0] === props.id)[0];
+    return (modal ? modal[1].open : false);
   })();
 
   const modalRef = useRef<HTMLDivElement>(null);
-  const event = useRef<(e: MouseEvent) => void>(null);
+  const [onClickOutside, removeClickOutside] = useClickOutside();
 
   useEffect(() => {
     if (props.id) {
-      create(props.id, open ?? false, props.params);
+      create({id: props.id, open: currentOpenValue, params: props.params});
 
         return () => {
           if (props.id) {
-          destroy(props.id);
+          destroy({id: props.id});
         }
       };
     }
@@ -41,20 +38,14 @@ function ModalBehavior<T extends AnyObject = AnyObject>(props: ModalBehaviorProp
 
   const handleClose = useCallback(() => {
     if (props.id) {
-      close(props.id);
+      close({id: props.id});
     }
   }, []);
 
   useEffect(() => {
     if (props.id && currentOpenValue && modalRef.current && !props.disableClickOutside) {
-      const e = event as OnClickOutsideCallbackRefObject;
-
-      if (event.current) {
-        document.removeEventListener('click', event.current);
-        e.current = null;
-      }
-
-      e.current = onClickOutside(modalRef.current, handleClose);
+      removeClickOutside();
+      onClickOutside(modalRef.current, handleClose);
     }
   }, [props.id, currentOpenValue, props.disableClickOutside]);
 

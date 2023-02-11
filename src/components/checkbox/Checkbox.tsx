@@ -7,7 +7,7 @@ export interface CheckBoxProps {
 	label: string;
 	value: boolean;
 	className?: string;
-	innerRef?: ReactComponentRef<HTMLInputElement>;
+	innerRef?: ReactElementRef<HTMLInputElement>;
 	onClick?: (event: React.MouseEvent) => void;
 	onAction?: StateSetter<boolean>;
 }

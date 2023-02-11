@@ -1,38 +1,44 @@
 import React from 'react';
 import {usePopOverStore} from '@store/store';
-import onClickOutside, {type OnClickOutsideCallback, type OnClickOutsideCallbackRefObject} from '@utils/onClickOutside';
-import {useCallback, useEffect, useMemo, useRef} from 'react';
+import {type OnClickOutsideCallback, type OnClickOutsideCallbackRefObject} from '@utils/onClickOutside';
+import {useCallback, useEffect, useRef} from 'react';
 import {type PopOverProps} from './PopOver';
 import {type PopOverTemplateProps} from './PopOverTemplate';
+import {OnyxEvents} from '@internals/EventManager';
+import {useRoot} from '@internals/Root';
+import useClickOutside from '@hooks/useClickOutside';
 
 interface PopOverBehaviorProps extends PopOverProps {
   Template: React.FC<PopOverTemplateProps>;
 }
 
 const PopOverBehavior: React.FC<PopOverBehaviorProps> = props => {
-  const {Template, ...templateProps} = props;
+  const {Template, open, ...templateProps} = props;
 
-  const {data, create, destroy, close} = usePopOverStore();
+  // Cconst {data, create, destroy, close} = usePopOverStore();
+  const data = usePopOverStore(state => state.data.filter(m => m[0] === props.id)[0]);
+  const close = usePopOverStore(state => state.close);
+  const create = usePopOverStore(state => state.create);
+  const destroy = usePopOverStore(state => state.destroy);
     
   const currentOpenValue = ((): boolean => {
     if (props.id) {
-      const popover = data.filter(m => m[0] === props.id)[0];
-      return (popover ? popover[1].open : false);
+      return (data ? data[1].open : false);
     }
 
-    return props.open ?? false;
+    return open ?? false;
   })();
 
   const popoverRef = useRef<HTMLDivElement>(null);
-  const event = useRef<OnClickOutsideCallback>(null);
+  const [onClickOutside, removeClickOutside] = useClickOutside();
 
   useEffect(() => {
     if (props.id) {
-      create(props.id, props.open ?? false);
+      create({id: props.id, open: props.open ?? false});
       return () => {
         if (props.id) {
-destroy(props.id);
-}
+          destroy({id: props.id});
+        }
       };
     }
 
@@ -41,20 +47,14 @@ destroy(props.id);
 
   const handleClose = useCallback(() => {
     if (props.id) {
-close(props.id);
-}
+      close({id: props.id});
+    }
   }, []);
 
   useEffect(() => {
     if (props.id && currentOpenValue && popoverRef.current) {
-      const e = event as OnClickOutsideCallbackRefObject;
-
-      if (event.current) {
-        document.removeEventListener('click', event.current, true);
-        e.current = null;
-      }
-
-      e.current = onClickOutside(popoverRef.current, handleClose);
+      removeClickOutside();
+      onClickOutside(popoverRef.current, handleClose);
     }
   }, [currentOpenValue]);
 
@@ -131,14 +131,14 @@ close(props.id);
     return anchorY2 - popHeight;
   }, [props.anchor, props.height, props.position]);
 
-  const rect = useMemo(() => ({
+  const rect = {
     x: getX(),
     y: getY(),
     width: getWidth(),
     height: props.height,
-  }), [getX, getY, getWidth, props.height]);
+  };
 
-  return <Template popoverRef={popoverRef} rect={rect} {...templateProps} />;
+  return <Template popoverRef={popoverRef} rect={rect} open={currentOpenValue} {...templateProps} />;
 };
 
 export default PopOverBehavior;

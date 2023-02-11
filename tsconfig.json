@@ -21,6 +21,7 @@
       "@style/*": ["./src/style/*"],
       "@store/*": ["./src/store/*"],
       "@hooks/*": ["./src/hooks/*"],
+      "@internals/*": ["./src/internals/*"],
       "@test/*": ["./src/test/*"],
       "@custom-types/*": ["./src/custom-types/*"]
     }

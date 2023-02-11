@@ -24,8 +24,8 @@ const TextfieldBehavior: React.FC<TextfieldBehaviorProps> = props => {
     }
 
     if (inputTextRef.current) {
-      if (props.ref) {
-        (props.ref as React.MutableRefObject<HTMLInputElement>).current = inputTextRef.current;
+      if (props.innerRef) {
+        (props.innerRef as React.MutableRefObject<HTMLInputElement>).current = inputTextRef.current;
       }
 
       props.onLoad?.(inputTextRef);

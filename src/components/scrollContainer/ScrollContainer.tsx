@@ -2,7 +2,7 @@ import React from 'react';
 import ScrollContainerBehavior from './ScrollContainerBehavior';
 import ScrollContainerTemplate from './ScrollContainerTemplate';
 
-export interface ScrollContainerProps {
+export interface ScrollContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   maxHeight?: number;
   className?: string;
   children?: React.ReactNode;

@@ -1,5 +1,5 @@
 
-onyx-datepicker {
+.ui-datepicker {
 
   $measure: .6rem 0;
 
@@ -9,105 +9,117 @@ onyx-datepicker {
     width: 100%;
   }
 
-  > .ui-popover {
+  > .ui-popover > div {
   
-    > .month-control {
-      @include flex(space-between);
-      @include padding();
-    }
-  
-    > .days-of-week {
-      @include flex();
-      margin: $measure;
-      cursor: default;
-      > div {
-        text-align: center;
+    > .weeks-panel {
+      > .month-control {
+        @include flex(space-between);
+        @include padding();
       }
-    }
-  
-    > .week {
-      @include flex();
-      > button {
-        padding: $measure;
-        outline: none;
-        border: none;
-        cursor: pointer;
-
-        @include transition();
-  
-        &:hover {
-          background-color: $color-dark-green;
-          color: #000a;
-        }
-  
-        &.active {
-          @include theme($color-green);
-        }
-        &.from-other-month {
-          color: #fffa !important;
+    
+      > .days-of-week {
+        @include flex();
+        margin: $measure;
+        cursor: default;
+        > div {
+          text-align: center;
         }
       }
+    
+      > .week {
+        @include flex();
+        > button {
+          padding: $measure;
+          outline: none;
+          border: none;
+          cursor: pointer;
   
-      &:nth-child(odd) {
-        > button:nth-child(odd):not(.active, :hover) {
-          @include theme($color-greenish-black)
+          @include transition();
+    
+          &:hover {
+            background-color: $color-dark-green;
+            color: #000a;
+          }
+    
+          &.active {
+            @include theme($color-green);
+          }
+          &.from-other-month {
+            color: #fffa !important;
+          }
+
+          > input[type='radio'] {
+            display: none;
+          }
         }
-        > button:nth-child(even):not(.active, :hover) {
-          @include theme($color-greenish-gray)
+    
+        &:nth-child(odd) {
+          > button:nth-child(odd):not(.active, :hover) {
+            @include theme($color-greenish-black)
+          }
+          > button:nth-child(even):not(.active, :hover) {
+            @include theme($color-greenish-gray)
+          }
+        }
+    
+        &:nth-child(even) {
+          > button:nth-child(odd):not(.active, :hover) {
+            @include theme($color-greenish-gray)
+          }
+          > button:nth-child(even):not(.active, :hover) {
+            @include theme($color-greenish-black)
+          }
+        }
+    
+      }
+    } // .weeks-panel
+
+    > .months-panel {
+      > .year-control {
+        margin: $measure;
+        @include flex();
+      }
+    
+      > .months {
+  
+        border-top: 1px solid $color-green;
+        border-bottom: 1px solid $color-green;
+    
+        button {
+          width: 100%;
+          padding: $measure;
+          outline: none;
+          border: none;
+          cursor: pointer;
+  
+          @include transition();
+  
+          &:hover {
+            @include theme($color-dark-green);
+            color: $color-greenish-gray;
+          }
+  
+          &.active {
+            @include theme($color-green);
+          }
+  
+          &:nth-child(odd):not(.active, :hover) {
+            @include theme($color-greenish-black);
+          }
+  
+          &:nth-child(even):not(.active, :hover) {
+            @include theme($color-greenish-gray);
+          }
+
+          > input {
+            display: none;
+          }
+
         }
       }
-  
-      &:nth-child(even) {
-        > button:nth-child(odd):not(.active, :hover) {
-          @include theme($color-greenish-gray)
-        }
-        > button:nth-child(even):not(.active, :hover) {
-          @include theme($color-greenish-black)
-        }
-      }
-  
-    }
-
-    > .year-control {
-      margin: $measure;
-      @include flex();
-    }
-  
-    > .months {
-
-      border-top: 1px solid $color-green;
-      border-bottom: 1px solid $color-green;
-  
-      button {
-        width: 100%;
-        padding: $measure;
-        outline: none;
-        border: none;
-        cursor: pointer;
-
-        @include transition();
-
-        &:hover {
-          @include theme($color-dark-green);
-          color: $color-greenish-gray;
-        }
-
-        &.active {
-          @include theme($color-green);
-        }
-
-        &:nth-child(odd):not(.active, :hover) {
-          @include theme($color-greenish-black);
-        }
-
-        &:nth-child(even):not(.active, :hover) {
-          @include theme($color-greenish-gray);
-        }
-      }
-    }
+    } // .months-panel
 
     > .years-panel {
-
       > .years-range-control {
         @include flex(space-between);
         @include padding();
@@ -135,6 +147,10 @@ onyx-datepicker {
             &.active {
               @include theme($color-green);
             }
+
+            > input {
+              display: none;
+            }
           }
 
           &:nth-child(odd) {
@@ -156,7 +172,7 @@ onyx-datepicker {
           }
         }
 
-      }
+      } // .year-panel
     }
 
   }

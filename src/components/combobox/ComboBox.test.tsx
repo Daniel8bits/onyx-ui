@@ -3,7 +3,6 @@ import {vi} from 'vitest';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ComboBox from './ComboBox';
-import {type ComboItemData} from './ComboBoxCore';
 
 const items = [
   {value: '0', label: 'cachorro'},
@@ -34,25 +33,97 @@ describe('ComboBox Component', () => {
     const clickHandler = vi.fn();
 		render(<ComboBox id='test' items={items} value={items[0]} onAction={clickHandler} />);
 
-		expect(screen.getByText('cachorro')).toBeInTheDocument();
+    const input = screen.getByDisplayValue('cachorro');
+    expect(input).toBeInTheDocument();
 	});
 
   it('should render content when categorized', () => {
     const clickHandler = vi.fn();
 		render(<ComboBox id='test' items={categorizedItems} value={categorizedItems.mamiferos[0]} onAction={clickHandler} />);
 
-		expect(screen.getByText('cachorro')).toBeInTheDocument();
+		const input = screen.getByDisplayValue('cachorro');
+    expect(input).toBeInTheDocument();
 	});
 
 	it('should open the popover', async () => {
 		const clickHandler = vi.fn();
-		render(<ComboBox id='test' items={items} value={items[0]} onAction={clickHandler} />);
+		render(
+      <>
+        <ComboBox id='test' items={items} value={items[0]} onAction={clickHandler} />
+        <div> click outside </div>
+      </>,
+    );
 
-		const button = screen.getByText('cachorro');
-		userEvent.click(button);
+		const input = screen.getByDisplayValue('cachorro');
+		userEvent.click(input);
 
-    const popover = screen.getByText('gato');
+    expect(screen.queryByText('cachorro')).toBeInTheDocument();
+    expect(screen.queryByText('gato')).toBeInTheDocument();
+    expect(screen.queryByText('galinha')).toBeInTheDocument();
+    expect(screen.queryByText('pato')).toBeInTheDocument();
+    expect(screen.queryByText('lagarto')).toBeInTheDocument();
+    expect(screen.queryByText('jacaré')).toBeInTheDocument();
 
-		expect(clickHandler).toHaveBeenCalledTimes(1);
+    const div = screen.getByText('click outside');
+    userEvent.click(div);
+
+    expect(screen.queryByText('cachorro')).not.toBeInTheDocument();
+    expect(screen.queryByText('gato')).not.toBeInTheDocument();
+    expect(screen.queryByText('galinha')).not.toBeInTheDocument();
+    expect(screen.queryByText('pato')).not.toBeInTheDocument();
+    expect(screen.queryByText('lagarto')).not.toBeInTheDocument();
+    expect(screen.queryByText('jacaré')).not.toBeInTheDocument();
+	});
+
+  it('should open the popover when categorized', async () => {
+		const clickHandler = vi.fn();
+		render(
+      <>
+        <ComboBox id='test' items={categorizedItems} value={categorizedItems.mamiferos[0]} onAction={clickHandler} />
+        <div> click outside </div>
+      </>,
+    );
+
+		const input = screen.getByRole('textbox');
+		userEvent.click(input);
+
+    expect(screen.queryByText('mamiferos')).toBeInTheDocument();
+		expect(screen.queryByText('gato')).toBeInTheDocument();
+
+    expect(screen.queryByText('aves')).toBeInTheDocument();
+    expect(screen.queryByText('galinha')).toBeInTheDocument();
+    expect(screen.queryByText('pato')).toBeInTheDocument();
+
+    expect(screen.queryByText('repteis')).toBeInTheDocument();
+    expect(screen.queryByText('lagarto')).toBeInTheDocument();
+    expect(screen.queryByText('jacaré')).toBeInTheDocument();
+
+    const div = screen.getByText('click outside');
+    userEvent.click(div);
+
+    expect(screen.queryByText('mamiferos')).not.toBeInTheDocument();
+		expect(screen.queryByText('gato')).not.toBeInTheDocument();
+
+    expect(screen.queryByText('aves')).not.toBeInTheDocument();
+    expect(screen.queryByText('galinha')).not.toBeInTheDocument();
+    expect(screen.queryByText('pato')).not.toBeInTheDocument();
+
+    expect(screen.queryByText('repteis')).not.toBeInTheDocument();
+    expect(screen.queryByText('lagarto')).not.toBeInTheDocument();
+    expect(screen.queryByText('jacaré')).not.toBeInTheDocument();
+	});
+
+  it('should search items', async () => {
+		const clickHandler = vi.fn();
+		render(<ComboBox id='test' items={items} value={items[0]} onAction={clickHandler} allowSearch />);
+
+		const input = screen.getByRole('textbox');
+		userEvent.click(input);
+    userEvent.clear(input);
+    userEvent.type(input, 'ga');
+
+    expect(screen.queryByText('gato')).toBeInTheDocument();
+    expect(screen.queryByText('galinha')).toBeInTheDocument();
+    expect(screen.queryByText('pato')).not.toBeInTheDocument();
 	});
 });

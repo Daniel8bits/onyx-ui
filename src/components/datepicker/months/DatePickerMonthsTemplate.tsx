@@ -11,7 +11,7 @@ export interface DatePickerMonthsTemplateProps extends DatePickerMonthsProps {
 }
 
 const DatePickerMonthsTemplate: React.FC<DatePickerMonthsTemplateProps> = props => (
-  <>
+  <div className='months-panel' aria-label='months panel'>
     <div className='year-control'>
       <Button onAction={() => props.setPanel(DatePickerPanels.YEARS)}>
         {props.activeMonth.getYear()}
@@ -19,32 +19,25 @@ const DatePickerMonthsTemplate: React.FC<DatePickerMonthsTemplateProps> = props 
     </div>
     <ScrollContainer className='months' maxHeight={235}>
       {
-        [
-          'Janeiro',
-          'Fevereiro',
-          'Março',
-          'Abril',
-          'Maio',
-          'Junho',
-          'Julho',
-          'Agosto',
-          'Setembro',
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-        ].map((value, key) => (
+        [...Array<number>(12)].map((v, i) => i).map((value, key) => (
             <button
               type='button'
               key={value}
               className={`${key === props.activeMonth.getMonth() ? 'active' : ''}`}
               onClick={() => props.updateDate(key)}
             >
-              {value}
+              <input
+                name='month'
+                type='radio'
+                checked={key === props.activeMonth.getMonth()}
+                readOnly
+              />
+              {props.activeMonth.format('<xmE>', [value])}
             </button>
           ))
       }
     </ScrollContainer>
-  </>
+  </div>
 );
 
 export default DatePickerMonthsTemplate;

@@ -4,7 +4,7 @@ import {MdChevronLeft, MdChevronRight} from 'react-icons/md';
 import {type TableProps} from './Table';
 
 export interface TableTemplateProps extends TableProps {
-  pagingInput: ReactComponentRef<HTMLInputElement>;
+  pagingInput: ReactElementRef<HTMLInputElement>;
 }
 
 const TableTemplate: React.FC<TableTemplateProps> = props => (
@@ -34,7 +34,7 @@ const TableTemplate: React.FC<TableTemplateProps> = props => (
           <div className='pagination'>
             <MdChevronLeft onClick={props.document.previousPage} size={32} />
             <Textfield
-              ref={props.pagingInput}
+              innerRef={props.pagingInput}
               id='page'
               defaultValue={String(props.document.getPageNumber())}
               onAction={value => props.document.setPage(Number(value))}

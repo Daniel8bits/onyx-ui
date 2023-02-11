@@ -1,4 +1,5 @@
 
+import produce from 'immer';
 import {create} from 'zustand';
 
 export interface IComponentObject<T extends AnyObject = AnyObject> {
@@ -9,58 +10,50 @@ export interface IComponentObject<T extends AnyObject = AnyObject> {
 
 interface IComponentStore {
   data: Array<[string, IComponentObject]>;
-  create: (id: string, open: boolean, params?: AnyObject) => void;
-  destroy: (id: string) => void;
-  open: (id: string) => void;
-  close: (id: string) => void;
-  setOpen: (id: string, open: boolean) => void;
-  setParams: (id: string, params?: AnyObject) => void;
+  create: (payload: {id: string; open: boolean; params?: AnyObject}) => void;
+  destroy: (payload: {id: string}) => void;
+  open: (payload: {id: string}) => void;
+  close: (payload: {id: string}) => void;
+  setOpen: (payload: {id: string; open: boolean}) => void;
+  setParams: (payload: {id: string; params?: AnyObject}) => void;
 }
 
-type ZustandSetter<T> = (partial: IComponentStore | Partial<T> | ((state: T) => T | Partial<T>), replace?: boolean | undefined) => void;
+type ZustandSetter<T> = (partial: T | Partial<T> | ((state: T) => T | Partial<T>), replace?: boolean | undefined) => void;
+
+const action = <S, T>(set: ZustandSetter<S>, callback: (state: S, payload: T) => void) => (payload: T) => set(produce<S>(state => callback(state as S, payload)));
 
 function createComponentStore(set: ZustandSetter<IComponentStore>): IComponentStore {
   return {
     data: [],
-    create: (id, open, params) => set(state => {
-      if (state.data.filter(m => m[0] === id).length > 0) return state;
-      return {...state, data: [...state.data, [id, {id, open, params}]]};
+    create: action(set, (draft, payload) => {
+      const {id, open, params} = payload;
+      if (draft.data.filter(m => m[0] === id).length > 0) return draft;
+      draft.data.push([id, {id, open, params}]);
     }),
-    destroy: id => set(state => {
-      const data = state.data.filter(m => m[0] !== id);
-      return {...state, data};
+    destroy: action(set, (draft, payload) => {
+      draft.data = draft.data.filter(m => m[0] !== payload.id);
     }),
-    open: id => set(state => {
-      const modal = state.data.filter(m => m[0] === id)[0];
-      if (!modal) return state;
-      const data = state.data.filter(m => m[0] !== id);
-      modal[1].open = true;
-      data.push(modal);
-      return {...state, data};
+    open: action(set, (draft, payload) => {
+      const component = draft.data.filter(m => m[0] === payload.id)[0];
+      if (!component) return;
+      component[1].open = true;
     }),
-    close: id => set(state => {
-      const modal = state.data.filter(m => m[0] === id)[0];
-      if (!modal) return state;
-      const data = state.data.filter(m => m[0] !== id);
-      modal[1].open = false;
-      data.push(modal);
-      return {...state, data};
+    close: action(set, (draft, payload) => {
+      const component = draft.data.filter(m => m[0] === payload.id)[0];
+      if (!component) return;
+      component[1].open = false;
     }),
-    setOpen: (id, open) => set(state => {
-      const modal = state.data.filter(m => m[0] === id)[0];
-      if (!modal) return state;
-      const data = state.data.filter(m => m[0] !== id);
-      modal[1].open = open;
-      data.push(modal);
-      return {...state, data};
+    setOpen: action(set, (draft, payload) => {
+      const {id, open} = payload;
+      const component = draft.data.filter(m => m[0] === id)[0];
+      if (!component) return;
+      component[1].open = open;
     }),
-    setParams: (id, params) => set(state => {
-      const modal = state.data.filter(m => m[0] === id)[0];
-      if (!modal) return state;
-      const data = state.data.filter(m => m[0] !== id);
-      modal[1].params = params;
-      data.push(modal);
-      return {...state, data};
+    setParams: action(set, (draft, payload) => {
+      const {id, params} = payload;
+      const component = draft.data.filter(m => m[0] === id)[0];
+      if (!component) return;
+      component[1].params = params;
     }),
   };
 }

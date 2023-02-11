@@ -13,7 +13,7 @@ const DatePickerYearsTemplate: React.FC<DatePickerYearsTemplateProps> = props =>
   const step = props.core.yearsStep.get() ?? 0;
 
   return (
-    <div className='years-panel'>
+    <div className='years-panel' aria-label='years panel'>
       <div className='years-range-control'>
         <Button onAction={props.core.decrementYear}> <FaCaretLeft /> </Button>
         <Button onAction={props.core.incrementYear}> <FaCaretRight /> </Button>
@@ -31,6 +31,12 @@ const DatePickerYearsTemplate: React.FC<DatePickerYearsTemplateProps> = props =>
                     onClick={() => props.updateDate(year)}
                     style={{width: props.ratio / 4}}
                   >
+                    <input
+                      name='year'
+                      type='radio'
+                      checked={year === activeYear.getYear()}
+                      readOnly
+                    />
                     {year}
                   </button>
                 );

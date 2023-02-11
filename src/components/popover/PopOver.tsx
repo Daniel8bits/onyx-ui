@@ -6,7 +6,7 @@ export interface PopOverProps {
   readonly id?: string;
   width: number | 'inherit' | 'anchor';
   height: number | 'auto';
-  anchor: React.MutableRefObject<HTMLElement | null>;
+  anchor: ReactElementRef;
   open?: boolean;
   position?: 'top' | 'bottom' | 'left' | 'right';
   scroll?: boolean;

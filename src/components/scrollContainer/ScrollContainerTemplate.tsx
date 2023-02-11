@@ -2,44 +2,62 @@ import React from 'react';
 import {type ScrollContainerProps} from './ScrollContainer';
 
 export interface ScrollContainerTemplateProps extends ScrollContainerProps {
-  verticalScrollRef: ReactComponentRef<HTMLButtonElement>;
-  horizontalScrollRef: ReactComponentRef<HTMLButtonElement>;
-  containerRef: ReactComponentRef<HTMLDivElement>;
-  contentRef: ReactComponentRef<HTMLDivElement>;
+  verticalScrollRef: ReactElementRef<HTMLButtonElement>;
+  horizontalScrollRef: ReactElementRef<HTMLButtonElement>;
+  containerRef: ReactElementRef<HTMLDivElement>;
+  contentRef: ReactElementRef<HTMLDivElement>;
   width: number;
   height: number;
   doVerticalScroll: (e: React.MouseEvent) => void;
 }
 
-const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = props => (
-  <div 
-    ref={props.containerRef} 
-    className={`ui-scroll-container ${props.className ?? ''}`}
-    style={{maxHeight: props.maxHeight ? `${props.maxHeight}px` : '100vh'}}
-  >
-    <div ref={props.contentRef} className='content'>
-      {props.children}
-    </div>
+const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = props => {
+  const {
+    verticalScrollRef,
+    horizontalScrollRef,
+    containerRef,
+    contentRef,
+    width,
+    height,
+    doVerticalScroll,
+    className,
+    style,
+    maxHeight,
+    children,
+    ...divProps
+  } = props;
+
+  return (
     <div 
-      className='controller' 
-      style={{
-        height: props.containerRef.current ? `${props.containerRef.current.offsetHeight}px` : 0,
-        top: props.containerRef.current ? `${props.containerRef.current.offsetTop}px` : 0,
-      }}
+      ref={containerRef} 
+      className={`ui-scroll-container ${className ?? ''}`}
+      style={{...style, maxHeight: maxHeight ? `${maxHeight}px` : '100vh'}}
+      {...divProps}
     >
-      {props.height > 0 && <div className='vertical'>
-        <button 
-          ref={props.verticalScrollRef} 
-          type='button' 
-          style={{height: props.height}}
-          onMouseDown={props.doVerticalScroll}
-        />
-      </div>}
-      {props.width > 0 && <div className='horizontal'>
-        <button ref={props.horizontalScrollRef} type='button' style={{width: props.width}} />
-      </div>}
+      <div ref={contentRef} className='content'>
+        {children}
+      </div>
+      <div 
+        className='controller' 
+        style={{
+          height: containerRef.current ? `${containerRef.current.offsetHeight}px` : 0,
+          top: containerRef.current ? `${containerRef.current.offsetTop}px` : 0,
+        }}
+      >
+        {height > 0 && <div className='vertical'>
+          <button 
+            ref={verticalScrollRef} 
+            type='button' 
+            style={{height}}
+            onMouseDown={doVerticalScroll}
+          />
+        </div>}
+        {width > 0 && <div className='horizontal'>
+          <button ref={horizontalScrollRef} type='button' style={{width}} />
+        </div>}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default ScrollContainerTemplate;

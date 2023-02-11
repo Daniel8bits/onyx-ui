@@ -1,3 +1,4 @@
+import DateFormatter, {ExtendedDateLocale} from './DateFormatter';
 
 class ExtendedDate {
   public static minYear = 1915;
@@ -22,25 +23,34 @@ class ExtendedDate {
   }
 
   /*
-  Pattern dd/MM/yyyy
+  Patterns dd/MM/yyyy and yyyy/MM/dd
   */
   public static parse(value: string): ExtendedDate | never {
-    if (!value.match(/^\d{2}\/\d{2}\/\d{4}$/g)) {
-      throw new Error('Invalid date format');
+    if (value.match(/^\d{4}\/\d{2}\/\d{2}$/g)) {
+      const dateArr = value.split('/');
+      return new ExtendedDate(Number(dateArr[2]), Number(dateArr[1]) - 1, Number(dateArr[0]));
     }
 
-    const dateArr = value.split('/');
-    return new ExtendedDate(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]));
+    if (value.match(/^\d{2}\/\d{2}\/\d{4}$/g)) {
+      const dateArr = value.split('/');
+      return new ExtendedDate(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]));
+    }
+
+    throw new Error('Invalid date format');
   }
 
   private _day: number;
   private _month: number;
   private _year: number;
+  private _locale: ExtendedDateLocale;
+  private readonly _formatter: DateFormatter;
 
-  constructor(day: number, month: number, year: number) {
+  constructor(day: number, month: number, year: number, locale = ExtendedDateLocale.EN_US) {
     this._day = day;
     this._month = month;
     this._year = year;
+    this._locale = locale;
+    this._formatter = new DateFormatter(this);
     this.fix();
   }
 
@@ -71,6 +81,14 @@ class ExtendedDate {
     this.fix();
   }
 
+  public setLocale(locale: ExtendedDateLocale) {
+    this._locale = locale;
+  }
+
+  public getLocale() {
+    return this._locale;
+  }
+
   public before(date: ExtendedDate): boolean {
     return !(
       this._year > date.getYear()
@@ -87,61 +105,16 @@ class ExtendedDate {
     );
   }
 
-  public getFormattedDate(): string {
-    let value = '';
-    if (this._day < 10) {
-      value += `0${this._day}`;
-    } else {
-      value += String(this._day);
-    }
-
-    value += '/';
-    if (this._month + 1 < 10) {
-      value += `0${this._month + 1}`;
-    } else {
-      value += String(this._month + 1);
-    }
-
-    value += `/${this._year}`;
-    return value;
+  public format(format = '<y>/<m>/<d>', stack: Array<string | number | boolean> = []): string {
+    return this._formatter.format(format, stack);
   }
 
   public toString() {
-    let value = '';
-    value += `${this._year}`;
-    value += '-';
-    if (this._month + 1 < 10) {
-      value += `0${this._month + 1}`;
-    } else {
-      value += String(this._month);
-    }
-
-    value += '-';
-    if (this._day < 10) {
-      value += `0${this._day}`;
-    } else {
-      value += String(this._day);
-    }
-
-    return value;
+    return this._formatter.format();
   }
 
   public getMonthName(): string {
-    const monthNameList = [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ];
-    return monthNameList[this._month];
+    return this._formatter.getMonthName();
   }
 
   public isLeap(): boolean {
