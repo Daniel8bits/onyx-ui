@@ -2,7 +2,7 @@
 import useEventManager from '@hooks/useEventManager';
 import useUpdater from '@hooks/useUpdater';
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
-import componentSelector, {type OnyxComponentRef} from './ComponentSelector';
+import type OnyxComponentRef from './OnyxComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
 
 const RootContext = React.createContext<Partial<{

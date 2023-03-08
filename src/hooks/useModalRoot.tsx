@@ -6,7 +6,7 @@ function useModalRoot(id: string) {
 
   useEffect(() => modalRoot?.update(id));
 
-  return {render: (modal: React.ReactNode) => modalRoot?.render(id, modal)};
+  return {render: (modal: React.ReactNode) => modalRoot?.render(id, modal) ?? null};
 }
 
 export default useModalRoot;

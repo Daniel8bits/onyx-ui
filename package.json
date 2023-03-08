@@ -1,7 +1,7 @@
 {
   "name": "onyx-ui",
   "version": "0.1.0",
-  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -14,7 +14,6 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-text-mask": "^5.5.0",
-    "simplebar-react": "^2.4.3",
     "web-vitals": "^2.1.4",
     "zustand": "^4.1.5"
   },
@@ -40,6 +39,31 @@
     "sass": "^1.56.2",
     "typescript": "^4.9.4",
     "vite": "^4.0.0",
+    "vite-plugin-dts": "^2.1.0",
     "vitest": "^0.27.1"
-  }
+  },
+
+  "main": "./dist/onyx-ui.umd.cjs",
+  "module": "./dist/onyx-ui.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/onyx-ui.js",
+      "require": "./dist/onyx-ui.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daniel8bits/onyx-ui.git"
+  },
+  "author": "Daniel Noguês de Oliveira (Github Accounts: LonelehKitten, Daniel8bits)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Daniel8bits/onyx-ui/issues"
+  },
+  "homepage": "https://github.com/Daniel8bits/onyx-ui#readme"
 }

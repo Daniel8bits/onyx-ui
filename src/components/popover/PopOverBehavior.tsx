@@ -1,6 +1,5 @@
 import React from 'react';
 import {usePopOverStore} from '@store/store';
-import {type OnClickOutsideCallback, type OnClickOutsideCallbackRefObject} from '@utils/onClickOutside';
 import {useCallback, useEffect, useRef} from 'react';
 import {type PopOverProps} from './PopOver';
 import {type PopOverTemplateProps} from './PopOverTemplate';

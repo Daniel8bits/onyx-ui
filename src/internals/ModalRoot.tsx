@@ -1,7 +1,7 @@
 import useEventManager from '@hooks/useEventManager';
 import useUpdater from '@hooks/useUpdater';
 import React, {useEffect, useRef} from 'react';
-import {type OnyxComponentRef} from './ComponentSelector';
+import type OnyxComponentRef from './OnyxComponentRef';
 
 export interface ModalRootRef extends OnyxComponentRef {
   render: (key: string, modal: React.ReactNode) => null;

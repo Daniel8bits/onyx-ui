@@ -1,6 +1,7 @@
 import React from 'react';
 import {type ModalProps} from './Modal';
 import {useRoot} from '@internals/Root';
+import useModalRoot from '@hooks/useModalRoot';
 
 export interface ModalTemplateProps extends ModalProps {
   open: boolean;
@@ -8,16 +9,15 @@ export interface ModalTemplateProps extends ModalProps {
 }
 
 const ModalTemplate: React.FC<ModalTemplateProps> = props => {
-  const {modalRoot} = useRoot();
+  const {render} = useModalRoot(props.id);
 
-  return modalRoot?.render(
-    props.id,
+  return render(
     <div className={`ui-modal ${props.template ?? ''} ${props.open ? 'open' : ''} ${props.className ?? ''}`}>
       <div ref={props.modalRef}>
         {props.children}
       </div>
     </div>,
-  ) ?? null;
+  );
 };
 
 export default ModalTemplate;

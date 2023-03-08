@@ -1,7 +1,8 @@
 import {OnyxEvents} from '@internals/EventManager';
 import {useRoot} from '@internals/Root';
-import {type OnClickOutsideCallback} from '@utils/onClickOutside';
 import {useCallback, useRef} from 'react';
+
+type OnClickOutsideCallback = ((e: React.MouseEvent) => void) | null;
 
 function useClickOutside(): [
   (element: HTMLElement, callback: () => void) => void,

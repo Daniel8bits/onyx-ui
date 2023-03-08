@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {useModalStore} from '@store/store';
-import onClickOutside, {type OnClickOutsideCallbackRefObject} from '@utils/onClickOutside';
 import {type ModalProps} from './Modal';
 import {type ModalTemplateProps} from './ModalTemplate';
 import useClickOutside from '@hooks/useClickOutside';
