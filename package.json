@@ -1,5 +1,5 @@
 {
-  "name": "onyx-ui",
+  "name": "sapphire-ui",
   "version": "0.1.0",
   "type": "module",
   "scripts": {
@@ -43,13 +43,13 @@
     "vitest": "^0.27.1"
   },
 
-  "main": "./dist/onyx-ui.umd.cjs",
-  "module": "./dist/onyx-ui.js",
+  "main": "./dist/sapphire-ui.umd.cjs",
+  "module": "./dist/sapphire-ui.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/onyx-ui.js",
-      "require": "./dist/onyx-ui.umd.cjs"
+      "import": "./dist/sapphire-ui.js",
+      "require": "./dist/sapphire-ui.umd.cjs"
     }
   },
   "files": [
