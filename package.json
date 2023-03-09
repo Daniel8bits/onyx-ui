@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && sass src/style/main.scss dist/style.css && sass src/style/main.scss dist/style.css --style compressed",
+    "build:react": "tsc && vite build && sass src/style/main.scss dist/style.css",
+    "build:styles": "sass src/style/main.scss dist/style.css --style compressed",
     "preview": "vite preview",
     "test": "vitest"
   },
