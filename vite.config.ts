@@ -16,6 +16,10 @@ export default defineConfig({
 			entry: resolve(__dirname, 'src/index.ts'),
 			name: 'aquino',
 			fileName: 'aquino',
+
+		},
+		rollupOptions: {
+			external: ['react', 'react-dom'],
 		},
 	},
 	test: {
