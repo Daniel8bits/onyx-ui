@@ -14,7 +14,7 @@ export function useRoot() {
   return useContext(RootContext);
 }
 
-interface RootProps {
+export interface RootProps {
   children: React.ReactNode;
 }
 
