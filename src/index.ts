@@ -18,9 +18,9 @@ import useNew from '@hooks/useNew';
 import usePopOver from '@hooks/usePopOver';
 import useUpdater from '@hooks/useUpdater';
 
-import Root from '@internals/Root';
+import Aquino from '@internals/Root';
 
-export default {
+export {
   // Components
   Box,
   Button,
@@ -41,9 +41,6 @@ export default {
   useNew,
   usePopOver,
   useUpdater,
-
-  // Internals
-  Root,
 };
 
 export type {
@@ -59,3 +56,5 @@ export type {
   TableProps,
   TextfieldProps,
 };
+
+export default Aquino;
