@@ -1,3 +1,3 @@
 
 export * from '@components/index';
-export * from '@internals/Root';
+export {default as Root} from '@internals/Root';
