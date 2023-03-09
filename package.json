@@ -1,5 +1,5 @@
 {
-  "name": "sapphire-ui",
+  "name": "aquino",
   "version": "0.1.0",
   "type": "module",
   "scripts": {
@@ -43,13 +43,13 @@
     "vitest": "^0.27.1"
   },
 
-  "main": "./dist/sapphire-ui.umd.cjs",
-  "module": "./dist/sapphire-ui.js",
+  "main": "./dist/aquino.umd.cjs",
+  "module": "./dist/aquino.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/sapphire-ui.js",
-      "require": "./dist/sapphire-ui.umd.cjs"
+      "import": "./dist/aquino.js",
+      "require": "./dist/aquino.umd.cjs"
     }
   },
   "files": [
