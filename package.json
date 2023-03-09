@@ -1,6 +1,6 @@
 {
   "name": "aquino",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -42,7 +42,6 @@
     "vite-plugin-dts": "^2.1.0",
     "vitest": "^0.27.1"
   },
-
   "main": "./dist/aquino.umd.cjs",
   "module": "./dist/aquino.js",
   "types": "./dist/index.d.ts",
@@ -55,7 +54,6 @@
   "files": [
     "dist"
   ],
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Daniel8bits/onyx-ui.git"
