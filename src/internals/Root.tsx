@@ -35,8 +35,8 @@ const Root: React.FC<RootProps> = props => {
         ref={ref} 
         className='aquino-root'
         style={{
-          width: `${window.innerWidth}px`,
-          height: `${window.innerHeight}px`,
+          minWidth: `${window.innerWidth}px`,
+          minHeight: `${window.innerHeight}px`,
           overflow: 'auto',
         }}
         {...events}
