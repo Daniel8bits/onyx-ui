@@ -11,6 +11,9 @@ import ScrollContainer, {type ScrollContainerProps} from '@components/scrollCont
 import Table, {type TableProps} from '@components/table/Table';
 import Textfield, {type TextfieldProps} from '@components/textfield/Textfield';
 
+import Row from '@layouts/grid/Row';
+import Column from '@layouts/grid/Column';
+
 import useClickOutside from '@hooks/useClickOutside';
 import useEventManager from '@hooks/useEventManager';
 import useModal from '@hooks/useModal';
@@ -33,6 +36,10 @@ export {
   ScrollContainer,
   Table,
   Textfield,
+
+  // Layouts
+  Row,
+  Column,
 
   // Hooks
   useClickOutside,

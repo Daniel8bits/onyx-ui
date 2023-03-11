@@ -25,6 +25,7 @@
       "@style/*": ["./src/style/*"],
       "@store/*": ["./src/store/*"],
       "@hooks/*": ["./src/hooks/*"],
+      "@layouts/*": ["./src/layouts/*"],
       "@internals/*": ["./src/internals/*"],
       "@test/*": ["./src/test/*"],
       "@custom-types/*": ["./src/custom-types/*"]

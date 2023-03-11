@@ -40,6 +40,7 @@ const ScrollContainerTemplate: React.FC<ScrollContainerTemplateProps> = props =>
       <div 
         className='controller' 
         style={{
+          width: containerRef.current ? `${containerRef.current.offsetWidth}px` : 0,
           height: containerRef.current ? `${containerRef.current.offsetHeight}px` : 0,
           top: containerRef.current ? `${containerRef.current.offsetTop}px` : 0,
         }}

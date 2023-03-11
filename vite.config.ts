@@ -34,6 +34,7 @@ export default defineConfig({
       '@style': path.resolve(__dirname, './src/style'),
       '@store': path.resolve(__dirname, './src/store'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
+			'@layouts': path.resolve(__dirname, './src/layouts'),
       '@test': path.resolve(__dirname, './src/test'),
 			'@internals': path.resolve(__dirname, './src/internals'),
       '@custom-types': path.resolve(__dirname, './src/custom-types'),
