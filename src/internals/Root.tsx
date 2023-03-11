@@ -4,8 +4,6 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import type OnyxComponentRef from './OnyxComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
 
-import './root.scss';
-
 const RootContext = React.createContext<Partial<{
   root: OnyxComponentRef;
   modalRoot: ModalRootRef;
