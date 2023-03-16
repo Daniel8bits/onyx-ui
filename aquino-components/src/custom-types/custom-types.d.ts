@@ -9,3 +9,5 @@ declare type Override<T, R> = Omit<T, keyof R> & R;
 declare type Class<T> = new (...args: any[]) => T;
 
 declare type ReactElementRef<T extends HTMLElement = HTMLElement> = React.MutableRefObject<T | null>;
+
+declare type Props<T> = Parameters<T>[0];

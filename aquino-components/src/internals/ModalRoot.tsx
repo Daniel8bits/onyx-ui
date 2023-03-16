@@ -1,15 +1,15 @@
 import useEventManager from '@hooks/useEventManager';
 import useUpdater from '@hooks/useUpdater';
 import React, {useEffect, useRef} from 'react';
-import type OnyxComponentRef from './OnyxComponentRef';
+import type ComponentRef from './ComponentRef';
 
-export interface ModalRootRef extends OnyxComponentRef {
+export interface ModalRootRef extends ComponentRef {
   render: (key: string, modal: React.ReactNode) => null;
   update: (key: string) => void;
 }
 
 interface ModalRootProps {
-  innerRef: React.MutableRefObject<Nullable<OnyxComponentRef>>;
+  innerRef: React.MutableRefObject<Nullable<ComponentRef>>;
 }
 
 const ModalRoot: React.FC<ModalRootProps> = props => {

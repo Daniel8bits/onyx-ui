@@ -1,14 +1,14 @@
 import React from 'react';
 import {vi} from 'vitest';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Checkbox from './Checkbox';
+import CheckBox from './CheckBox';
 
 import MockStateToProps from '../../test/mocks/MockStateToProps';
 
-describe('UICheckbox Component', () => {
+describe('UICheckBox Component', () => {
 	it('should render content', () => {
-		render(<Checkbox label='checkbox' value={true} />);
+		render(<CheckBox label='checkbox' value={true} />);
 
 		expect(screen.getByText('checkbox')).toBeInTheDocument();
 	});
@@ -16,20 +16,26 @@ describe('UICheckbox Component', () => {
 	it('should change value', async () => {
 		render(
 			<MockStateToProps initialValue={false}>
-				{(value, setValue) => <Checkbox label='checkbox' value={value} onAction={setValue} />}
+				{(value, setValue) => <CheckBox label='checkbox' value={value} onAction={setValue} />}
 			</MockStateToProps>,
 		);
 
-		const checkbox = screen.getByRole('checkbox');
-		const label = screen.getByText('checkbox');
+		const {getByRole, getByText} = screen;
+
+		const checkbox = getByRole('checkbox');
+		const label = getByText('checkbox');
 
 		expect(checkbox).not.toBeChecked();
 
-		userEvent.click(label);
+		act(() => {
+			userEvent.click(label);
+		});
 
 		expect(checkbox).toBeChecked();
 
-		userEvent.click(label);
+		act(() => {
+			userEvent.click(label);
+		});
 
 		expect(checkbox).not.toBeChecked();
 	});

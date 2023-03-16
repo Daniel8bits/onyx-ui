@@ -1,8 +1,8 @@
 import type EventManager from './EventManager';
 
-interface OnyxComponentRef {
+interface ComponentRef {
   eventListeners: EventManager;
   el: HTMLElement;
 }
 
-export default OnyxComponentRef;
+export default ComponentRef;

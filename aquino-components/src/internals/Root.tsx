@@ -1,11 +1,11 @@
 
 import useEventManager from '@hooks/useEventManager';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import type OnyxComponentRef from './OnyxComponentRef';
+import type ComponentRef from './ComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
 
 const RootContext = React.createContext<Partial<{
-  root: OnyxComponentRef;
+  root: ComponentRef;
   modalRoot: ModalRootRef;
 }>>({});
 
@@ -18,7 +18,7 @@ export interface RootProps {
 }
 
 const Root: React.FC<RootProps> = props => {
-  const [rootRef, setRootRef] = useState<OnyxComponentRef>();
+  const [rootRef, setRootRef] = useState<ComponentRef>();
   const modalRootRef = useRef<ModalRootRef>();
   const ref = useRef<HTMLDivElement>(null);
 

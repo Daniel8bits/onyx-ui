@@ -30,7 +30,7 @@ class MockStateToProps<T> extends Component<MockStateToPropsProps<T>, {value: T}
 
   private readonly _setValue: StateSetter<T> = value => {
     if (value instanceof Function) {
-      this.setState(state => value(state.value));
+      this.setState(state => ({value: value(state.value)}));
       return;
     }
     
