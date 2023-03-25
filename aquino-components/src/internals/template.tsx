@@ -2,14 +2,14 @@ import {useMemo} from 'react';
 import styleManager, {type AquinoTemplate, type Theme, type AquinoTemplateProps, type ThemeConfig} from './ThemeManager';
 
 function template<
-	TP,
+	P,
 	E extends HTMLElement = HTMLElement,
 	S extends Theme = Theme,
 >(
-	component: (props: TP & AquinoTemplateProps<E>, style: S | undefined) => React.ReactNode,
+	component: (props: AquinoTemplateProps<P, E, S>, style: S | undefined) => React.ReactNode,
 	initialStyleValue: S,
-): AquinoTemplate<TP & AquinoTemplateProps<E>, S> {
-	type TemplateProps = TP & AquinoTemplateProps<E>;
+): AquinoTemplate<AquinoTemplateProps<P, E, S>, S> {
+	type TemplateProps = AquinoTemplateProps<P, E, S>;
 
 	const c: any = (props: TemplateProps): React.ReactNode => {
 		const theme = props.theme?.() ?? styleManager.getStyle(c.id)?.();
@@ -18,7 +18,7 @@ function template<
 	};
 
 	c.id = Symbol('');
-	c.theme = (style: ThemeConfig<AquinoTemplateProps, Theme>) => styleManager.setStyle(c.id, style);
+	c.theme = (style: ThemeConfig<AquinoTemplateProps<any>, Theme>) => styleManager.setStyle(c.id, style);
 	
 	styleManager.setStyle(c.id, () => ({
 		theme: () => initialStyleValue,

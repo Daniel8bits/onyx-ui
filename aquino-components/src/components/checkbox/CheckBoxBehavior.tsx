@@ -1,17 +1,14 @@
+/* eslint-disable react/prop-types */
+import React, {useEffect} from 'react';
 import useComponentRef from '@hooks/useComponentRef';
 import {OnyxEvents} from '@internals/EventManager';
-import React, {useEffect} from 'react';
-import {type CheckBoxProps} from './CheckBox';
+import {type AquinoBehavior} from '@internals/ThemeManager';
 import type CheckBoxTemplate from './CheckBoxTemplate';
+import {type CheckBoxTemplateStyle, type CheckBoxProps} from './CheckBoxTemplate';
 
-interface CheckBoxBehaviorProps extends CheckBoxProps {
-	Template: React.FC<Props<typeof CheckBoxTemplate>>;
-}
-
-const CheckBoxBehavior: React.FC<CheckBoxBehaviorProps> = props => {
-	const {Template, className, onAction, innerRef: forwardedRef, ...templateProps} = props;
-	const classes = `ui-checkbox ${className ?? ''}`;
-	const {ref, events, eventManager} = useComponentRef<HTMLInputElement>(forwardedRef);
+const CheckBoxBehavior: AquinoBehavior<CheckBoxProps, typeof CheckBoxTemplate, CheckBoxTemplateStyle> = props => {
+	const {Template, onAction, innerRef, ...templateProps} = props;
+	const {ref, events, eventManager} = useComponentRef<HTMLInputElement>(innerRef);
 
 	useEffect(() => {
 		if (ref.current) {
@@ -25,7 +22,7 @@ const CheckBoxBehavior: React.FC<CheckBoxBehaviorProps> = props => {
 		});
 	}, []);
 
-	return <Template el={ref} events={events} className={classes} {...templateProps} />;
+	return <Template el={ref} events={events} {...templateProps} />;
 };
 
 export default CheckBoxBehavior;

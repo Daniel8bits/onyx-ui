@@ -1,47 +1,81 @@
-import React, {useCallback} from 'react';
-import {type TextfieldProps} from './Textfield';
-import type TextfieldCore from './TextfieldCore';
+import React from 'react';
+import template from '@internals/template';
+import {type Theme} from '@internals/ThemeManager';
+import {type IconType} from 'react-icons';
 
-export interface TextfieldTemplateProps extends TextfieldProps {
-  core: TextfieldCore;
-  input: JSX.Element;
+export interface TextfieldProps {
+  id: string;
+  label?: string;
+  className?: string;
+  placeholder?: string;
+  ariaLabel?: string;
+  defaultValue?: string;
+  template?: string;
+  password?: boolean;
+  disabled?: boolean;
+  icon?: IconType;
+  iconPosition?: 'left' | 'right';
+  onFocus?: (ev: React.FocusEvent) => void;
+  onBlur?: (ev: React.FocusEvent) => void;
+  onChange?: (ev: React.ChangeEvent) => void;
+  onKeyUp?: (ev: React.KeyboardEvent) => void;
+  onKeyDown?: (ev: React.KeyboardEvent) => void;
+  onMouseUp?: (ev: React.MouseEvent) => void;
+  onAction?: (value: string) => void;
+  onClickIcon?: () => void;
+  onLoad?: (ref: React.RefObject<HTMLInputElement>) => void;
+  iconContainerRef?: React.RefObject<HTMLDivElement>;
+  innerRef?: ReactElementRef<HTMLInputElement>;
 }
 
-const TextfieldTemplate: React.FC<TextfieldTemplateProps> = props => {
-  const inputWithIcon = useCallback(() => {
-    const onClickIcon = props.disabled ? undefined : props.onClickIcon;
+export interface TextfieldTemplateProps extends TextfieldProps {
+  inputProps: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+}
 
-    if (!props.icon) return;
+const initialStyleValue = {
+	div: ['', {
+    label: '',
+    div: ['', {
+      input: '',
+      button: ['', {
+        icon: '',
+      }],
+    }],
+  }],
+} satisfies Theme;
 
-    return (
-      <div
-        ref={props.iconContainerRef}
-        className={`${props.onClickIcon ? 'icon-as-button' : ''}`}
-      >
-        {(!props.iconPosition || props.iconPosition === 'left')
-          && <button type='button' onClick={onClickIcon} aria-label='button'><props.icon /></button>}
-        {props.input}
-        {props.iconPosition === 'right'
-          && <button type='button' onClick={onClickIcon} aria-label='button'><props.icon /></button>}
-      </div>
-    );
-  }, [
-    props.icon, 
-    props.onClickIcon, 
-    props.iconContainerRef,
-    props.iconPosition,
-    props.disabled,
-  ]);
+export type TextfieldTemplateStyle = typeof initialStyleValue;
 
-  return (
-    <div className={`ui-textfield ${props.className ?? ''} ${props.template ?? 'default'} ${props.disabled ? 'disabled' : ''} ${props.icon && props.iconPosition ? 'hasIcon' : ''}`}>
-      {props.label
-        && <label htmlFor={props.id}>
-          {props.label}
-        </label>}
-      {props.icon ? inputWithIcon() : props.input}
+const TextfieldTemplate = template<TextfieldTemplateProps, HTMLInputElement, TextfieldTemplateStyle>((props, style) => (
+  <div className={`${style?.div[0] ?? ''} ${props.className ?? ''}`} {...props.events}>
+    {props.label
+      && <label htmlFor={props.id} className={style?.div[1].label}>
+        {props.label}
+      </label>}
+    <div ref={props.iconContainerRef} className={style?.div[1].div[0]}>
+      {props.icon && (!props.iconPosition || props.iconPosition === 'left')
+        && <button 
+          type='button' 
+          onClick={props.disabled ? undefined : props.onClickIcon} 
+          aria-label='button'
+          className={style?.div[1].div[1].button[0]}
+        >
+          <props.icon className={style?.div[1].div[1].button[1].icon} />
+        </button>}
+
+      <input ref={props.el} className={style?.div[1].div[1].input} {...props.inputProps} />
+
+      {props.icon && props.iconPosition === 'right'
+        && <button 
+          type='button' 
+          onClick={props.disabled ? undefined : props.onClickIcon} 
+          aria-label='button'
+          className={style?.div[1].div[1].button[0]}
+        >
+          <props.icon className={style?.div[1].div[1].button[1].icon} />
+        </button>}
     </div>
-  );
-};
+  </div>
+), initialStyleValue);
 
 export default TextfieldTemplate;

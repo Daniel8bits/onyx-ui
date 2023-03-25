@@ -25,7 +25,7 @@ describe('Card Component', () => {
 
 	it('should run the callback on click', async () => {
 		const clickHandler = vi.fn();
-		render(<Card onClick={clickHandler}> something </Card>);
+		render(<Card onAction={clickHandler}> something </Card>);
 
 		const card = screen.getByText('something');
 		userEvent.click(card);

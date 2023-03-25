@@ -1,18 +1,18 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import {usePopOverStore} from '@store/store';
 import {useCallback, useEffect, useRef} from 'react';
-import {type PopOverProps} from './PopOver';
+import {type PopOverProps, type PopOverTemplateStyle} from './PopOverTemplate';
+import type PopOverTemplate from './PopOverTemplate';
 import {type PopOverTemplateProps} from './PopOverTemplate';
 import {OnyxEvents} from '@internals/EventManager';
 import {useRoot} from '@internals/Root';
 import useClickOutside from '@hooks/useClickOutside';
+import {type AquinoBehavior} from '@internals/ThemeManager';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface PopOverBehaviorProps extends PopOverProps {
-  Template: React.FC<PopOverTemplateProps>;
-}
-
-const PopOverBehavior: React.FC<PopOverBehaviorProps> = props => {
-  const {Template, open, ...templateProps} = props;
+const PopOverBehavior: AquinoBehavior<PopOverProps, typeof PopOverTemplate, PopOverTemplateStyle> = props => {
+  const {Template, open, innerRef, ...templateProps} = props;
 
   // Cconst {data, create, destroy, close} = usePopOverStore();
   const data = usePopOverStore(state => state.data.filter(m => m[0] === props.id)[0]);
@@ -28,7 +28,7 @@ const PopOverBehavior: React.FC<PopOverBehaviorProps> = props => {
     return open ?? false;
   })();
 
-  const popoverRef = useRef<HTMLDivElement>(null);
+  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
   const [onClickOutside, removeClickOutside] = useClickOutside();
 
   useEffect(() => {
@@ -51,9 +51,9 @@ const PopOverBehavior: React.FC<PopOverBehaviorProps> = props => {
   }, []);
 
   useEffect(() => {
-    if (props.id && currentOpenValue && popoverRef.current) {
+    if (props.id && currentOpenValue && ref.current) {
       removeClickOutside();
-      onClickOutside(popoverRef.current, handleClose);
+      onClickOutside(ref.current, handleClose);
     }
   }, [currentOpenValue]);
 
@@ -61,7 +61,7 @@ const PopOverBehavior: React.FC<PopOverBehaviorProps> = props => {
     if (typeof props.width === 'string') {
       switch (props.width) {
         case 'inherit':
-          return popoverRef.current?.parentElement ? popoverRef.current.parentElement.offsetWidth : 0;
+          return ref.current?.parentElement ? ref.current.parentElement.offsetWidth : 0;
         case 'anchor':
           return props.anchor.current 
             ? props.anchor.current.offsetWidth : 0;
@@ -137,7 +137,7 @@ const PopOverBehavior: React.FC<PopOverBehaviorProps> = props => {
     height: props.height,
   };
 
-  return <Template popoverRef={popoverRef} rect={rect} open={currentOpenValue} {...templateProps} />;
+  return <Template el={ref} events={events} rect={rect} open={currentOpenValue} {...templateProps} />;
 };
 
 export default PopOverBehavior;

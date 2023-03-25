@@ -1,12 +1,8 @@
 import React from 'react';
-import {type DatePickerPanelProps} from '../DatePickerTemplate';
+import {type AquinoComponent} from '@internals/ThemeManager';
 import DatePickerWeeksBehavior from './DatePickerWeeksBehavior';
-import DatePickerWeeksTemplate from './DatePickerWeeksTemplate';
+import DatePickerWeeksTemplate, {type DatePickerWeeksProps, type DatePickerWeeksTemplateStyle} from './DatePickerWeeksTemplate';
 
-export interface DatePickerWeeksProps extends DatePickerPanelProps {
-  ratio: number;
-}
-
-const DatePickerWeeks: React.FC<DatePickerWeeksProps> = props => <DatePickerWeeksBehavior Template={DatePickerWeeksTemplate} {...props} />;
+const DatePickerWeeks: AquinoComponent<DatePickerWeeksProps, DatePickerWeeksTemplateStyle> = props => <DatePickerWeeksBehavior Template={DatePickerWeeksTemplate} {...props} />;
 
 export default DatePickerWeeks;

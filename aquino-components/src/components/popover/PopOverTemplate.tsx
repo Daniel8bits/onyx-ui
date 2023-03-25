@@ -1,6 +1,20 @@
 import React from 'react';
 import ScrollContainer from '@components/scrollContainer/ScrollContainer';
-import {type PopOverProps} from './PopOver';
+import {type Theme} from '@internals/ThemeManager';
+import template from '@internals/template';
+
+export interface PopOverProps {
+  readonly id?: string;
+  width: number | 'inherit' | 'anchor';
+  height: number | 'auto';
+  anchor: ReactElementRef;
+  open?: boolean;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  scroll?: boolean;
+  template?: string;
+  className?: string;
+  children?: any;
+}
 
 export interface PopOverTemplateProps extends PopOverProps {
   rect: {
@@ -9,12 +23,17 @@ export interface PopOverTemplateProps extends PopOverProps {
     width: number;
     height: number | 'auto';
   };
-  popoverRef: ReactElementRef<HTMLDivElement>;
 }
 
-const PopOverTemplate: React.FC<PopOverTemplateProps> = props => (
+const initialStyleValue = {
+	div: '',
+} satisfies Theme;
+
+export type PopOverTemplateStyle = typeof initialStyleValue;
+
+const PopOverTemplate = template<PopOverTemplateProps, HTMLDivElement, PopOverTemplateStyle>((props, style) => (
   <div 
-    ref={props.popoverRef}
+    ref={props.el}
     style={{
       left: `${props.rect.x}px`,
       top: `${props.rect.y}px`,
@@ -22,7 +41,7 @@ const PopOverTemplate: React.FC<PopOverTemplateProps> = props => (
       height: props.rect.height === 'auto' ? props.rect.height : `${props.rect.height}px`,
       visibility: props.open ? 'visible' : 'hidden',
     }}
-    className={`ui-popover ${props.template ?? ''} ${props.open ? 'open' : ''} ${props.className ?? ''}`}
+    className={`${style?.div ?? ''} ${props.className ?? ''}`}
   >
     {props.open && (
       props.scroll && props.height !== 'auto' 
@@ -34,6 +53,6 @@ const PopOverTemplate: React.FC<PopOverTemplateProps> = props => (
       </div>
     )}
   </div>
-);
+), initialStyleValue);
 
 export default PopOverTemplate;

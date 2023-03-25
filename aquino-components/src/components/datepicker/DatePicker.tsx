@@ -1,16 +1,8 @@
 import React from 'react';
-import {type TextfieldProps} from '@components/textfield/Textfield';
-
-import type ExtendedDate from './ExtendedDate';
-import DatePickerTemplate from './DatePickerTemplate';
+import DatePickerTemplate, {type DatePickerProps, type DatePickerTemplateProps, type DatePickerTemplateStyle} from './DatePickerTemplate';
 import DatePickerBehavior from './DatePickerBehavior';
+import {type AquinoComponent} from '@internals/ThemeManager';
 
-export interface DatePickerProps extends Override<TextfieldProps, {
-  value: Nullable<ExtendedDate>;
-  onAction: StateSetter<Nullable<ExtendedDate>>;
-}> {
-}
-
-const DatePicker: React.FC<DatePickerProps> = props => <DatePickerBehavior Template={DatePickerTemplate} {...props} />;
+const DatePicker: AquinoComponent<DatePickerProps, DatePickerTemplateStyle, DatePickerTemplateProps> = props => <DatePickerBehavior Template={DatePickerTemplate} {...props} />;
 
 export default DatePicker;

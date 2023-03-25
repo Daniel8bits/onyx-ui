@@ -1,35 +1,18 @@
+/* eslint-disable react/prop-types */
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import useNew from '@hooks/useNew';
-import MaskedInput from 'react-text-mask';
-import {type TextfieldProps} from './Textfield';
-import TextfieldCore from './TextfieldCore';
-import {type TextfieldTemplateProps} from './TextfieldTemplate';
+import {type TextfieldProps, type TextfieldTemplateStyle} from './TextfieldTemplate';
+import type TextfieldTemplate from './TextfieldTemplate';
+import {type AquinoBehavior} from '@internals/ThemeManager';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface TextfieldBehaviorProps extends TextfieldProps {
-  Template: React.FC<TextfieldTemplateProps>;
-}
-
-const TextfieldBehavior: React.FC<TextfieldBehaviorProps> = props => {
-  const {Template, ...templateProps} = props;
+const TextfieldBehavior: AquinoBehavior<TextfieldProps, typeof TextfieldTemplate, TextfieldTemplateStyle> = props => {
+  const {Template, innerRef, ...templateProps} = props;
   
-  const inputTextRef = useRef<HTMLInputElement>(null);
-  const maskedInputRef = useRef<MaskedInput>(null);
-
-  const core = useNew(TextfieldCore, [props.mask]);
+  const {ref, events, eventManager} = useComponentRef<HTMLInputElement>(innerRef);
 
   useEffect(() => {
-    if (props.mask && !inputTextRef.current && maskedInputRef.current) {
-      const inputRef = inputTextRef as React.MutableRefObject<HTMLInputElement>;
-      inputRef.current = maskedInputRef.current.inputElement as HTMLInputElement;
-    }
-
-    if (inputTextRef.current) {
-      if (props.innerRef) {
-        (props.innerRef as React.MutableRefObject<HTMLInputElement>).current = inputTextRef.current;
-      }
-
-      props.onLoad?.(inputTextRef);
-    }
+    if (!ref.current) return;
+    props.onLoad?.(ref);
   }, []);
 
   /**
@@ -43,12 +26,12 @@ const TextfieldBehavior: React.FC<TextfieldBehaviorProps> = props => {
       props.onKeyUp(event);
     }
 
-    if (props.onAction && inputTextRef.current) {
-      props.onAction(inputTextRef.current.value);
+    if (props.onAction && ref.current) {
+      props.onAction(ref.current.value);
     }
   }, [props.disabled, props.onKeyUp, props.onAction]);
 
-  const inputProps = useMemo(() => ({
+  const inputProps = useMemo<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>(() => ({
     id: props.id,
     name: props.id,
     type: props.password ? 'password' : 'text',
@@ -77,14 +60,7 @@ const TextfieldBehavior: React.FC<TextfieldBehaviorProps> = props => {
     actionPerformed,
   ]);
 
-  const input = useMemo(() => {
-    if (!core.decomposedMask) return <input type='text' />;
-    return props.mask
-      ? <MaskedInput ref={maskedInputRef} mask={core.decomposedMask} showMask {...inputProps} />
-      : <input ref={inputTextRef} {...inputProps} />;
-  }, [props.mask]);
-
-  return <Template core={core} input={input} {...templateProps} />;
+  return <Template el={ref} events={events} inputProps={inputProps} {...templateProps} />;
 };
 
 export default TextfieldBehavior;

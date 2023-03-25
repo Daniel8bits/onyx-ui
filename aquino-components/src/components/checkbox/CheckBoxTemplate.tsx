@@ -1,10 +1,17 @@
 import React, {useCallback} from 'react';
 import template from '@internals/template';
-import type {AquinoTemplateProps, Theme} from '@internals/ThemeManager';
+import type {Theme} from '@internals/ThemeManager';
 import {MdCheckBox, MdCheckBoxOutlineBlank} from 'react-icons/md';
-import {type CheckBoxProps} from './CheckBox';
 
-const CheckBoxTemplateStyle = {
+export interface CheckBoxProps {
+	label: string;
+	value: boolean;
+	className?: string;
+	onClick?: (event: React.MouseEvent) => void;
+	onAction?: StateSetter<boolean>;
+}
+
+const initialThemeValue = {
 	div: ['', {
 		input: '',
 		icon: '',
@@ -12,9 +19,9 @@ const CheckBoxTemplateStyle = {
 	}],
 } satisfies Theme;
 
-export type CheckBoxTemplateStyleType = typeof CheckBoxTemplateStyle;
+export type CheckBoxTemplateStyle = typeof initialThemeValue;
 
-const CheckBoxTemplate = template<CheckBoxProps, HTMLInputElement, CheckBoxTemplateStyleType>((props, style) => (
+const CheckBoxTemplate = template<CheckBoxProps, HTMLInputElement, CheckBoxTemplateStyle>((props, style) => (
 	<div className={`${style?.div[0] ?? ''} ${props.className ?? ''}`} {...props.events}>
 		<input
 			ref={props.el}
@@ -29,6 +36,6 @@ const CheckBoxTemplate = template<CheckBoxProps, HTMLInputElement, CheckBoxTempl
 			{props.label}
 		</span>
 	</div>
-), CheckBoxTemplateStyle);
+), initialThemeValue);
 
 export default CheckBoxTemplate;

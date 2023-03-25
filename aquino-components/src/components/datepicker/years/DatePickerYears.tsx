@@ -1,12 +1,8 @@
 import React from 'react';
-import {type DatePickerPanelProps} from '../DatePickerTemplate';
+import {type AquinoComponent} from '@internals/ThemeManager';
 import DatePickerYearsBehavior from './DatePickerYearsBehavior';
-import DatePickerYearsTemplate from './DatePickerYearsTemplate';
+import DatePickerYearsTemplate, {type DatePickerYearsProps, type DatePickerYearsTemplateProps, type DatePickerYearsTemplateStyle} from './DatePickerYearsTemplate';
 
-export interface DatePickerYearsProps extends DatePickerPanelProps {
-  ratio: number;
-}
-
-const DatePickerYears: React.FC<DatePickerYearsProps> = props => <DatePickerYearsBehavior Template={DatePickerYearsTemplate} {...props} />;
+const DatePickerYears: AquinoComponent<DatePickerYearsProps, DatePickerYearsTemplateStyle, DatePickerYearsTemplateProps> = props => <DatePickerYearsBehavior Template={DatePickerYearsTemplate} {...props} />;
 
 export default DatePickerYears;

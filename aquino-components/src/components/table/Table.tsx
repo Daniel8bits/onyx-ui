@@ -1,12 +1,8 @@
 import React from 'react';
-import type TableDocument from './TableDocument';
 import TableBehavior from './TableBehavior';
-import TableTemplate from './TableTemplate';
+import TableTemplate, {type TableProps, type TableTemplateProps, type TableTemplateStyle} from './TableTemplate';
+import {type AquinoComponent} from '@internals/ThemeManager';
 
-export interface TableProps {
-  document: TableDocument<any>;
-}
-
-const Table: React.FC<TableProps> = props => <TableBehavior Template={TableTemplate} {...props} />;
+const Table: AquinoComponent<TableProps, TableTemplateStyle, TableTemplateProps> = props => <TableBehavior Template={TableTemplate} {...props} />;
 
 export default Table;

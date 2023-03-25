@@ -1,15 +1,8 @@
 import React from 'react';
+import {type AquinoComponent} from '@internals/ThemeManager';
 import ButtonBehavior from './ButtonBehavior';
-import ButtonTemplate from './ButtonTemplate';
+import ButtonTemplate, {type ButtonProps, type ButtonTemplateStyle} from './ButtonTemplate';
 
-export interface ButtonProps {
-	children: React.ReactNode;
-	onAction?: () => void;
-	className?: string;
-	submit?: boolean;
-	disabled?: boolean;
-}
-
-const Button: React.FC<ButtonProps> = props => <ButtonBehavior Template={ButtonTemplate} {...props} />;
+const Button: AquinoComponent<ButtonProps, ButtonTemplateStyle> = props => <ButtonBehavior Template={ButtonTemplate} {...props} />;
 
 export default Button;

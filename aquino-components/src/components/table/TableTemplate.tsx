@@ -1,51 +1,115 @@
 import React from 'react';
 import Textfield from '@components/textfield/Textfield';
 import {MdChevronLeft, MdChevronRight} from 'react-icons/md';
-import {type TableProps} from './Table';
+import {type Theme} from '@internals/ThemeManager';
+import type TableDocument from './TableDocument';
+import template from '@internals/template';
+
+export interface TableProps {
+  document: TableDocument<any>;
+  className?: string;
+}
 
 export interface TableTemplateProps extends TableProps {
   pagingInput: ReactElementRef<HTMLInputElement>;
 }
 
-const TableTemplate: React.FC<TableTemplateProps> = props => (
-  <table className='ui-table'>
-    <thead>
-      <tr>
-        {props.document.columnMapping((name, key) => <th key={key}> {name} </th>)}
+const initialStyleValue = {
+	table: ['', {
+    thead: ['', {
+      tr: ['', {
+        th: '',
+      }],
+    }],
+    tbody: ['', {
+      tr: ['', {
+        td: '',
+      }],
+      selectedTr: '',
+    }],
+    tfoot: ['', {
+      tr: ['', {
+        td: ['', {
+          div: ['', {
+            previous: '',
+            textfield: '',
+            span: '',
+            next: '',
+          }],
+        }],
+      }],
+    }],
+  }],
+} satisfies Theme;
+
+export type TableTemplateStyle = typeof initialStyleValue;
+
+const TableTemplate = template<TableTemplateProps, HTMLTableElement, TableTemplateStyle>((props, style) => (
+  <table ref={props.el} className={`${style?.table[0] ?? ''} ${props.className ?? ''}`} {...props.events}>
+    <thead className={style?.table[1].thead[0]}>
+      <tr className={style?.table[1].thead[1].tr[0]}>
+        {props.document.columnMapping((name, key) => 
+          <th key={key} className={style?.table[1].thead[1].tr[1].th}> {name} </th>)}
       </tr>
     </thead>
-    <tbody>
-      {props.document.loading && <tr><td colSpan={props.document.getColumnsLength()}>Carregando...</td></tr>
-        || (props.document.getRowsLength() === 0 && <tr><td colSpan={props.document.getColumnsLength()}>Nenhum Dado Encontrado</td></tr>)}
+    <tbody className={style?.table[1].tbody[0]}>
+      {props.document.loading 
+        && <tr className={style?.table[1].tbody[1].tr[0]}>
+          <td className={style?.table[1].tbody[1].tr[1].td} colSpan={props.document.getColumnsLength()}>
+            Carregando...
+          </td>
+        </tr>
+        || (props.document.getRowsLength() === 0 
+        && <tr className={style?.table[1].tbody[1].tr[0]}>
+          <td className={style?.table[1].tbody[1].tr[1].td} colSpan={props.document.getColumnsLength()}>
+            Nenhum Dado Encontrado
+          </td>
+        </tr>
+      )}
       {props.document.rowMapping(row => (
         <tr
           onClick={() => props.document.triggerOnRowSelected(row)}
           onDoubleClick={() => props.document.triggerOnRowDoubleClicked(row)}
-          className={`${props.document.isSelected(row) ? 'selected' : ''}`}
+          className={`
+            ${style?.table[1].tbody[1].tr[0] ?? ''}
+            ${props.document.isSelected(row) ? style?.table[1].tbody[1].selectedTr ?? '' : ''}
+          `}
           key={row.id}
         >
-          {props.document.cellMapping(row, (cell, key) => <td key={key}> {cell} </td>)}
+          {props.document.cellMapping(row, (cell, key) => 
+            <td key={key} className={style?.table[1].tbody[1].tr[1].td}> {cell} </td>)}
         </tr>
       ))}
     </tbody>
-    <tfoot>
-      <tr>
-        <td colSpan={props.document.getColumnsLength()}>
-          <div className='pagination'>
-            <MdChevronLeft onClick={props.document.previousPage} size={32} />
+    <tfoot className={style?.table[1].tfoot[0]}>
+      <tr className={style?.table[1].tfoot[1].tr[0]}>
+        <td className={style?.table[1].tfoot[1].tr[1].td[0]} colSpan={props.document.getColumnsLength()}>
+          <div className={style?.table[1].tfoot[1].tr[1].td[1].div[0]}>
+            <MdChevronLeft 
+              className={style?.table[1].tfoot[1].tr[1].td[1].div[1].previous} 
+              onClick={props.document.previousPage} 
+              size={32} 
+            />
             <Textfield
               innerRef={props.pagingInput}
               id='page'
               defaultValue={String(props.document.getPageNumber())}
               onAction={value => props.document.setPage(Number(value))}
+              className={style?.table[1].tfoot[1].tr[1].td[1].div[1].textfield}
             />
-            <span>de {props.document.getMaxPage()}</span>
-            <MdChevronRight onClick={props.document.nextPage} size={32} />
+            <span className={style?.table[1].tfoot[1].tr[1].td[1].div[1].span}>
+              de {props.document.getMaxPage()}
+            </span>
+            <MdChevronRight 
+              className={style?.table[1].tfoot[1].tr[1].td[1].div[1].next} 
+              onClick={props.document.nextPage} 
+              size={32} 
+            />
           </div>
         </td>
       </tr>
     </tfoot>
   </table>
-);
+), initialStyleValue);
 
 export default TableTemplate;

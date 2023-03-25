@@ -1,11 +1,9 @@
 import React from 'react';
+import {type AquinoComponent} from '@internals/ThemeManager';
 import {type DatePickerPanelProps} from '../DatePickerTemplate';
 import DatePickerMonthsBehavior from './DatePickerMonthsBehavior';
-import DatePickerMonthsTemplate from './DatePickerMonthsTemplate';
+import DatePickerMonthsTemplate, {type DatePickerMonthsProps, type DatePickerMonthsTemplateProps, type DatePickerMonthsTemplateStyle} from './DatePickerMonthsTemplate';
 
-export interface DatePickerMonthsProps extends DatePickerPanelProps {
-}
-
-const DatePickerMonths: React.FC<DatePickerMonthsProps> = props => <DatePickerMonthsBehavior Template={DatePickerMonthsTemplate} {...props} />;
+const DatePickerMonths: AquinoComponent<DatePickerMonthsProps, DatePickerMonthsTemplateStyle, DatePickerMonthsTemplateProps> = props => <DatePickerMonthsBehavior Template={DatePickerMonthsTemplate} {...props} />;
 
 export default DatePickerMonths;

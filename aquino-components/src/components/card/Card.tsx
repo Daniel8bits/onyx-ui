@@ -1,15 +1,8 @@
 import React from 'react';
+import {type AquinoComponent} from '@internals/ThemeManager';
 import CardBehavior from './CardBehavior';
-import CardTemplate from './CardTemplate';
+import CardTemplate, {type CardProps, type CardTemplateStyle} from './CardTemplate';
 
-export interface CardProps {
-	className?: string;
-	image?: string;
-	title?: string;
-	onClick?: () => void;
-	children: React.ReactNode;
-}
-
-const Card: React.FC<CardProps> = props => <CardBehavior Template={CardTemplate} {...props} />;
+const Card: AquinoComponent<CardProps, CardTemplateStyle> = props => <CardBehavior Template={CardTemplate} {...props} />;
 
 export default Card;

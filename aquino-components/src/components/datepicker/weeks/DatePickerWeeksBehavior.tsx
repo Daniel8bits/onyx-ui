@@ -1,14 +1,15 @@
+/* eslint-disable react/prop-types */
 import useUpdater from '@hooks/useUpdater';
+import {type AquinoBehavior} from '@internals/ThemeManager';
 import React, {useEffect} from 'react';
-import {type DatePickerWeeksProps} from './DatePickerWeeks';
+import {type DatePickerWeeksProps, type DatePickerWeeksTemplateStyle} from './DatePickerWeeksTemplate';
+import type DatePickerWeeksTemplate from './DatePickerWeeksTemplate';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface DatePickerWeeksBehaviorProps extends DatePickerWeeksProps {
-  Template: React.FC<DatePickerWeeksProps>;
-}
-
-const DatePickerWeeksBehavior: React.FC<DatePickerWeeksBehaviorProps> = props => {
-  const {Template, ...templateProps} = props;
+const DatePickerWeeksBehavior: AquinoBehavior<DatePickerWeeksProps, typeof DatePickerWeeksTemplate, DatePickerWeeksTemplateStyle> = props => {
+  const {Template, innerRef, ...templateProps} = props;
   const update = useUpdater();
+  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
 
   useEffect(() => {
     props.core.subscribe(['value', 'monthDays'], update);
@@ -17,7 +18,7 @@ const DatePickerWeeksBehavior: React.FC<DatePickerWeeksBehaviorProps> = props =>
     };
   }, []);
 
-  return <Template {...templateProps} />;
+  return <Template el={ref} events={events} {...templateProps} />;
 };
 
 export default DatePickerWeeksBehavior;

@@ -1,16 +1,16 @@
+/* eslint-disable react/prop-types */
 import useUpdater from '@hooks/useUpdater';
+import {type AquinoBehavior} from '@internals/ThemeManager';
 import React, {useCallback, useEffect} from 'react';
 import {DatePickerPanels} from '../DatePickerTemplate';
-import {type DatePickerYearsProps} from './DatePickerYears';
-import {type DatePickerYearsTemplateProps} from './DatePickerYearsTemplate';
+import {type DatePickerYearsProps, type DatePickerYearsTemplateStyle} from './DatePickerYearsTemplate';
+import type DatePickerYearsTemplate from './DatePickerYearsTemplate';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface DatePickerYearsBehaviorProps extends DatePickerYearsProps {
-  Template: React.FC<DatePickerYearsTemplateProps>;
-}
-
-const DatePickerYearsBehavior: React.FC<DatePickerYearsBehaviorProps> = props => {
-  const {Template, ...templateProps} = props;
+const DatePickerYearsBehavior: AquinoBehavior<DatePickerYearsProps, typeof DatePickerYearsTemplate, DatePickerYearsTemplateStyle> = props => {
+  const {Template, innerRef, ...templateProps} = props;
   const update = useUpdater();
+  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
 
   useEffect(() => {
     props.core.subscribe(['value', 'yearsRange', 'yearsStep'], update);
@@ -24,7 +24,7 @@ const DatePickerYearsBehavior: React.FC<DatePickerYearsBehaviorProps> = props =>
     props.setPanel(DatePickerPanels.MONTHS);
   }, []);
 
-  return <Template updateDate={updateDate} {...templateProps} />;
+  return <Template el={ref} events={events} updateDate={updateDate} {...templateProps} />;
 };
 
 export default DatePickerYearsBehavior;

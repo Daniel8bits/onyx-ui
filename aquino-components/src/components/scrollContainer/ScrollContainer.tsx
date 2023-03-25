@@ -1,13 +1,8 @@
 import React from 'react';
+import {type AquinoComponent} from '@internals/ThemeManager';
 import ScrollContainerBehavior from './ScrollContainerBehavior';
-import ScrollContainerTemplate from './ScrollContainerTemplate';
+import ScrollContainerTemplate, {type ScrollContainerProps, type ScrollContainerTemplateProps, type ScrollContainerTemplateStyle} from './ScrollContainerTemplate';
 
-export interface ScrollContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  maxHeight?: number;
-  className?: string;
-  children?: React.ReactNode;
-}
-
-const ScrollContainer: React.FC<ScrollContainerProps> = props => <ScrollContainerBehavior Template={ScrollContainerTemplate} {...props} />;
+const ScrollContainer: AquinoComponent<ScrollContainerProps, ScrollContainerTemplateStyle, ScrollContainerTemplateProps> = props => <ScrollContainerBehavior Template={ScrollContainerTemplate} {...props} />;
 
 export default ScrollContainer;

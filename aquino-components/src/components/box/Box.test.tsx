@@ -13,7 +13,7 @@ describe('Box Component', () => {
 
 	it('should run the callback on click', async () => {
 		const clickHandler = vi.fn();
-		render(<Box onClick={clickHandler}> something </Box>);
+		render(<Box onAction={clickHandler}> something </Box>);
 
 		const div = screen.getByText('something');
 		userEvent.click(div);

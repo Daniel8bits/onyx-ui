@@ -21,39 +21,54 @@ type ThemeSetter<P, S> = (props: P) => S;
 type ThemeDeps<P> = (props: P) => any[];
 export type ThemeConfig<P, S> = () => {theme: ThemeSetter<P, S>; deps: ThemeDeps<P>};
 
-export interface AquinoComponentProps<P, S extends Theme = Theme> extends JSX.IntrinsicAttributes {
-	theme?: ThemeConfig<P & AquinoTemplateProps, S>;
+export interface Themeable<P, S extends Theme = Theme> {
+	theme?: ThemeConfig<P, S>;
+}
+
+export interface AquinoComponentProps_ {
   innerRef?: ComponentRef;
 }
 
-export type AquinoTemplate<P extends AquinoTemplateProps, S extends Theme> = React.FC<P> & {
-	readonly id: Symbol;
-	theme: (theme: ThemeConfig<P, S>) => void;
-};
-
-export interface AquinoTemplateProps<E extends HTMLElement = HTMLElement> extends AquinoComponentProps<AquinoTemplateProps> {
+export interface AquinoTemplateProps_<E extends HTMLElement = HTMLElement> {
 	el: ReactElementRef<E>;
 	events: Partial<Record<OnyxEvents, OnyxMouseEventCallback>>;
 }
 
-interface ComponentStyle extends Theme {
-	div: [
-		string,
-		{
-			div: string;
-			span: string;
-		},
-	];
-}
+export type AquinoComponentProps<
+	P,
+	S extends Theme = Theme,
+	T = P,
+> = P 
+	& AquinoComponentProps_
+	& Themeable<T, S>;
+
+export type AquinoTemplateProps<
+	P,
+	E extends HTMLElement = HTMLElement, 
+	S extends Theme = Theme,
+> = P 
+	& AquinoTemplateProps_<E> 
+	& Themeable<P, S>;
+
+export type AquinoComponent<P, S extends Theme, T = P> = React.FC<AquinoComponentProps<P, S, T>>;
+
+export type AquinoTemplate<P, S extends Theme> = React.FC<P> & {
+	readonly id: Symbol;
+	theme: (theme: ThemeConfig<P, S>) => void;
+};
+
+export type AquinoBehavior<P, T, S extends Theme> = React.FC<AquinoComponentProps<P, S, Omit<Props<T>, keyof (AquinoTemplateProps_ & Themeable<P>)>> & {
+	Template: React.FC<Props<T>>;
+}>;
 
 class StyleManager {
-	private readonly _styles: Map<Symbol, ThemeConfig<AquinoTemplateProps, Theme>>;
+	private readonly _styles: Map<Symbol, ThemeConfig<AquinoTemplateProps<any>, Theme>>;
 
 	constructor() {
 		this._styles = new Map();
 	}
 
-	public setStyle(id: Symbol, style: ThemeConfig<AquinoTemplateProps, Theme>) {
+	public setStyle(id: Symbol, style: ThemeConfig<AquinoTemplateProps<any>, Theme>) {
 		this._styles.set(id, style);
 	}
 

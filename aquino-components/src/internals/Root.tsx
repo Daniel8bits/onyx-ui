@@ -4,6 +4,20 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import type ComponentRef from './ComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
 
+function insertGlobalStyle() {
+  const id = 'aquino-global-style';
+  if (document.getElementById(id)) return;
+  const styleElement = document.createElement('style');
+  styleElement.id = id;
+  styleElement.innerText = `
+    * {
+      padding: 0;
+      margin: 0;
+    }
+  `;
+  document.head.append(styleElement);
+}
+
 const RootContext = React.createContext<Partial<{
   root: ComponentRef;
   modalRoot: ModalRootRef;
@@ -27,6 +41,7 @@ const Root: React.FC<RootProps> = props => {
   useEffect(() => {
     if (!ref.current) return;
     setRootRef({el: ref.current, eventListeners: eventManager});
+    insertGlobalStyle();
   }, []);
 
   return (

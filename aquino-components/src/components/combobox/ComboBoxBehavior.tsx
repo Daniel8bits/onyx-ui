@@ -1,17 +1,16 @@
+/* eslint-disable react/prop-types */
 import React, {useEffect, useRef, useState} from 'react';
 import useNew from '@hooks/useNew';
-import {type ComboBoxProps} from './ComboBox';
 import ComboBoxCore from './ComboBoxCore';
-import {type ComboBoxTemplateProps} from './ComboBoxTemplate';
+import {type ComboBoxProps, type ComboBoxTemplateStyle} from './ComboBoxTemplate';
+import type ComboBoxTemplate from './ComboBoxTemplate';
+import {type AquinoBehavior} from '@internals/ThemeManager';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface ComboBoxBehaviorProps extends ComboBoxProps {
-  Template: React.FC<ComboBoxTemplateProps>;
-}
-
-const ComboBoxBehavior: React.FC<ComboBoxBehaviorProps> = props => {
-  const {Template, className, ...templateProps} = props;
+const ComboBoxBehavior: AquinoBehavior<ComboBoxProps, typeof ComboBoxTemplate, ComboBoxTemplateStyle> = props => {
+  const {Template, innerRef, ...templateProps} = props;
   const [, setUpdater] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const {ref, events, eventManager} = useComponentRef<HTMLInputElement>(innerRef);
 
   const core = useNew(ComboBoxCore, [
     props.value,
@@ -22,7 +21,7 @@ const ComboBoxBehavior: React.FC<ComboBoxBehaviorProps> = props => {
   ]);
 
   useEffect(() => {
-    core.setInput(inputRef.current);
+    core.setInput(ref.current);
   }, []);
 
   useEffect(() => {
@@ -39,9 +38,7 @@ const ComboBoxBehavior: React.FC<ComboBoxBehaviorProps> = props => {
     core.setAllowSearch(props.allowSearch ?? false);
   }, [props.allowSearch]);
 
-  const classes = `ui-combobox ${props.allowSearch ? 'allow-search' : ''} ${props.template ?? ''} ${className ?? ''}`;
-
-  return <Template core={core} inputRef={inputRef} className={classes} {...templateProps} />;
+  return <Template core={core} el={ref} events={events} {...templateProps} />;
 };
 
 export default ComboBoxBehavior;

@@ -1,18 +1,18 @@
+/* eslint-disable react/prop-types */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {type ScrollContainerProps} from './ScrollContainer';
-import {type ScrollContainerTemplateProps} from './ScrollContainerTemplate';
+import {type AquinoBehavior} from '@internals/ThemeManager';
+import {type ScrollContainerProps, type ScrollContainerTemplateStyle} from './ScrollContainerTemplate';
+import type ScrollContainerTemplate from './ScrollContainerTemplate';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface ScrollContainerBehaviorProps extends ScrollContainerProps {
-  Template: React.FC<ScrollContainerTemplateProps>;
-}
-
-const ScrollContainerBehavior: React.FC<ScrollContainerBehaviorProps> = props => {
-  const {Template, ...templateProps} = props;
+const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof ScrollContainerTemplate, ScrollContainerTemplateStyle> = props => {
+  const {Template, innerRef, ...templateProps} = props;
 
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const {ref: containerRef, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
+
   const contentRef = useRef<HTMLDivElement>(null);
   const verticalScrollRef = useRef<HTMLButtonElement>(null);
   const horizontalScrollRef = useRef<HTMLButtonElement>(null);
@@ -125,11 +125,12 @@ const ScrollContainerBehavior: React.FC<ScrollContainerBehaviorProps> = props =>
     <Template  
       width={width}
       height={height}
-      containerRef={containerRef}
+      el={containerRef}
       contentRef={contentRef}
       verticalScrollRef={verticalScrollRef}
       horizontalScrollRef={horizontalScrollRef}
       doVerticalScroll={doVerticalScroll}
+      events={events}
       {...templateProps}
     />
   );

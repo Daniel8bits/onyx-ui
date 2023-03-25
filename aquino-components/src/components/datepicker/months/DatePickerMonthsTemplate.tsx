@@ -2,18 +2,36 @@ import React from 'react';
 import Button from '@components/button/Button';
 import ScrollContainer from '@components/scrollContainer/ScrollContainer';
 import type ExtendedDate from '../ExtendedDate';
-import {DatePickerPanels} from '../DatePickerTemplate';
-import {type DatePickerMonthsProps} from './DatePickerMonths';
+import {type DatePickerPanelProps, DatePickerPanels} from '../DatePickerTemplate';
+import {type Theme} from '@internals/ThemeManager';
+import template from '@internals/template';
+
+export interface DatePickerMonthsProps extends DatePickerPanelProps {
+}
 
 export interface DatePickerMonthsTemplateProps extends DatePickerMonthsProps {
   activeMonth: ExtendedDate;
   updateDate: (month: number) => void;
 }
 
-const DatePickerMonthsTemplate: React.FC<DatePickerMonthsTemplateProps> = props => (
-  <div className='months-panel' aria-label='months panel'>
-    <div className='year-control'>
-      <Button onAction={() => props.setPanel(DatePickerPanels.YEARS)}>
+const initialStyleValue = {
+	panel: ['', {
+		controls: ['', {
+			yearsButton: '',		
+		}],
+		month: ['', {
+			input: '',
+		}],
+    activeMonth: '',
+	}],
+} satisfies Theme;
+
+export type DatePickerMonthsTemplateStyle = typeof initialStyleValue;
+
+const DatePickerMonthsTemplate = template<DatePickerMonthsTemplateProps, HTMLDivElement, DatePickerMonthsTemplateStyle>((props, style) => (
+  <div className={style?.panel[0]} aria-label='months panel' {...props.events}>
+    <div className={style?.panel[1].controls[0]}>
+      <Button onAction={() => props.setPanel(DatePickerPanels.YEARS)} className={style?.panel[1].controls[1].yearsButton}>
         {props.activeMonth.getYear()}
       </Button>
     </div>
@@ -23,12 +41,16 @@ const DatePickerMonthsTemplate: React.FC<DatePickerMonthsTemplateProps> = props 
             <button
               type='button'
               key={value}
-              className={`${key === props.activeMonth.getMonth() ? 'active' : ''}`}
+              className={`
+                ${style?.panel[1].month[0] ?? ''}
+                ${key === props.activeMonth.getMonth() ? style?.panel[1].activeMonth ?? '' : ''}
+              `}
               onClick={() => props.updateDate(key)}
             >
               <input
                 name='month'
                 type='radio'
+                className={style?.panel[1].month[1].input}
                 checked={key === props.activeMonth.getMonth()}
                 readOnly
               />
@@ -38,6 +60,6 @@ const DatePickerMonthsTemplate: React.FC<DatePickerMonthsTemplateProps> = props 
       }
     </ScrollContainer>
   </div>
-);
+), initialStyleValue);
 
 export default DatePickerMonthsTemplate;

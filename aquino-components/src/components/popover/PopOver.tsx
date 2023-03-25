@@ -1,20 +1,8 @@
 import React from 'react';
-import PopOverTemplate from './PopOverTemplate';
+import PopOverTemplate, {type PopOverProps, type PopOverTemplateProps, type PopOverTemplateStyle} from './PopOverTemplate';
 import PopOverBehavior from './PopOverBehavior';
+import {type AquinoComponent} from '@internals/ThemeManager';
 
-export interface PopOverProps {
-  readonly id?: string;
-  width: number | 'inherit' | 'anchor';
-  height: number | 'auto';
-  anchor: ReactElementRef;
-  open?: boolean;
-  position?: 'top' | 'bottom' | 'left' | 'right';
-  scroll?: boolean;
-  template?: string;
-  className?: string;
-  children?: any;
-}
-
-const PopOver: React.FC<PopOverProps> = props => <PopOverBehavior Template={PopOverTemplate} {...props} />;
+const PopOver: AquinoComponent<PopOverProps, PopOverTemplateStyle, PopOverTemplateProps> = props => <PopOverBehavior Template={PopOverTemplate} {...props} />;
 
 export default PopOver;

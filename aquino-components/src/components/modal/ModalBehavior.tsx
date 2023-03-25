@@ -1,15 +1,14 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+/* eslint-disable react/prop-types */
+import React, {useCallback, useEffect} from 'react';
 import {useModalStore} from '@store/store';
-import {type ModalProps} from './Modal';
-import {type ModalTemplateProps} from './ModalTemplate';
+import {type ModalProps, type ModalTemplateStyle} from './ModalTemplate';
+import type ModalTemplate from './ModalTemplate';
 import useClickOutside from '@hooks/useClickOutside';
+import {type AquinoBehavior} from '@internals/ThemeManager';
+import useComponentRef from '@hooks/useComponentRef';
 
-interface ModalBehaviorProps<T extends AnyObject = AnyObject> extends ModalProps<T> {
-  Template: React.FC<ModalTemplateProps>;
-}
-
-function ModalBehavior<T extends AnyObject = AnyObject>(props: ModalBehaviorProps<T>) {
-  const {Template, ...templateProps} = props;
+const ModalBehavior: AquinoBehavior<ModalProps, typeof ModalTemplate, ModalTemplateStyle> = props => {
+  const {Template, innerRef, ...templateProps} = props;
 
   const {data, create, destroy, close} = useModalStore();
 
@@ -18,7 +17,7 @@ function ModalBehavior<T extends AnyObject = AnyObject>(props: ModalBehaviorProp
     return (modal ? modal[1].open : false);
   })();
 
-  const modalRef = useRef<HTMLDivElement>(null);
+  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
   const [onClickOutside, removeClickOutside] = useClickOutside();
 
   useEffect(() => {
@@ -42,13 +41,13 @@ function ModalBehavior<T extends AnyObject = AnyObject>(props: ModalBehaviorProp
   }, []);
 
   useEffect(() => {
-    if (props.id && currentOpenValue && modalRef.current && !props.disableClickOutside) {
+    if (props.id && currentOpenValue && ref.current && !props.disableClickOutside) {
       removeClickOutside();
-      onClickOutside(modalRef.current, handleClose);
+      onClickOutside(ref.current, handleClose);
     }
   }, [props.id, currentOpenValue, props.disableClickOutside]);
 
-  return <Template modalRef={modalRef} open={currentOpenValue} {...templateProps} />;
-}
+  return <Template el={ref} events={events} open={currentOpenValue} {...templateProps} />;
+};
 
 export default ModalBehavior;
