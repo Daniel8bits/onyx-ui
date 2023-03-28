@@ -1,6 +1,6 @@
 import React from 'react';
 import template from '@internals/template';
-import {type Theme} from '@internals/ThemeManager';
+import {ThemeExtensor, type Theme} from '@internals/ThemeManager';
 import {type IconType} from 'react-icons';
 
 export interface TextfieldProps {

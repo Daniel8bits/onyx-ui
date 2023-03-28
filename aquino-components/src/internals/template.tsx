@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import styleManager, {type AquinoTemplate, type Theme, type AquinoTemplateProps, type ThemeConfig} from './ThemeManager';
+import styleManager, {type AquinoTemplate, type Theme, type AquinoTemplateProps, type ThemeConfig, ThemeExtensor} from './ThemeManager';
 
 function template<
 	P,
@@ -19,6 +19,10 @@ function template<
 
 	c.id = Symbol('');
 	c.theme = (style: ThemeConfig<AquinoTemplateProps<any>, Theme>) => styleManager.setStyle(c.id, style);
+	c.extends = (theme?: ThemeConfig<AquinoTemplateProps<any>, Theme>) => 
+		theme 
+		? new ThemeExtensor(theme().theme, theme().deps) 
+		: new ThemeExtensor();
 	
 	styleManager.setStyle(c.id, () => ({
 		theme: () => initialStyleValue,

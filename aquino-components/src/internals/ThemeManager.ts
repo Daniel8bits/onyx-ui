@@ -2,8 +2,38 @@ import type ComponentRef from './ComponentRef';
 import type {OnyxEvents, OnyxMouseEventCallback} from './EventManager';
 import {type Draft} from 'immer';
 
+type ThemeSetter<P, S> = (props: P) => S;
+type ThemeDeps<P> = (props: P) => any[];
+export type ThemeConfig<P, S> = () => {theme: ThemeSetter<P, S>; deps: ThemeDeps<P>};
+
+export class ThemeExtensor<P = any, S = any> {
+	private readonly _setter?: ThemeSetter<P, S>;
+	private readonly _deps?: ThemeDeps<P>;
+
+	public constructor();
+	public constructor(setter: ThemeSetter<P, S>, deps: ThemeDeps<P>);
+	public constructor(...args: unknown[]) {
+		const [setter, deps] = args as [Nullable<ThemeSetter<P, S>>, ThemeDeps<P>];
+		if (setter) {
+			this._setter = setter;
+			this._deps = deps;
+		}
+	}
+
+	public theme() {
+		if (!this._setter) return null;
+		if (!this._deps) return null;
+		return {
+			theme: this._setter,
+			deps: this._deps,
+		};
+	}
+}
+
+type ThemeValue = string | ThemeExtensor;
+
 export type Theme = {
-	[key: string]: string | [string, Theme];
+	[key: string]: ThemeValue | [ThemeValue, Theme];
 };
 
 /* .
@@ -16,10 +46,6 @@ export type ThemeDraft<T extends Theme> = Partial<{
 			: undefined
 }>;
 */
-
-type ThemeSetter<P, S> = (props: P) => S;
-type ThemeDeps<P> = (props: P) => any[];
-export type ThemeConfig<P, S> = () => {theme: ThemeSetter<P, S>; deps: ThemeDeps<P>};
 
 export interface Themeable<P, S extends Theme = Theme> {
 	theme?: ThemeConfig<P, S>;
@@ -55,6 +81,7 @@ export type AquinoComponent<P, S extends Theme, T = P> = React.FC<AquinoComponen
 export type AquinoTemplate<P, S extends Theme> = React.FC<P> & {
 	readonly id: Symbol;
 	theme: (theme: ThemeConfig<P, S>) => void;
+	extends: (theme?: ThemeConfig<P, S>) => ThemeExtensor<P, S>;
 };
 
 export type AquinoBehavior<P, T, S extends Theme> = React.FC<AquinoComponentProps<P, S, Omit<Props<T>, keyof (AquinoTemplateProps_ & Themeable<P>)>> & {
