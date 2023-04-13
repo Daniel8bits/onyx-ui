@@ -1,9 +1,8 @@
 import React from 'react';
-
 import {type AquinoComponent} from '@internals/ThemeManager';
 import CheckBoxBehavior from './CheckBoxBehavior';
-import CheckBoxTemplate, {type CheckBoxTemplateStyle, type CheckBoxProps} from './CheckBoxTemplate';
+import CheckBoxTemplate from './CheckBoxTemplate';
 
-const CheckBox: AquinoComponent<CheckBoxProps, CheckBoxTemplateStyle> = props => <CheckBoxBehavior Template={CheckBoxTemplate} {...props} />;
+const CheckBox: AquinoComponent<typeof CheckBoxBehavior> = props => <CheckBoxBehavior Template={CheckBoxTemplate} {...props} />;
 
 export default CheckBox;

@@ -5,6 +5,36 @@ import userEvent from '@testing-library/user-event';
 import DatePicker from './DatePicker';
 import ExtendedDate from './ExtendedDate';
 import MockStateToProps, {type MockStateToPropsRefType} from '@test/mocks/MockStateToProps';
+import Root from '@internals/Root';
+
+function renderDatePicker_(datepicker: JSX.Element) {
+  render(
+    <Root>
+      <div>click outside</div>
+      {datepicker}
+    </Root>,
+  );
+  const button = screen.getByRole('button');
+  userEvent.click(button);
+  return screen.getByLabelText('weeks panel');
+}
+
+function renderDatePicker(): [HTMLElement, ExtendedDate] {
+  const date = ExtendedDate.parse('02/02/1990');
+  const panel = renderDatePicker_(<DatePicker id='test' value={date} onAction={vi.fn()} />);
+  return [panel, date];
+}
+
+function renderMockedDatePicker(): [HTMLElement, ExtendedDate, React.RefObject<MockStateToPropsRefType<Nullable<ExtendedDate>>>] {
+  const mockRef = React.createRef<MockStateToPropsRefType<Nullable<ExtendedDate>>>();
+  const date = ExtendedDate.parse('02/02/1990');
+  const panel = renderDatePicker_(
+    <MockStateToProps<Nullable<ExtendedDate>> innerRef={mockRef} initialValue={date}>
+      {(value, setValue) => <DatePicker id='test' value={value} onAction={setValue} />}
+    </MockStateToProps>,
+  );
+  return [panel, date, mockRef];
+}
 
 describe('DatePicker Component', () => {
 	it('should render content', () => {
@@ -14,13 +44,7 @@ describe('DatePicker Component', () => {
 	});
 
   it('should change date when typing', () => {
-    const mockRef = React.createRef<MockStateToPropsRefType<Nullable<ExtendedDate>>>();
-
-		render(
-      <MockStateToProps<Nullable<ExtendedDate>> innerRef={mockRef} initialValue={ExtendedDate.now()}>
-        {(value, setValue) => <DatePicker id='test' value={value} onAction={setValue} />}
-      </MockStateToProps>,
-    );
+    const [, value, mockRef] = renderMockedDatePicker();
 
 		const input = screen.getByRole('textbox');
     userEvent.click(input);

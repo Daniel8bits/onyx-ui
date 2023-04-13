@@ -1,10 +1,10 @@
 import type ComponentRef from './ComponentRef';
-import type {OnyxEvents, OnyxMouseEventCallback} from './EventManager';
+import type {AllEventsAsObject, AquinoEvents} from './EventManager';
 import {type Draft} from 'immer';
 
 type ThemeSetter<P, S> = (props: P) => S;
 type ThemeDeps<P> = (props: P) => any[];
-export type ThemeConfig<P, S> = () => {theme: ThemeSetter<P, S>; deps: ThemeDeps<P>};
+export type ThemeConfig<P, S> = {theme: ThemeSetter<P, S>; deps: ThemeDeps<P>};
 
 export class ThemeExtensor<P = any, S = any> {
 	private readonly _setter?: ThemeSetter<P, S>;
@@ -51,22 +51,23 @@ export interface Themeable<P, S extends Theme = Theme> {
 	theme?: ThemeConfig<P, S>;
 }
 
-export interface AquinoComponentProps_ {
-  innerRef?: ComponentRef;
-}
-
 export interface AquinoTemplateProps_<E extends HTMLElement = HTMLElement> {
 	el: ReactElementRef<E>;
-	events: Partial<Record<OnyxEvents, OnyxMouseEventCallback>>;
+	events: Partial<AllEventsAsObject>;
 }
 
-export type AquinoComponentProps<
+export type AquinoComponentProps<B extends AquinoBehavior<any, any>> = Omit<Props<B>, 'Template'>;
+
+export interface AquinoBehaviorProps_<T extends AquinoTemplate<any>, R = {}> {
+  innerRef?: ComponentRef<Exclude<Props<T>['el']['current'], null>, R>;
+}
+
+export type AquinoBehaviorProps<
 	P,
-	S extends Theme = Theme,
-	T = P,
+	T extends AquinoTemplate<P>,
+	R = {},
 > = P 
-	& AquinoComponentProps_
-	& Themeable<T, S>;
+	& AquinoBehaviorProps_<T, R>;
 
 export type AquinoTemplateProps<
 	P,
@@ -76,15 +77,19 @@ export type AquinoTemplateProps<
 	& AquinoTemplateProps_<E> 
 	& Themeable<P, S>;
 
-export type AquinoComponent<P, S extends Theme, T = P> = React.FC<AquinoComponentProps<P, S, T>>;
+export type AquinoComponent<B extends AquinoBehavior<any, any>> = React.FC<AquinoComponentProps<B>>;
 
-export type AquinoTemplate<P, S extends Theme> = React.FC<P> & {
+export type AquinoTemplate<
+	P, 
+	E extends HTMLElement = HTMLElement, 
+	S extends Theme = Theme,
+> = React.FC<AquinoTemplateProps<P, E, S>> & {
 	readonly id: Symbol;
 	theme: (theme: ThemeConfig<P, S>) => void;
 	extends: (theme?: ThemeConfig<P, S>) => ThemeExtensor<P, S>;
 };
 
-export type AquinoBehavior<P, T, S extends Theme> = React.FC<AquinoComponentProps<P, S, Omit<Props<T>, keyof (AquinoTemplateProps_ & Themeable<P>)>> & {
+export type AquinoBehavior<P, T extends AquinoTemplate<any, any, any>, R = {}> = React.FC<AquinoBehaviorProps<P, T, R> & {
 	Template: React.FC<Props<T>>;
 }>;
 

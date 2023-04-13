@@ -1,8 +1,9 @@
 
 import useEventManager from '@hooks/useEventManager';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import type ComponentRef from './ComponentRef';
+import {type ComponentRefObject} from './ComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
+import useComponentRef from '@hooks/useComponentRef';
 
 function insertGlobalStyle() {
   const id = 'aquino-global-style';
@@ -19,7 +20,7 @@ function insertGlobalStyle() {
 }
 
 const RootContext = React.createContext<Partial<{
-  root: ComponentRef;
+  root: ComponentRefObject;
   modalRoot: ModalRootRef;
 }>>({});
 
@@ -32,8 +33,8 @@ export interface RootProps {
 }
 
 const Root: React.FC<RootProps> = props => {
-  const [rootRef, setRootRef] = useState<ComponentRef>();
-  const modalRootRef = useRef<ModalRootRef>();
+  const [rootRef, setRootRef] = useState<ComponentRefObject<HTMLDivElement>>();
+  const [modalRootRef, setModalRootRef] = useState<ModalRootRef>();
   const ref = useRef<HTMLDivElement>(null);
 
   const {eventManager, events} = useEventManager();
@@ -45,7 +46,7 @@ const Root: React.FC<RootProps> = props => {
   }, []);
 
   return (
-    <RootContext.Provider value={{root: rootRef, modalRoot: modalRootRef.current}}>
+    <RootContext.Provider value={{root: rootRef, modalRoot: modalRootRef}}>
       <div 
         ref={ref} 
         className='aquino-root'
@@ -57,7 +58,7 @@ const Root: React.FC<RootProps> = props => {
         {...events}
       >
         <div> {props.children} </div>
-        <ModalRoot innerRef={modalRootRef} />
+        <ModalRoot innerRef={setModalRootRef} />
       </div>
     </RootContext.Provider>
   );

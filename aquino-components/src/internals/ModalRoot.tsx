@@ -1,22 +1,23 @@
 import useEventManager from '@hooks/useEventManager';
 import useUpdater from '@hooks/useUpdater';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import type ComponentRef from './ComponentRef';
+import {type ComponentRefObject} from './ComponentRef';
 
-export interface ModalRootRef extends ComponentRef {
+export interface ModalRootRef extends ComponentRefObject<HTMLDivElement> {
   render: (key: string, modal: React.ReactNode) => null;
   update: (key: string) => void;
 }
 
 interface ModalRootProps {
-  innerRef: React.MutableRefObject<Nullable<ComponentRef>>;
+  innerRef: ComponentRef<HTMLDivElement, ModalRootRef>;
 }
 
 const ModalRoot: React.FC<ModalRootProps> = props => {
   const modalRootRef = useRef<ModalRootRef>();
   const modalsRef = useRef<Map<string, React.ReactNode>>(new Map());
   const ref = useRef<HTMLDivElement>(null);
-  const update = useUpdater();
+  const [, update] = useUpdater();
 
   const {eventManager, events} = useEventManager();
 
@@ -31,7 +32,7 @@ const ModalRoot: React.FC<ModalRootProps> = props => {
       },
       update,
     };
-    props.innerRef.current = modalRootRef.current;
+    props.innerRef(modalRootRef.current);
   }, []);
 
   return (

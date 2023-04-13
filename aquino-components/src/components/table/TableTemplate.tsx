@@ -1,9 +1,10 @@
 import React from 'react';
-import Textfield from '@components/textfield/Textfield';
 import {MdChevronLeft, MdChevronRight} from 'react-icons/md';
 import {type Theme} from '@internals/ThemeManager';
 import type TableDocument from './TableDocument';
 import template from '@internals/template';
+import type ComponentRef from '@internals/ComponentRef';
+import MaskedTextfield from '@components/maskedTextfield/MaskedTextfield';
 
 export interface TableProps {
   document: TableDocument<any>;
@@ -11,7 +12,7 @@ export interface TableProps {
 }
 
 export interface TableTemplateProps extends TableProps {
-  pagingInput: ReactElementRef<HTMLInputElement>;
+  pagingInput: ComponentRef<HTMLInputElement, any>;
 }
 
 const initialStyleValue = {
@@ -90,9 +91,9 @@ const TableTemplate = template<TableTemplateProps, HTMLTableElement, TableTempla
               onClick={props.document.previousPage} 
               size={32} 
             />
-            <Textfield
+            <MaskedTextfield
               innerRef={props.pagingInput}
-              id='page'
+              mask='{d}'
               defaultValue={String(props.document.getPageNumber())}
               onAction={value => props.document.setPage(Number(value))}
               className={style?.table[1].tfoot[1].tr[1].td[1].div[1].textfield}

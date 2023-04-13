@@ -3,12 +3,14 @@ import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {type TextfieldProps, type TextfieldTemplateStyle} from './TextfieldTemplate';
 import type TextfieldTemplate from './TextfieldTemplate';
 import {type AquinoBehavior} from '@internals/ThemeManager';
-import useComponentRef from '@hooks/useComponentRef';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
+import useUniqueId from '@hooks/useUniqueId';
 
-const TextfieldBehavior: AquinoBehavior<TextfieldProps, typeof TextfieldTemplate, TextfieldTemplateStyle> = props => {
-  const {Template, innerRef, ...templateProps} = props;
+const TextfieldBehavior: AquinoBehavior<TextfieldProps, typeof TextfieldTemplate> = props => {
+  const {Template, innerRef, id, ...templateProps} = props;
   
-  const {ref, events, eventManager} = useComponentRef<HTMLInputElement>(innerRef);
+  const {ref, events} = useCreateComponentRef<typeof TextfieldBehavior>(innerRef);
+  const uniqueId = useUniqueId(id, true);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -32,7 +34,7 @@ const TextfieldBehavior: AquinoBehavior<TextfieldProps, typeof TextfieldTemplate
   }, [props.disabled, props.onKeyUp, props.onAction]);
 
   const inputProps = useMemo<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>>(() => ({
-    id: props.id,
+    id: uniqueId(),
     name: props.id,
     type: props.password ? 'password' : 'text',
     placeholder: props.placeholder ?? '',

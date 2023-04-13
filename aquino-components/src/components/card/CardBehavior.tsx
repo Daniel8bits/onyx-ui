@@ -1,18 +1,17 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect} from 'react';
 import {type AquinoBehavior} from '@internals/ThemeManager';
-import {type CardProps, type CardTemplateStyle} from './CardTemplate';
+import {type CardProps} from './CardTemplate';
 import type CardTemplate from './CardTemplate';
-import useComponentRef from '@hooks/useComponentRef';
-import {OnyxEvents} from '@internals/EventManager';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
+import {AquinoEvents} from '@internals/EventManager';
 
-const CardBehavior: AquinoBehavior<CardProps, typeof CardTemplate, CardTemplateStyle> = props => {
+const CardBehavior: AquinoBehavior<CardProps, typeof CardTemplate> = props => {
 	const {Template, innerRef, ...templateProps} = props;
-	const {ref, events, eventManager} = useComponentRef<HTMLButtonElement>(innerRef);
+	const {ref, events, eventManager} = useCreateComponentRef<typeof CardBehavior>(innerRef);
 	useEffect(() => {
-		eventManager.add(OnyxEvents.CLICK, () => {
-			props.onAction?.();
-		});
+		if (!props.onAction) return;
+		eventManager.add(AquinoEvents.CLICK, props.onAction);
 	}, []);
 	return <Template el={ref} events={events} {...templateProps} />;
 };

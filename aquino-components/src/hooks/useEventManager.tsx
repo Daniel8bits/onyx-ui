@@ -1,16 +1,12 @@
-import EventManager, {type OnyxMouseEventCallback, type OnyxEvents} from '@internals/EventManager';
+import EventManager from '@internals/EventManager';
 import {useMemo} from 'react';
+import useUpdater from './useUpdater';
 
 function useEventManager() {
-  const eventManager = useMemo(() => new EventManager(), []);
+  const [updater, update] = useUpdater();
+  const eventManager = useMemo(() => new EventManager(update), []);
 
-  const events = useMemo(() => {
-    const e: Partial<Record<OnyxEvents, OnyxMouseEventCallback>> = {};
-    eventManager.events.forEach(listener => {
-      e[listener[0]] = ev => listener[1].forEach(fn => fn(ev));
-    });
-    return e;
-  }, []);
+  const events = useMemo(() => eventManager.getEvents(), [updater]);
 
   return {events, eventManager};
 }

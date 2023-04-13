@@ -12,7 +12,7 @@ class DatePickerCore extends ComponentCore {
   private readonly _yearsRange: Observable<number[]>;
   private readonly _value: Observable<Nullable<ExtendedDate>>;
   private readonly _monthDays: Observable<number[][]>;
-  private readonly _input: Observable<Nullable<HTMLInputElement>>;
+  private readonly _input: Observable<Nullable<(v?: string) => string>>;
   private readonly _triggerAction: StateSetter<Nullable<ExtendedDate>>;
 
   private _inputKeyUpEvent!: () => void;
@@ -31,7 +31,6 @@ class DatePickerCore extends ComponentCore {
 
     this.setValue = this.setValue.bind(this);
     this.setInput = this.setInput.bind(this);
-    this.destroy = this.destroy.bind(this);
     this.setDateByDay = this.setDateByDay.bind(this);
     this.setDateByMonth = this.setDateByMonth.bind(this);
     this.setDateByYear = this.setDateByYear.bind(this);
@@ -52,7 +51,7 @@ class DatePickerCore extends ComponentCore {
 
   public setValue(value: Nullable<ExtendedDate>) {
     this._value.set(value);
-
+    
     this.setInput(this._input.get());
     this._calculateMonthDays();
     this._calculateYearPivot();
@@ -60,19 +59,16 @@ class DatePickerCore extends ComponentCore {
     this._triggerAction(value);
   }
 
-  public setInput(input: Nullable<HTMLInputElement>) {
-    this.destroy();
+  public setInput(input: Nullable<(v?: string) => string>) {
     this._input.set(input);
     const value = this._value.get();
     if (input && value) {
-      input.value = value.format('<y>/<m>/<d>');
+      input(value.format('<y>/<m>/<d>'));
     }
-
-    input?.addEventListener('keyup', this._inputKeyUpEvent);
   }
 
-  public destroy() {
-    this._input.get()?.removeEventListener('keyup', this._inputKeyUpEvent);
+  public getInputKeyUpEvent() {
+    return this._inputKeyUpEvent;
   }
 
   public get monthDays() {
@@ -263,7 +259,7 @@ class DatePickerCore extends ComponentCore {
       }
 
       try {
-        this._triggerAction(ExtendedDate.parse(input.value));
+        this._triggerAction(ExtendedDate.parse(input()));
       } catch (e: unknown) {
         this._triggerAction(null as unknown as ExtendedDate);
       }

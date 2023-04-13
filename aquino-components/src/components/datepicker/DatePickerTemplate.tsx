@@ -1,15 +1,19 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import type DatePickerCore from './DatePickerCore';
 import usePopOver from '@hooks/usePopOver';
 import DatePickerMonths from './months/DatePickerMonths';
 import DatePickerYears from './years/DatePickerYears';
 import DatePickerWeeks from './weeks/DatePickerWeeks';
 import PopOver from '@components/popover/PopOver';
-import Textfield, {type TextfieldProps} from '@components/textfield/Textfield';
 import {FaCalendarAlt} from 'react-icons/fa';
 import type ExtendedDate from './ExtendedDate';
 import template from '@internals/template';
 import {type Theme} from '@internals/ThemeManager';
+import {type TextfieldProps} from '@components/textfield/TextfieldTemplate';
+import useUniqueId from '@hooks/useUniqueId';
+import MaskedTextfield from '@components/maskedTextfield/MaskedTextfield';
+import {AquinoEvents} from '@internals/EventManager';
+import useComponentRef from '@hooks/useComponentRef';
 
 export interface DatePickerProps extends Override<TextfieldProps, {
   value: Nullable<ExtendedDate>;
@@ -30,6 +34,7 @@ export interface DatePickerPanelProps {
 
 export interface DatePickerTemplateProps extends DatePickerProps {
   core: DatePickerCore;
+  updateValue: StateSetter<{value: (v?: string) => string}>;
 }
 
 const initialStyleValue = {
@@ -41,27 +46,32 @@ const initialStyleValue = {
 
 export type DatePickerTemplateStyle = typeof initialStyleValue;
 
-const DatePickerTemplate = template<DatePickerTemplateProps, HTMLInputElement, DatePickerTemplateStyle>((props, style) => {
+const fn = () => console.log('key up');
+
+const DatePickerTemplate = template<DatePickerTemplateProps, HTMLDivElement, DatePickerTemplateStyle>((props, style) => {
   const popOverSize = {
     width: 270,
     height: 315,
   };
 
   const iconButtonRef = useRef<HTMLDivElement>(null);
-
-  const id = props.id.trim();
-  const popoverId = `${id}__popover`;
+  const uniqueId = useUniqueId(props.id, true);
+  const popoverId = `${uniqueId()}__popover`;
   const {open} = usePopOver(popoverId);
+
+  const [maskedTextfieldRef, setMaskedTextfieldRef] = useComponentRef<typeof MaskedTextfield>();
 
   const {
     onAction,
     onMouseUp,
     onKeyDown,
     value,
-    mask,
     className,
     core,
     el,
+    updateValue,
+    theme, 
+    events,
     ...inputTextProps
   } = props;
 
@@ -85,11 +95,23 @@ const DatePickerTemplate = template<DatePickerTemplateProps, HTMLInputElement, D
     }
   }, [panel, props.value]);
 
+  useEffect(() => {
+    if (!maskedTextfieldRef) return;
+    updateValue({value(value) {
+      if (!maskedTextfieldRef) return '';
+      if (value) {
+        maskedTextfieldRef.masking.externalUpdate(value, 0);
+      }
+
+      return maskedTextfieldRef.el.value;
+    }});
+    maskedTextfieldRef.eventListeners.add(AquinoEvents.KEYUP, core.getInputKeyUpEvent());
+  }, [maskedTextfieldRef]);
+
   return (
-    <div className={`${style?.div[0] ?? ''} ${props.className ?? ''}`}>
+    <div ref={el} className={`${style?.div[0] ?? ''} ${props.className ?? ''}`} {...events}>
       <PopOver
         id={popoverId}
-        template='primary'
         width={popOverSize.width}
         height={popOverSize.height}
         anchor={iconButtonRef}
@@ -97,10 +119,10 @@ const DatePickerTemplate = template<DatePickerTemplateProps, HTMLInputElement, D
       >
         {currentPanel}
       </PopOver>
-      <Textfield {...inputTextProps}
-        id={`${id}_textfield`}
-        innerRef={el}
-        mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/]}
+      <MaskedTextfield {...inputTextProps}
+        id={`${uniqueId()}_textfield`}
+        innerRef={setMaskedTextfieldRef}
+        mask='{dddd}/{dd}/{dd}'
         icon={FaCalendarAlt}
         iconPosition='right'
         onKeyDown={onKeyDown}

@@ -3,14 +3,14 @@ import useUpdater from '@hooks/useUpdater';
 import {type AquinoBehavior} from '@internals/ThemeManager';
 import React, {useCallback, useEffect} from 'react';
 import {DatePickerPanels} from '../DatePickerTemplate';
-import {type DatePickerYearsProps, type DatePickerYearsTemplateStyle} from './DatePickerYearsTemplate';
+import {type DatePickerYearsProps} from './DatePickerYearsTemplate';
 import type DatePickerYearsTemplate from './DatePickerYearsTemplate';
-import useComponentRef from '@hooks/useComponentRef';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
 
-const DatePickerYearsBehavior: AquinoBehavior<DatePickerYearsProps, typeof DatePickerYearsTemplate, DatePickerYearsTemplateStyle> = props => {
+const DatePickerYearsBehavior: AquinoBehavior<DatePickerYearsProps, typeof DatePickerYearsTemplate> = props => {
   const {Template, innerRef, ...templateProps} = props;
-  const update = useUpdater();
-  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
+  const [, update] = useUpdater();
+  const {ref, events} = useCreateComponentRef<typeof DatePickerYearsBehavior>(innerRef);
 
   useEffect(() => {
     props.core.subscribe(['value', 'yearsRange', 'yearsStep'], update);

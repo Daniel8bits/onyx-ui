@@ -10,6 +10,7 @@ specifiers:
   '@types/react-dom': ^18.0.9
   '@types/react-text-mask': ^5.4.11
   '@types/testing-library__jest-dom': ^5.14.5
+  '@types/uniqid': ^5.3.2
   '@typescript-eslint/eslint-plugin': ^5.48.1
   '@typescript-eslint/parser': ^5.48.1
   '@vitejs/plugin-react-swc': ^3.0.0
@@ -17,6 +18,7 @@ specifiers:
   eslint-config-xo: ^0.43.1
   eslint-config-xo-typescript: ^0.55.1
   eslint-plugin-react: ^7.32.0
+  imask: 6.5.0-alpha.0
   immer: ^9.0.18
   jsdom: ^21.0.0
   react: ^18.2.0
@@ -26,6 +28,7 @@ specifiers:
   resize-observer-polyfill: ^1.5.1
   sass: ^1.56.2
   typescript: ^4.9.4
+  uniqid: ^5.4.0
   vite: ^4.0.0
   vite-plugin-dts: ^2.1.0
   vitest: ^0.27.1
@@ -33,11 +36,13 @@ specifiers:
   zustand: ^4.1.5
 
 dependencies:
+  imask: 6.5.0-alpha.0
   immer: 9.0.18
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-imask: 6.4.3_react@18.2.0
+  uniqid: 5.4.0
   web-vitals: 2.1.4
   zustand: 4.3.2_immer@9.0.18+react@18.2.0
 
@@ -51,6 +56,7 @@ devDependencies:
   '@types/react-dom': 18.0.10
   '@types/react-text-mask': 5.4.11
   '@types/testing-library__jest-dom': 5.14.5
+  '@types/uniqid': 5.3.2
   '@typescript-eslint/eslint-plugin': 5.48.1_3jon24igvnqaqexgwtxk6nkpse
   '@typescript-eslint/parser': 5.48.1_iukboom6ndih5an6iafl45j2fe
   '@vitejs/plugin-react-swc': 3.0.1_vite@4.0.4
@@ -782,6 +788,10 @@ packages:
     resolution: {integrity: sha512-SBwbxYoyPIvxHbeHxTZX2Pe/74F/tX2/D3mMvzabdeJ25bBojfW0TyB8BHrbq/9zaaKICJZjLP+8r6AeZMFCuQ==}
     dependencies:
       '@types/jest': 29.2.5
+    dev: true
+
+  /@types/uniqid/5.3.2:
+    resolution: {integrity: sha512-/NYoaZpWsnAJDsGYeMNDeG3p3fuUb4AiC7MfKxi5VSu18tXd08w6Ch0fKW94T4FeLXXZwZPoFgHA1O0rDYKyMQ==}
     dev: true
 
   /@types/yargs-parser/21.0.0:
@@ -2038,6 +2048,11 @@ packages:
 
   /imask/6.4.3:
     resolution: {integrity: sha512-aH2GHemGkr3cbRBfhogHMIx05eUxdHrZNlKTTLmz8VxpSopuHHJ8+85FsDlBVQqxPlDLhZuwj4lpHHWbLOdBSw==}
+    engines: {npm: '>=4.0.0'}
+    dev: false
+
+  /imask/6.5.0-alpha.0:
+    resolution: {integrity: sha512-yv/MGZB65SC+EkYE8DPE9YWj8SfOOtoLd4G70tH5G20sj1Ek9MdeUl+KvDhuxY+y8C2vkouTCrhSYwylFsalcw==}
     engines: {npm: '>=4.0.0'}
     dev: false
 
@@ -3325,6 +3340,10 @@ packages:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
     dev: true
+
+  /uniqid/5.4.0:
+    resolution: {integrity: sha512-38JRbJ4Fj94VmnC7G/J/5n5SC7Ab46OM5iNtSstB/ko3l1b5g7ALt4qzHFgGciFkyiRNtDXtLNb+VsxtMSE77A==}
+    dev: false
 
   /universalify/0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}

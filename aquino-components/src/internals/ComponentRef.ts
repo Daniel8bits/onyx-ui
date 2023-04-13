@@ -1,8 +1,11 @@
 import type EventManager from './EventManager';
+import {type AquinoComponent} from './ThemeManager';
 
-interface ComponentRef {
+export interface ComponentRefObject<E extends HTMLElement = HTMLElement> {
   eventListeners: EventManager;
-  el: HTMLElement;
+  el: E;
 }
+
+type ComponentRef<E extends HTMLElement = HTMLElement, R = {}> = StateSetter<R & ComponentRefObject<E> | undefined>;
 
 export default ComponentRef;

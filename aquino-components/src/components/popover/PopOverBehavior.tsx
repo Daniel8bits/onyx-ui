@@ -1,17 +1,14 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {usePopOverStore} from '@store/store';
-import {useCallback, useEffect, useRef} from 'react';
-import {type PopOverProps, type PopOverTemplateStyle} from './PopOverTemplate';
+import {useCallback, useEffect} from 'react';
+import {type PopOverProps} from './PopOverTemplate';
 import type PopOverTemplate from './PopOverTemplate';
-import {type PopOverTemplateProps} from './PopOverTemplate';
-import {OnyxEvents} from '@internals/EventManager';
-import {useRoot} from '@internals/Root';
 import useClickOutside from '@hooks/useClickOutside';
 import {type AquinoBehavior} from '@internals/ThemeManager';
-import useComponentRef from '@hooks/useComponentRef';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
 
-const PopOverBehavior: AquinoBehavior<PopOverProps, typeof PopOverTemplate, PopOverTemplateStyle> = props => {
+const PopOverBehavior: AquinoBehavior<PopOverProps, typeof PopOverTemplate> = props => {
   const {Template, open, innerRef, ...templateProps} = props;
 
   // Cconst {data, create, destroy, close} = usePopOverStore();
@@ -28,7 +25,7 @@ const PopOverBehavior: AquinoBehavior<PopOverProps, typeof PopOverTemplate, PopO
     return open ?? false;
   })();
 
-  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
+  const {ref, events} = useCreateComponentRef<typeof PopOverBehavior>(innerRef);
   const [onClickOutside, removeClickOutside] = useClickOutside();
 
   useEffect(() => {

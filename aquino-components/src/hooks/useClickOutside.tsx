@@ -1,4 +1,4 @@
-import {OnyxEvents} from '@internals/EventManager';
+import {AquinoEvents} from '@internals/EventManager';
 import {useRoot} from '@internals/Root';
 import {useCallback, useRef} from 'react';
 
@@ -15,18 +15,18 @@ function useClickOutside(): [
     const fn = (e: React.MouseEvent) => {
       if (element && !element.contains(e.target as HTMLElement)) {
         callback();
-        root?.eventListeners.remove(OnyxEvents.CLICK, fn);
+        root?.eventListeners.remove(AquinoEvents.CLICK, fn);
       }
     };
 
-    root?.eventListeners.add(OnyxEvents.CLICK, fn);
+    root?.eventListeners.add(AquinoEvents.CLICK, fn);
 
     event.current = fn;
   }, [root]);
 
   const removeClickOutside = useCallback(() => {
     if (event.current) {
-      root?.eventListeners.remove(OnyxEvents.CLICK, event.current);
+      root?.eventListeners.remove(AquinoEvents.CLICK, event.current);
       event.current = null;
     }
   }, [root]);

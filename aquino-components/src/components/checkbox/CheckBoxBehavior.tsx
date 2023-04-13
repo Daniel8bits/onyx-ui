@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect} from 'react';
-import useComponentRef from '@hooks/useComponentRef';
-import {OnyxEvents} from '@internals/EventManager';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
+import {AquinoEvents} from '@internals/EventManager';
 import {type AquinoBehavior} from '@internals/ThemeManager';
 import type CheckBoxTemplate from './CheckBoxTemplate';
-import {type CheckBoxTemplateStyle, type CheckBoxProps} from './CheckBoxTemplate';
+import {type CheckBoxProps} from './CheckBoxTemplate';
 
-const CheckBoxBehavior: AquinoBehavior<CheckBoxProps, typeof CheckBoxTemplate, CheckBoxTemplateStyle> = props => {
+const CheckBoxBehavior: AquinoBehavior<CheckBoxProps, typeof CheckBoxTemplate> = props => {
 	const {Template, onAction, innerRef, ...templateProps} = props;
-	const {ref, events, eventManager} = useComponentRef<HTMLInputElement>(innerRef);
+	const {ref, events, eventManager} = useCreateComponentRef<typeof CheckBoxBehavior>(innerRef);
 
 	useEffect(() => {
 		if (ref.current) {
@@ -17,7 +17,8 @@ const CheckBoxBehavior: AquinoBehavior<CheckBoxProps, typeof CheckBoxTemplate, C
 	}, [props.value]);
 
 	useEffect(() => {
-		eventManager.add(OnyxEvents.CLICK, () => {
+		if (!props.onAction) return;
+		eventManager.add(AquinoEvents.CLICK, () => {
 			props.onAction?.(v => !v);
 		});
 	}, []);

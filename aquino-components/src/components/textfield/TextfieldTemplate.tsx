@@ -1,10 +1,10 @@
 import React from 'react';
 import template from '@internals/template';
-import {ThemeExtensor, type Theme} from '@internals/ThemeManager';
+import {type Theme} from '@internals/ThemeManager';
 import {type IconType} from 'react-icons';
 
 export interface TextfieldProps {
-  id: string;
+  id?: string;
   label?: string;
   className?: string;
   placeholder?: string;
@@ -25,7 +25,6 @@ export interface TextfieldProps {
   onClickIcon?: () => void;
   onLoad?: (ref: React.RefObject<HTMLInputElement>) => void;
   iconContainerRef?: React.RefObject<HTMLDivElement>;
-  innerRef?: ReactElementRef<HTMLInputElement>;
 }
 
 export interface TextfieldTemplateProps extends TextfieldProps {
@@ -49,7 +48,7 @@ export type TextfieldTemplateStyle = typeof initialStyleValue;
 const TextfieldTemplate = template<TextfieldTemplateProps, HTMLInputElement, TextfieldTemplateStyle>((props, style) => (
   <div className={`${style?.div[0] ?? ''} ${props.className ?? ''}`} {...props.events}>
     {props.label
-      && <label htmlFor={props.id} className={style?.div[1].label}>
+      && <label htmlFor={props.inputProps.id} className={style?.div[1].label}>
         {props.label}
       </label>}
     <div ref={props.iconContainerRef} className={style?.div[1].div[0]}>

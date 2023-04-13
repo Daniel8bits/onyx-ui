@@ -5,9 +5,9 @@ import {type ModalProps, type ModalTemplateStyle} from './ModalTemplate';
 import type ModalTemplate from './ModalTemplate';
 import useClickOutside from '@hooks/useClickOutside';
 import {type AquinoBehavior} from '@internals/ThemeManager';
-import useComponentRef from '@hooks/useComponentRef';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
 
-const ModalBehavior: AquinoBehavior<ModalProps, typeof ModalTemplate, ModalTemplateStyle> = props => {
+const ModalBehavior: AquinoBehavior<ModalProps, typeof ModalTemplate> = props => {
   const {Template, innerRef, ...templateProps} = props;
 
   const {data, create, destroy, close} = useModalStore();
@@ -17,7 +17,7 @@ const ModalBehavior: AquinoBehavior<ModalProps, typeof ModalTemplate, ModalTempl
     return (modal ? modal[1].open : false);
   })();
 
-  const {ref, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
+  const {ref, events} = useCreateComponentRef<typeof ModalBehavior>(innerRef);
   const [onClickOutside, removeClickOutside] = useClickOutside();
 
   useEffect(() => {

@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {type AquinoBehavior} from '@internals/ThemeManager';
-import {type ScrollContainerProps, type ScrollContainerTemplateStyle} from './ScrollContainerTemplate';
+import {type ScrollContainerProps} from './ScrollContainerTemplate';
 import type ScrollContainerTemplate from './ScrollContainerTemplate';
-import useComponentRef from '@hooks/useComponentRef';
+import useCreateComponentRef from '@hooks/useCreateComponentRef';
 
-const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof ScrollContainerTemplate, ScrollContainerTemplateStyle> = props => {
+const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof ScrollContainerTemplate> = props => {
   const {Template, innerRef, ...templateProps} = props;
 
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
 
-  const {ref: containerRef, events, eventManager} = useComponentRef<HTMLDivElement>(innerRef);
+  const {ref: containerRef, events} = useCreateComponentRef<typeof ScrollContainerBehavior>(innerRef);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const verticalScrollRef = useRef<HTMLButtonElement>(null);
