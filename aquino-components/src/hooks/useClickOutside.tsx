@@ -10,23 +10,24 @@ function useClickOutside(): [
 ] {
   const {root} = useRoot();
   const event = useRef<OnClickOutsideCallback>(null);
+  const idRef = useRef(Symbol('useClickOutside'));
 
   const onClickOutside = useCallback((element: HTMLElement, callback: () => void) => {
     const fn = (e: React.MouseEvent) => {
       if (element && !element.contains(e.target as HTMLElement)) {
         callback();
-        root?.eventListeners.remove(AquinoEvents.CLICK, fn);
+        root?.eventListeners.remove(idRef.current, AquinoEvents.CLICK, fn);
       }
     };
 
-    root?.eventListeners.add(AquinoEvents.CLICK, fn);
+    root?.eventListeners.add(idRef.current, AquinoEvents.CLICK, fn);
 
     event.current = fn;
   }, [root]);
 
   const removeClickOutside = useCallback(() => {
     if (event.current) {
-      root?.eventListeners.remove(AquinoEvents.CLICK, event.current);
+      root?.eventListeners.remove(idRef.current, AquinoEvents.CLICK, event.current);
       event.current = null;
     }
   }, [root]);

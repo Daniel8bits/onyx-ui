@@ -12,11 +12,12 @@ describe('Box Component', () => {
 	});
 
 	it('should run the callback on click', async () => {
+		const user = userEvent.setup();
 		const clickHandler = vi.fn();
 		render(<Box onAction={clickHandler}> something </Box>);
 
 		const div = screen.getByText('something');
-		userEvent.click(div);
+		await user.click(div);
 
 		expect(clickHandler).toHaveBeenCalledTimes(1);
 	});

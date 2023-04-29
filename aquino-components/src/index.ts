@@ -1,16 +1,30 @@
 
 // Components
-import Box, {type BoxProps} from '@components/box/Box';
-import Button, {type ButtonProps} from '@components/button/Button';
-import Card, {type CardProps} from '@components/card/Card';
-import CheckBox, {type CheckBoxProps} from '@components/checkbox/CheckBox';
-import ComboBox, {type ComboBoxProps} from '@components/combobox/ComboBox';
-import DatePicker, {type DatePickerProps} from '@components/datepicker/DatePicker';
-import Modal, {type ModalProps} from '@components/modal/Modal';
-import PopOver, {type PopOverProps} from '@components/popover/PopOver';
-import ScrollContainer, {type ScrollContainerProps} from '@components/scrollContainer/ScrollContainer';
-import Table, {type TableProps} from '@components/table/Table';
-import Textfield, {type TextfieldProps} from '@components/textfield/Textfield';
+import Box from '@components/box/Box';
+import Button from '@components/button/Button';
+import Card from '@components/card/Card';
+import CheckBox from '@components/checkbox/CheckBox';
+import ComboBox from '@components/combobox/ComboBox';
+import DatePicker from '@components/datepicker/DatePicker';
+import Modal from '@components/modal/Modal';
+import PopOver from '@components/popover/PopOver';
+import ScrollContainer from '@components/scrollContainer/ScrollContainer';
+import Table from '@components/table/Table';
+import Textfield from '@components/textfields/standard/Textfield';
+
+// Prop types
+
+import {type BoxProps} from '@components/box/BoxTemplate';
+import {type ButtonProps} from '@components/button/ButtonTemplate';
+import {type CardProps} from '@components/card/CardTemplate';
+import {type CheckBoxProps} from '@components/checkbox/CheckBoxTemplate';
+import {type ComboBoxProps} from '@components/combobox/ComboBoxTemplate';
+import {type DatePickerProps} from '@components/datepicker/DatePickerTemplate';
+import {type ModalProps} from '@components/modal/ModalTemplate';
+import {type PopOverProps} from '@components/popover/PopOverTemplate';
+import {type ScrollContainerProps} from '@components/scrollContainer/ScrollContainerTemplate';
+import {type TableProps} from '@components/table/TableTemplate';
+import {type TextfieldProps} from '@components/textfields/standard/TextfieldTemplate';
 
 // Templates
 import BoxTemplate from '@components/box/BoxTemplate';
@@ -23,7 +37,7 @@ import ModalTemplate from '@components/modal/ModalTemplate';
 import PopOverTemplate from '@components/popover/PopOverTemplate';
 import ScrollContainerTemplate from '@components/scrollContainer/ScrollContainerTemplate';
 import TableTemplate from '@components/table/TableTemplate';
-import TextfieldTemplate from '@components/textfield/TextfieldTemplate';
+import TextfieldTemplate from '@components/textfields/standard/TextfieldTemplate';
 
 // Layouts
 import Row from '@layouts/grid/Row';

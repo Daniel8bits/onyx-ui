@@ -19,10 +19,12 @@ export type AllEventsAsObject =
   & Record<MouseEvents, MouseEventCallback>
   & Record<KeyboardEvents, KeyboardEventCallback>;
 
+type MapKey = number | string | Symbol;
+
 class EventManager {
   private readonly _events: 
-    & Map<MouseEvents, Set<MouseEventCallback>>
-    & Map<KeyboardEvents, Set<KeyboardEventCallback>>;
+    & Map<MouseEvents, Map<MapKey, MouseEventCallback>>
+    & Map<KeyboardEvents, Map<MapKey, KeyboardEventCallback>>;
 
   private readonly _update: () => void;
 
@@ -30,12 +32,12 @@ class EventManager {
     this._events = new Map();
     this._update = update;
 
-    this._events.set(AquinoEvents.CLICK, new Set());
-    this._events.set(AquinoEvents.MOUSEDOWN, new Set());
-    this._events.set(AquinoEvents.MOUSEUP, new Set());
+    this._events.set(AquinoEvents.CLICK, new Map());
+    this._events.set(AquinoEvents.MOUSEDOWN, new Map());
+    this._events.set(AquinoEvents.MOUSEUP, new Map());
 
-    this._events.set(AquinoEvents.KEYUP, new Set());
-    this._events.set(AquinoEvents.KEYDOWN, new Set());
+    this._events.set(AquinoEvents.KEYUP, new Map());
+    this._events.set(AquinoEvents.KEYDOWN, new Map());
 
     this.getEvents = this.getEvents.bind(this);
   }
@@ -48,26 +50,26 @@ class EventManager {
     return e;
   }
 
-  public add(event: MouseEvents, fn: MouseEventCallback): void;
-  public add(event: KeyboardEvents, fn: KeyboardEventCallback): void; 
-  public add(event: unknown, fn: unknown) {
+  public add(id: MapKey, event: MouseEvents, fn: MouseEventCallback): void;
+  public add(id: MapKey, event: KeyboardEvents, fn: KeyboardEventCallback): void; 
+  public add(id: MapKey, event: unknown, fn: unknown) {
     if (this._events.has(event as MouseEvents)) {
-      const set = this._events.get(event as MouseEvents);
-      if (!set) return;
-      if (set.has(fn as MouseEventCallback)) return;
-      set.add(fn as MouseEventCallback);
+      const map = this._events.get(event as MouseEvents);
+      if (!map) return;
+      if (map.has(id) && new Set([...map.values()]).has(fn as MouseEventCallback)) return;
+      map.set(id, fn as MouseEventCallback);
       this._update();
     }
   }
 
-  public remove(event: MouseEvents, fn: MouseEventCallback): void;
-  public remove(event: KeyboardEvents, fn: KeyboardEventCallback): void; 
-  public remove(event: unknown, fn: unknown) {
+  public remove(id: MapKey, event: MouseEvents, fn: MouseEventCallback): void;
+  public remove(id: MapKey, event: KeyboardEvents, fn: KeyboardEventCallback): void; 
+  public remove(id: MapKey, event: unknown, fn: unknown) {
     if (this._events.has(event as MouseEvents)) {
-      const set = this._events.get(event as MouseEvents);
-      if (!set) return;
-      if (!set.has(fn as MouseEventCallback)) return;
-      set.delete(fn as MouseEventCallback);
+      const map = this._events.get(event as MouseEvents);
+      if (!map) return;
+      if (!map.has(id)) return;
+      map.delete(id);
       this._update();
     }
   }

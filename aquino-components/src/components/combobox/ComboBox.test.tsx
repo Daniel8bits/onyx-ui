@@ -46,6 +46,7 @@ describe('ComboBox Component', () => {
 	});
 
 	it('should open the popover', async () => {
+		const user = userEvent.setup();
 		const clickHandler = vi.fn();
 		render(
       <>
@@ -55,7 +56,7 @@ describe('ComboBox Component', () => {
     );
 
 		const input = screen.getByDisplayValue('cachorro');
-		userEvent.click(input);
+		await user.click(input);
 
     expect(screen.queryByText('cachorro')).toBeInTheDocument();
     expect(screen.queryByText('gato')).toBeInTheDocument();
@@ -65,7 +66,7 @@ describe('ComboBox Component', () => {
     expect(screen.queryByText('jacaré')).toBeInTheDocument();
 
     const div = screen.getByText('click outside');
-    userEvent.click(div);
+    await user.click(div);
 
     expect(screen.queryByText('cachorro')).not.toBeInTheDocument();
     expect(screen.queryByText('gato')).not.toBeInTheDocument();
@@ -76,6 +77,7 @@ describe('ComboBox Component', () => {
 	});
 
   it('should open the popover when categorized', async () => {
+    const user = userEvent.setup();
 		const clickHandler = vi.fn();
 		render(
       <>
@@ -85,7 +87,7 @@ describe('ComboBox Component', () => {
     );
 
 		const input = screen.getByRole('textbox');
-		userEvent.click(input);
+		await user.click(input);
 
     expect(screen.queryByText('mamiferos')).toBeInTheDocument();
 		expect(screen.queryByText('gato')).toBeInTheDocument();
@@ -99,7 +101,7 @@ describe('ComboBox Component', () => {
     expect(screen.queryByText('jacaré')).toBeInTheDocument();
 
     const div = screen.getByText('click outside');
-    userEvent.click(div);
+    await user.click(div);
 
     expect(screen.queryByText('mamiferos')).not.toBeInTheDocument();
 		expect(screen.queryByText('gato')).not.toBeInTheDocument();
@@ -114,13 +116,14 @@ describe('ComboBox Component', () => {
 	});
 
   it('should search items', async () => {
+    const user = userEvent.setup();
 		const clickHandler = vi.fn();
 		render(<ComboBox id='test' items={items} value={items[0]} onAction={clickHandler} allowSearch />);
 
 		const input = screen.getByRole('textbox');
-		userEvent.click(input);
-    userEvent.clear(input);
-    userEvent.type(input, 'ga');
+		await user.click(input);
+    await user.clear(input);
+    await user.type(input, 'ga');
 
     expect(screen.queryByText('gato')).toBeInTheDocument();
     expect(screen.queryByText('galinha')).toBeInTheDocument();

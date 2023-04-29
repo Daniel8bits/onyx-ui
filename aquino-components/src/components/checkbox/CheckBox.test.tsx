@@ -14,6 +14,7 @@ describe('UICheckBox Component', () => {
 	});
 
 	it('should change value', async () => {
+		const user = userEvent.setup();
 		render(
 			<MockStateToProps initialValue={false}>
 				{(value, setValue) => <CheckBox label='checkbox' value={value} onAction={setValue} />}
@@ -27,15 +28,11 @@ describe('UICheckBox Component', () => {
 
 		expect(checkbox).not.toBeChecked();
 
-		act(() => {
-			userEvent.click(label);
-		});
+		await user.click(label);
 
 		expect(checkbox).toBeChecked();
 
-		act(() => {
-			userEvent.click(label);
-		});
+		await	user.click(label);
 
 		expect(checkbox).not.toBeChecked();
 	});

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, {useCallback, useEffect} from 'react';
 import {useModalStore} from '@store/store';
-import {type ModalProps, type ModalTemplateStyle} from './ModalTemplate';
+import {type ModalProps} from './ModalTemplate';
 import type ModalTemplate from './ModalTemplate';
 import useClickOutside from '@hooks/useClickOutside';
 import {type AquinoBehavior} from '@internals/ThemeManager';
