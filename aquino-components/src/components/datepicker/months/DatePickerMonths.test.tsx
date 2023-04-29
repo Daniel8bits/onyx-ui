@@ -7,10 +7,12 @@ import ExtendedDate from '../ExtendedDate';
 import MockStateToProps, {type MockStateToPropsRefType} from '@test/mocks/MockStateToProps';
 import Root from '@internals/Root';
 import {resetPopOverState} from '@test/configs/ZustandConfigs';
+import {type UserEvent} from '@testing-library/user-event/dist/types/setup/setup';
 
 resetPopOverState();
 
-function renderDatePickerMonths_(datepicker: JSX.Element, date: ExtendedDate) {
+async function renderDatePickerMonths_(datepicker: JSX.Element, date: ExtendedDate): Promise<[HTMLElement, UserEvent]> {
+  const user = userEvent.setup();
   render(
     <Root>
       <div>click outside</div>
@@ -18,39 +20,39 @@ function renderDatePickerMonths_(datepicker: JSX.Element, date: ExtendedDate) {
     </Root>,
   );
   const button = screen.getByRole('button');
-  userEvent.click(button);
+  await user.click(button);
   const monthsButton = screen.getByText(`${date.getMonthName()}, ${date.getYear()}`);
-  userEvent.click(monthsButton);
-  return screen.getByLabelText('months panel');
+  await user.click(monthsButton);
+  return [screen.getByLabelText('months panel'), user];
 }
 
-function renderDatePickerMonths(): [HTMLElement, ExtendedDate] {
+async function renderDatePickerMonths(): Promise<[HTMLElement, ExtendedDate, UserEvent]> {
   const date = ExtendedDate.parse('02/02/1990');
-  const panel = renderDatePickerMonths_(<DatePicker id='test' value={date} onAction={vi.fn()} />, date);
-  return [panel, date];
+  const [panel, user] = await renderDatePickerMonths_(<DatePicker id='test' value={date} onAction={vi.fn()} />, date);
+  return [panel, date, user];
 }
 
-function renderMockedDatePickerMonths(): [HTMLElement, ExtendedDate, React.RefObject<MockStateToPropsRefType<Nullable<ExtendedDate>>>] {
+async function renderMockedDatePickerMonths(): Promise<[HTMLElement, ExtendedDate, React.RefObject<MockStateToPropsRefType<Nullable<ExtendedDate>>>, UserEvent]> {
   const mockRef = React.createRef<MockStateToPropsRefType<Nullable<ExtendedDate>>>();
   const date = ExtendedDate.parse('02/02/1990');
-  const panel = renderDatePickerMonths_(
+  const [panel, user] = await renderDatePickerMonths_(
     <MockStateToProps<Nullable<ExtendedDate>> innerRef={mockRef} initialValue={date}>
       {(value, setValue) => <DatePicker id='test' value={value} onAction={setValue} />}
     </MockStateToProps>,
     date,
   );
-  return [panel, date, mockRef];
+  return [panel, date, mockRef, user];
 }
 
 describe('DatePickerMonth Component', () => {
-  it('should render content', () => {
-    const [panel] = renderDatePickerMonths();
+  it('should render content', async () => {
+    const [panel] = await renderDatePickerMonths();
 
     expect(panel).toBeInTheDocument();
   });
 
-  it('should change date when selecting a month', () => {
-    const [, , mockRef] = renderMockedDatePickerMonths();
+  it('should change date when selecting a month', async () => {
+    const [, , mockRef, user] = await renderMockedDatePickerMonths();
 
     const textbox = screen.getByRole<HTMLInputElement>('textbox');
 
@@ -60,12 +62,12 @@ describe('DatePickerMonth Component', () => {
     expect(february.children.item(0)).toBeChecked();
     expect(july.children.item(0)).not.toBeChecked();
 
-    act(() => {
-      userEvent.click(july);
+    await act(async () => {
+      await user.click(july);
     });
 
-    act(() => {
-      userEvent.click(screen.getByText('July, 1990'));
+    await act(async () => {
+      await user.click(screen.getByText('July, 1990'));
     });
 
     expect(screen.getByText('February').children.item(0)).not.toBeChecked();
@@ -79,18 +81,18 @@ describe('DatePickerMonth Component', () => {
   });
 
   it('should change selected month when typing a new date', async () => {
-    const [, , mockRef] = renderMockedDatePickerMonths();
+    const [, , mockRef, user] = await renderMockedDatePickerMonths();
 
     const textbox = screen.getByRole<HTMLInputElement>('textbox');
 
     expect(screen.getByText('February').children.item(0)).toBeChecked();
     expect(screen.getByText('July').children.item(0)).not.toBeChecked();
 
-    act(() => {
-      userEvent.click(screen.getByText('click outside'));
-      userEvent.click(textbox);
-      userEvent.clear(textbox);
-      userEvent.type(textbox, '19900702', {initialSelectionStart: 0, initialSelectionEnd: 0});
+    await act(async () => {
+      await user.click(screen.getByText('click outside'));
+      await user.click(textbox);
+      await user.clear(textbox);
+      await user.type(textbox, '19900702', {initialSelectionStart: 0, initialSelectionEnd: 0});
     });
 
     expect(textbox.value).toBe('1990/07/02');
@@ -99,8 +101,8 @@ describe('DatePickerMonth Component', () => {
       expect(value?.toString()).toBe('1990-07-02');
     });
     
-    act(() => {
-      userEvent.click(screen.getByRole('button'));
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
     });
 
     expect(screen.getByText('February').children.item(0)).not.toBeChecked();

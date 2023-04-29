@@ -11,7 +11,7 @@ const ButtonBehavior: AquinoBehavior<ButtonProps, typeof ButtonTemplate> = props
 	const {ref, events, eventManager} = useCreateComponentRef<typeof ButtonBehavior>(innerRef);
 	useEffect(() => {
 		if (!props.onAction) return;
-		eventManager.add(AquinoEvents.CLICK, props.onAction);
+		eventManager.add(0, AquinoEvents.CLICK, props.onAction);
 	}, []);
 	return <Template el={ref} events={events} {...templateProps} />;
 };

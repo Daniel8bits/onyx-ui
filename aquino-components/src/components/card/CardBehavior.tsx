@@ -11,7 +11,7 @@ const CardBehavior: AquinoBehavior<CardProps, typeof CardTemplate> = props => {
 	const {ref, events, eventManager} = useCreateComponentRef<typeof CardBehavior>(innerRef);
 	useEffect(() => {
 		if (!props.onAction) return;
-		eventManager.add(AquinoEvents.CLICK, props.onAction);
+		eventManager.add(0, AquinoEvents.CLICK, props.onAction);
 	}, []);
 	return <Template el={ref} events={events} {...templateProps} />;
 };

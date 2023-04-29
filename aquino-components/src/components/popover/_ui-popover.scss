@@ -1,9 +1,0 @@
-
-.ui-popover {
-  position: absolute;
-
-  @include theme($color-greenish-gray);
-  @include border();
-
-  @include fadeInOut('open', true);
-}

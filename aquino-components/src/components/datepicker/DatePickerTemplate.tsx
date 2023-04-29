@@ -9,9 +9,9 @@ import {FaCalendarAlt} from 'react-icons/fa';
 import type ExtendedDate from './ExtendedDate';
 import template from '@internals/template';
 import {type Theme} from '@internals/ThemeManager';
-import {type TextfieldProps} from '@components/textfield/TextfieldTemplate';
+import {type TextfieldProps} from '@components/textfields/standard/TextfieldTemplate';
 import useUniqueId from '@hooks/useUniqueId';
-import MaskedTextfield from '@components/maskedTextfield/MaskedTextfield';
+import MaskedTextfield from '@components/textfields/masked/MaskedTextfield';
 import {AquinoEvents} from '@internals/EventManager';
 import useComponentRef from '@hooks/useComponentRef';
 
@@ -45,8 +45,6 @@ const initialStyleValue = {
 } satisfies Theme;
 
 export type DatePickerTemplateStyle = typeof initialStyleValue;
-
-const fn = () => console.log('key up');
 
 const DatePickerTemplate = template<DatePickerTemplateProps, HTMLDivElement, DatePickerTemplateStyle>((props, style) => {
   const popOverSize = {
@@ -100,12 +98,12 @@ const DatePickerTemplate = template<DatePickerTemplateProps, HTMLDivElement, Dat
     updateValue({value(value) {
       if (!maskedTextfieldRef) return '';
       if (value) {
-        maskedTextfieldRef.masking.externalUpdate(value, 0);
+        maskedTextfieldRef.update(value, 0);
       }
 
       return maskedTextfieldRef.el.value;
     }});
-    maskedTextfieldRef.eventListeners.add(AquinoEvents.KEYUP, core.getInputKeyUpEvent());
+    maskedTextfieldRef.eventListeners.add(0, AquinoEvents.KEYUP, core.getInputKeyUpEvent());
   }, [maskedTextfieldRef]);
 
   return (

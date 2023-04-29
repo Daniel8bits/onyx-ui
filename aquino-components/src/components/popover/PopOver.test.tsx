@@ -45,7 +45,8 @@ describe('Popover Component', () => {
 		expect(screen.getByText('something')).toBeInTheDocument();
 	});
 
-  it('should close when clicking outside', () => {
+  it('should close when clicking outside', async () => {
+    const user = userEvent.setup();
 		const {open} = renderPopOver();
 
     act(() => {
@@ -54,8 +55,8 @@ describe('Popover Component', () => {
 
     expect(screen.getByText('something')).toBeInTheDocument();
 
-    act(() => {
-      userEvent.click(getOutsideElement()); 
+    await act(async () => {
+      await user.click(getOutsideElement()); 
     });
 
 		expect(screen.queryByText('something')).not.toBeInTheDocument();

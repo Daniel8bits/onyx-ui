@@ -18,7 +18,7 @@ const CheckBoxBehavior: AquinoBehavior<CheckBoxProps, typeof CheckBoxTemplate> =
 
 	useEffect(() => {
 		if (!props.onAction) return;
-		eventManager.add(AquinoEvents.CLICK, () => {
+		eventManager.add(0, AquinoEvents.CLICK, () => {
 			props.onAction?.(v => !v);
 		});
 	}, []);

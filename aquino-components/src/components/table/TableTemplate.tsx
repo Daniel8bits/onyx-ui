@@ -4,7 +4,7 @@ import {type Theme} from '@internals/ThemeManager';
 import type TableDocument from './TableDocument';
 import template from '@internals/template';
 import type ComponentRef from '@internals/ComponentRef';
-import MaskedTextfield from '@components/maskedTextfield/MaskedTextfield';
+import MaskedTextfield from '@components/textfields/masked/MaskedTextfield';
 
 export interface TableProps {
   document: TableDocument<any>;

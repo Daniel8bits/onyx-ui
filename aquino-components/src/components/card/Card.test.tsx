@@ -24,11 +24,12 @@ describe('Card Component', () => {
 	});
 
 	it('should run the callback on click', async () => {
+		const user = userEvent.setup();
 		const clickHandler = vi.fn();
 		render(<Card onAction={clickHandler}> something </Card>);
 
 		const card = screen.getByText('something');
-		userEvent.click(card);
+		await user.click(card);
 
 		expect(clickHandler).toHaveBeenCalledTimes(1);
 	});

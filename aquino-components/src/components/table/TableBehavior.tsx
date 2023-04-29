@@ -5,7 +5,7 @@ import {type TableProps} from './TableTemplate';
 import type TableTemplate from './TableTemplate';
 import useCreateComponentRef from '@hooks/useCreateComponentRef';
 import useComponentRef from '@hooks/useComponentRef';
-import type MaskedTextfield from '@components/maskedTextfield/MaskedTextfield';
+import type MaskedTextfield from '@components/textfields/masked/MaskedTextfield';
 
 const TableBehavior: AquinoBehavior<TableProps, typeof TableTemplate> = props => {
   const {Template, innerRef, ...templateProps} = props;

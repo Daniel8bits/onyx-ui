@@ -97,7 +97,11 @@ const PopOverBehavior: AquinoBehavior<PopOverProps, typeof PopOverTemplate> = pr
       return anchorX2 + gap / 2;
     }
 
-    return anchorX1 - gap / 2 - popWidth;
+    const positionIfInTheAnchorLeftSide = anchorX1 - gap / 2 - popWidth;
+
+    if (positionIfInTheAnchorLeftSide < 0) return anchorX1;
+
+    return positionIfInTheAnchorLeftSide;
   }, [props.anchor, getWidth, props.position]);
 
   const getY = useCallback((): number => {
@@ -118,6 +122,13 @@ const PopOverBehavior: AquinoBehavior<PopOverProps, typeof PopOverTemplate> = pr
         default:
           break;
       }
+    }
+
+    const x = getX();
+    if (x === props.anchor.current.offsetLeft) {
+      return anchorY2 + gap + popHeight > window.innerHeight
+        ? anchorY1 - popHeight - gap
+        : anchorY2 + gap;
     }
 
     if (anchorY2 + popHeight < window.innerHeight) {

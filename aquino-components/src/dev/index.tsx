@@ -3,12 +3,15 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import DatePicker from '@components/datepicker/DatePicker';
 import ExtendedDate from '@components/datepicker/ExtendedDate';
-import MaskedTextfield from '@components/maskedTextfield/MaskedTextfield';
+import MaskedTextfield from '@components/textfields/masked/MaskedTextfield';
 import {useIMask} from 'react-imask';
 import IMask from 'imask';
 import DateFormatter from '@components/datepicker/DateFormatter';
 import useComponentRef from '@hooks/useComponentRef';
 import {AquinoEvents} from '@internals/EventManager';
+import NumericTextfield from '@components/textfields/numeric/NumericTextfield';
+import Textfield from '@components/textfields/standard/Textfield';
+import {FaAddressBook} from 'react-icons/fa';
 
 const fn = () => console.log('key up');
  
@@ -18,7 +21,7 @@ const Test: React.FC<JSX.IntrinsicAttributes> = () => {
   
   return (
     <Root>
-      <DatePicker label='example' value={value} onAction={setValue} />
+      <MaskedTextfield label='example 2' mask='{dddd}/{dd}/{dd}' />
       
     </Root>
   );
@@ -30,9 +33,9 @@ const [ref, setRef] = useComponentRef<typeof MaskedTextfield>();
     if (!ref) return;
     ref.eventListeners.add(AquinoEvents.KEYUP, fn);
   }, [ref]);
-
+<MaskedTextfield label='example 2' mask='{dddd}/{dd}/{dd}' />
 <br />      
-<MaskedTextfield innerRef={setRef} label='example 2' mask='{dddd}/{dd}/{dd}' />
+<DatePicker label='example' value={value} onAction={setValue} />
 */
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

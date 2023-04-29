@@ -7,10 +7,12 @@ import ExtendedDate from '../ExtendedDate';
 import MockStateToProps, {type MockStateToPropsRefType} from '@test/mocks/MockStateToProps';
 import Root from '@internals/Root';
 import {resetPopOverState} from '@test/configs/ZustandConfigs';
+import {type UserEvent} from '@testing-library/user-event/dist/types/setup/setup';
 
 resetPopOverState();
 
-function renderDatePickerYears_(datepicker: JSX.Element, date: ExtendedDate) {
+async function renderDatePickerYears_(datepicker: JSX.Element, date: ExtendedDate): Promise<[HTMLElement, UserEvent]> {
+  const user = userEvent.setup();
   render(
     <Root>
       <div>click outside</div>
@@ -18,41 +20,41 @@ function renderDatePickerYears_(datepicker: JSX.Element, date: ExtendedDate) {
     </Root>,
   );
   const button = screen.getByRole('button');
-  userEvent.click(button);
+  await user.click(button);
   const monthsButton = screen.getByText(`${date.getMonthName()}, ${date.getYear()}`);
-  userEvent.click(monthsButton);
+  await user.click(monthsButton);
   const yearsButton = screen.getByText(`${date.getYear()}`);
-  userEvent.click(yearsButton);
-  return screen.getByLabelText('years panel');
+  await user.click(yearsButton);
+  return [screen.getByLabelText('years panel'), user];
 }
 
-function renderDatePickerYears(): [HTMLElement, ExtendedDate] {
+async function renderDatePickerYears(): Promise<[HTMLElement, ExtendedDate, UserEvent]> {
   const date = ExtendedDate.parse('02/02/1990');
-  const panel = renderDatePickerYears_(<DatePicker id='test' value={date} onAction={vi.fn()} />, date);
-  return [panel, date];
+  const [panel, user] = await renderDatePickerYears_(<DatePicker id='test' value={date} onAction={vi.fn()} />, date);
+  return [panel, date, user];
 }
 
-function renderMockedDatePickerYears(): [HTMLElement, ExtendedDate, React.RefObject<MockStateToPropsRefType<Nullable<ExtendedDate>>>] {
+async function renderMockedDatePickerYears(): Promise<[HTMLElement, ExtendedDate, React.RefObject<MockStateToPropsRefType<Nullable<ExtendedDate>>>, UserEvent]> {
   const mockRef = React.createRef<MockStateToPropsRefType<Nullable<ExtendedDate>>>();
   const date = ExtendedDate.parse('02/02/1990');
-  const panel = renderDatePickerYears_(
+  const [panel, user] = await renderDatePickerYears_(
     <MockStateToProps<Nullable<ExtendedDate>> innerRef={mockRef} initialValue={date}>
       {(value, setValue) => <DatePicker id='test' value={value} onAction={setValue} />}
     </MockStateToProps>,
     date,
   );
-  return [panel, date, mockRef];
+  return [panel, date, mockRef, user];
 }
 
 describe('DatePickerYears Component', () => {
-  it('should render content', () => {
-    const [panel] = renderDatePickerYears();
+  it('should render content', async () => {
+    const [panel] = await renderDatePickerYears();
 
     expect(panel).toBeInTheDocument();
   });
 
-  it('should change date when selecting a year', () => {
-    const [, , mockRef] = renderMockedDatePickerYears();
+  it('should change date when selecting a year', async () => {
+    const [, , mockRef, user] = await renderMockedDatePickerYears();
 
     const textbox = screen.getByRole<HTMLInputElement>('textbox');
 
@@ -62,12 +64,12 @@ describe('DatePickerYears Component', () => {
     expect(y1990.children.item(0)).toBeChecked();
     expect(y1973.children.item(0)).not.toBeChecked();
 
-    act(() => {
-      userEvent.click(y1973);
+    await act(async () => {
+      await user.click(y1973);
     });
 
-    act(() => {
-      userEvent.click(screen.getByText('1973'));
+    await act(async () => {
+      await user.click(screen.getByText('1973'));
     });
 
     expect(screen.getByText('1990').children.item(0)).not.toBeChecked();
@@ -81,18 +83,18 @@ describe('DatePickerYears Component', () => {
   });
 
   it('should change selected year when typing a new date', async () => {
-    const [, , mockRef] = renderMockedDatePickerYears();
+    const [, , mockRef, user] = await renderMockedDatePickerYears();
 
     const textbox = screen.getByRole<HTMLInputElement>('textbox');
 
     expect(screen.getByText('1990').children.item(0)).toBeChecked();
     expect(screen.getByText('1973').children.item(0)).not.toBeChecked();
 
-    act(() => {
-      userEvent.click(screen.getByText('click outside'));
-      userEvent.click(textbox);
-      userEvent.clear(textbox);
-      userEvent.type(textbox, '19730702', {initialSelectionStart: 0, initialSelectionEnd: 0});
+    await act(async () => {
+      await user.click(screen.getByText('click outside'));
+      await user.click(textbox);
+      await user.clear(textbox);
+      await user.type(textbox, '19730702', {initialSelectionStart: 0, initialSelectionEnd: 0});
     });
 
     expect(textbox.value).toBe('1973/07/02');
@@ -101,8 +103,8 @@ describe('DatePickerYears Component', () => {
       expect(value?.toString()).toBe('1973-07-02');
     });
     
-    act(() => {
-      userEvent.click(screen.getByRole('button'));
+    await act(async () => {
+      await user.click(screen.getByRole('button'));
     });
 
     expect(screen.getByText('1990').children.item(0)).not.toBeChecked();

@@ -35,6 +35,7 @@ const PopOverTemplate = template<PopOverTemplateProps, HTMLDivElement, PopOverTe
   <div 
     ref={props.el}
     style={{
+      position: 'absolute',
       left: `${props.rect.x}px`,
       top: `${props.rect.y}px`,
       width: `${props.rect.width}px`,

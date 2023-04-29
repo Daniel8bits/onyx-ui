@@ -1,45 +1,17 @@
-/* eslint-disable react/prop-types */
+import Masking from './Masking';
 
-import React, {useCallback, useEffect} from 'react';
-import type TextfieldTemplate from '@components/textfield/TextfieldTemplate';
-import {type TextfieldProps} from '@components/textfield/TextfieldTemplate';
-import {type AquinoBehavior} from '@internals/ThemeManager';
-import TextfieldBehavior from '@components/textfield/TextfieldBehavior';
-import {AquinoEvents} from '@internals/EventManager';
-import useNew from '@hooks/useNew';
-import useExtendsComponentRef from '@hooks/useExtendsComponentRef';
-
-/*
-
-TODO:
-  * Passar o algoritmo de mascara para a classe [OK]
-  * A classe deve ser extesível para outros tipos de mascarágem
-  * Deve funcionar bem tanto com typing quanto com inserção de valor por ref
-  * Deve ser autofixável
-  * Deve funcionar para qualquer elemento
-
-*/
-
-class Masking {
-  private _actualValue!: string;
-  private _displayValue!: string;
+class PatternMasking extends Masking {
   private _mask: string;
-
   private _base!: string; 
   private _regex!: RegExp;
   private _curlyBracketsBegins!: number[];
   private _curlyBracketsEnds!: number[];
   private _inverseSlashPositions!: number[];
 
-  private _onExternalValueUpdateCallback?: (dV: string) => void;
-
   constructor(mask: string) {
+    super();
     this._mask = mask;
     this._processMask();
-  }
-
-  public getDisplayValue() {
-    return this._displayValue;
   }
 
   public setMask(mask: string) {
@@ -47,38 +19,9 @@ class Masking {
     this._processMask();
   }
 
-  public onExternalValueUpdate(onExternalValueUpdateCallback: (dV: string) => void) {
-    this._onExternalValueUpdateCallback = onExternalValueUpdateCallback;
-  }
-
-  public externalUpdate(value: string, caretBeginPosition: number) {
-    if (!this._onExternalValueUpdateCallback) return;
-    const fn = this._onExternalValueUpdateCallback;
-    value.split('').forEach((v, i) => this._update(v, caretBeginPosition + i, fn));
-  }
-
-  public update(key: string, caretPosition: number, done: (displayValue: string, caretPosition: number, accepted: boolean) => void) {
-    this._update(key, caretPosition, done);
-  }
-
   // eslint-disable-next-line complexity
-  private _update(key: string, caretPosition: number, done: (displayValue: string, caretPosition: number, accepted: boolean) => void) {
-    const displayValue = this._displayValue;
+  protected _processValue(key: string, caretPosition: number, done: (displayValue: string, caretPosition: number, accepted: boolean, reject: () => void) => void): [string, number] {
     let value = this._actualValue;
-    
-    if (
-      key !== 'Backspace' && (
-      caretPosition >= displayValue.length
-      || key.length !== 1
-      || !(key >= 'a' && key <= 'z' 
-      || key >= 'A' && key <= 'Z' 
-      || key >= '0' && key <= '9'
-      || key === ' '))
-    ) {
-      this._displayValue = this._actualValue;
-      done(value, caretPosition, false);
-      return;
-    }
 
     const aux = value.split('');
     const switchedP: [boolean] = [false];
@@ -150,15 +93,35 @@ class Masking {
       newCaretPosition = 0;
     }
 
-    if (this._regex.exec(value)) {
-      this._displayValue = value;
-      this._actualValue = value;
-      done(value, newCaretPosition, true);
-    }
+    return [value, newCaretPosition];
+  }
+
+  protected _processValueOnBackspace(key: string, caretPosition: number, done: (displayValue: string, caretPosition: number, accepted: boolean, reject: () => void) => void): [string, number] {
+    return this._processValue(key, caretPosition, done);
+  }
+
+  protected _isValidKey(key: string, caretPosition: number): boolean {
+    return (
+      caretPosition < this._displayValue.length
+      && (
+        key >= 'a' && key <= 'z' 
+        || key >= 'A' && key <= 'Z' 
+        || key >= '0' && key <= '9'
+        || key === ' '
+      )
+    );
+  }
+
+  protected _isValidValue(value: string): boolean {
+    return Boolean(this._regex.exec(value));
   }
 
   // eslint-disable-next-line max-params
   private _handleBackspacing(value: string, caretPosition: number, beginPosition: number, switchedP: [boolean], aux: string[], done: (value: string, newCaretPosition: number) => void) {
+    if (typeof this._mask !== 'string') {
+      throw new Error('PatternMasking only with string mask');
+    }
+
     const maskPosition = this._getCurrentMaskPosition(beginPosition);
     let newCaretPosition = 0;
     for (let k = beginPosition; k >= 0; k--) {
@@ -201,6 +164,10 @@ class Masking {
   }
 
   private _processMask(): void {
+    if (typeof this._mask !== 'string') {
+      throw new Error('PatternMasking only with string mask');
+    }
+
     const mask = this._mask;
     let maskRegExpString = '^';
     let baseString = '';
@@ -278,51 +245,4 @@ class Masking {
   }
 }
 
-interface MaskedTextfieldRef {
-  masking: Masking;
-}
-
-export interface MaskedTextfieldProps extends TextfieldProps {
-  mask: string;
-}
-
-const MaskedTextfieldBehavior: AquinoBehavior<MaskedTextfieldProps, typeof TextfieldTemplate, MaskedTextfieldRef> = props => {
-  const {mask, innerRef, ...behaviorProps} = props;
-  
-  const masking = useNew(Masking, [mask]);
-  const [superRef, setSuperRef] = useExtendsComponentRef<typeof MaskedTextfieldBehavior, typeof TextfieldBehavior>(innerRef, {masking});
-
-  const handleMasking = useCallback((e: React.KeyboardEvent) => {
-    if (!superRef) return;
-    const {el} = superRef;
-    if (el.selectionStart === null) return;
-    masking.update(e.key, el.selectionStart, (displayValue, caretPosition, accepted) => {
-      if (!accepted) {
-        el.value = displayValue;
-        return;
-      }
-
-      e.preventDefault();
-      el.value = displayValue;
-      el.setSelectionRange(caretPosition, caretPosition);
-      el.focus();
-    });
-  }, [superRef]);
-
-  useEffect(() => {
-    if (!superRef) return;
-    const {el, eventListeners} = superRef;
-
-    el.value = masking.getDisplayValue();
-    el.maxLength = el.value.length;
-
-    eventListeners.add(AquinoEvents.KEYDOWN, handleMasking);
-    masking.onExternalValueUpdate(displayValue => {
-      el.value = displayValue;
-    });
-  }, [superRef]);
-
-  return <TextfieldBehavior innerRef={setSuperRef} {...behaviorProps} />;
-};
-
-export default MaskedTextfieldBehavior;
+export default PatternMasking;
