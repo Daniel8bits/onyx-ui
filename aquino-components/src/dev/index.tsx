@@ -1,5 +1,5 @@
 import Root from '@internals/Root';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import ReactDOM from 'react-dom/client';
 import DatePicker from '@components/datepicker/DatePicker';
 import ExtendedDate from '@components/datepicker/ExtendedDate';
@@ -12,22 +12,30 @@ import {AquinoEvents} from '@internals/EventManager';
 import NumericTextfield from '@components/textfields/numeric/NumericTextfield';
 import Textfield from '@components/textfields/standard/Textfield';
 import {FaAddressBook} from 'react-icons/fa';
+import ScrollContainer from '@components/scrollContainer/ScrollContainer';
 
 const fn = () => console.log('key up');
  
 // eslint-disable-next-line arrow-body-style
 const Test: React.FC<JSX.IntrinsicAttributes> = () => {
   const [value, setValue] = useState<Nullable<ExtendedDate>>(ExtendedDate.now());
+  const ref = useRef<HTMLDivElement>(null);
   
   return (
     <Root>
-      <MaskedTextfield label='example 2' mask='{dddd}/{dd}/{dd}' />
-      
+      <div ref={ref} style={{width: '60%', height: '60vh'}}>
+        <ScrollContainer>
+          <img src='https://images4.alphacoders.com/640/640956.jpg' alt='background' />
+        </ScrollContainer>
+      </div>
     </Root>
   );
 };
 
 /* .
+{[...Array<number>(100)].map((i, k) => <div key={k}>content {k}</div>)}
+maxWidth={window.innerWidth}
+maxHeight={window.innerHeight}
 const [ref, setRef] = useComponentRef<typeof MaskedTextfield>();
   useEffect(() => {
     if (!ref) return;

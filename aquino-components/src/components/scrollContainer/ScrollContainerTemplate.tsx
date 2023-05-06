@@ -3,7 +3,8 @@ import {type Theme} from '@internals/ThemeManager';
 import React from 'react';
 
 export interface ScrollContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  maxHeight?: number;
+  verticalScrollWidth?: number;
+  horizontalScrollHeight?: number;
   className?: string;
   children?: React.ReactNode;
 }
@@ -14,7 +15,10 @@ export interface ScrollContainerTemplateProps extends ScrollContainerProps {
   contentRef: ReactElementRef<HTMLDivElement>;
   width: number;
   height: number;
+  containerWidth: number;
+  containerHeight: number;
   doVerticalScroll: (e: React.MouseEvent) => void;
+  doHorizontalScroll: (e: React.MouseEvent) => void;
 }
 
 const initialStyleValue = {
@@ -41,16 +45,27 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
     width,
     height,
     doVerticalScroll,
+    doHorizontalScroll,
+    verticalScrollWidth,
+    horizontalScrollHeight,
     className,
     style: divStyle,
-    maxHeight,
+    containerWidth,
+    containerHeight,
     children,
     events,
     el,
     ...divProps
   } = props;
 
-  const scrollSize = '5rem';
+  const vsw = verticalScrollWidth ?? 16;
+  const hsh = horizontalScrollHeight ?? 16;
+
+  const verticalScrollShouldBeVisible = height > 0;
+  const horizontalScrollShouldBeVisible = width > 0;
+
+  const mw = containerWidth - (verticalScrollShouldBeVisible ? vsw : 0);
+  const mh = containerHeight - (horizontalScrollShouldBeVisible ? hsh : 0);
 
   return (
     <div 
@@ -58,36 +73,38 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
       className={`${style?.container[0] ?? ''} ${className ?? ''}`}
       style={{
         ...divStyle, 
-        maxHeight: maxHeight ? `${maxHeight}px` : '100vh',
-        width: '100%',
-        height: '100%',
+        maxWidth: `${mw}px`,
+        maxHeight: `${mh}px`,
+        width: `${mw}px`,
+        height: `${mh}px`,
         overflow: 'hidden',
       }}
       {...divProps}
       {...events}
     >
-      <div ref={contentRef} className={style?.container[1].content}>
+      <div ref={contentRef} className={style?.container[1].content} style={{display: 'inline-block'}}>
         {children}
       </div>
       <div 
         className={style?.container[1].controller[0]} 
         style={{
-          width: el.current ? `${el.current.offsetWidth}px` : '100%',
-          height: el.current ? `${el.current.offsetHeight}px` : '100%',
+          width: `${mw}px`,
+          height: `${mh}px`,
           top: el.current ? `${el.current.offsetTop}px` : 0,
           position: 'absolute',
           pointerEvents: 'none',
+          backgroundColor: 'transparent',
         }}
       >
-        {height > 0 
+        {verticalScrollShouldBeVisible 
         && <div 
           className={style?.container[1].controller[1].vertical[0]} 
           style={{
             position: 'absolute',
             pointerEvents: 'all',
-            width: scrollSize,
-            height: '100%',
-            left: `calc(100% - ${scrollSize})`,
+            width: `${vsw}px`,
+            height: `calc(100% - ${hsh}px)`,
+            left: `${mw}px`,
           }}
         >
           <button 
@@ -103,20 +120,21 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
             }}
           />
         </div>}
-        {width > 0 
+        {horizontalScrollShouldBeVisible
         && <div 
           className={style?.container[1].controller[1].horizontal[0]} 
           style={{
             position: 'absolute',
             pointerEvents: 'all',
-            width: '100%',
-            height: scrollSize,
-            top: `calc(100% - ${scrollSize})`,
+            width: `calc(100% - ${vsw}px)`,
+            height: `${hsh}px`,
+            top: `${mh}px`,
           }}
         >
           <button 
             ref={horizontalScrollRef} 
             type='button' 
+            onMouseDown={doHorizontalScroll}
             className={style?.container[1].controller[1].horizontal[1].scroll} 
             style={{
               position: 'relative',

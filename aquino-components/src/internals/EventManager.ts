@@ -4,27 +4,34 @@ export enum AquinoEvents {
   CLICK = 'onClick',
   MOUSEDOWN = 'onMouseDown',
   MOUSEUP = 'onMouseUp',
+  MOUSEMOVE = 'onMouseMove',
 
   KEYUP = 'onKeyUp',
   KEYDOWN = 'onKeyDown',
+
+  WHEEL = 'onWheel',
 }
 
-type MouseEvents = AquinoEvents.CLICK | AquinoEvents.MOUSEDOWN | AquinoEvents.MOUSEUP;
-type KeyboardEvents = AquinoEvents.KEYUP | AquinoEvents.KEYDOWN;
+export type MouseEvents = AquinoEvents.CLICK | AquinoEvents.MOUSEDOWN | AquinoEvents.MOUSEUP | AquinoEvents.MOUSEMOVE;
+export type KeyboardEvents = AquinoEvents.KEYUP | AquinoEvents.KEYDOWN;
+export type WheelEvents = AquinoEvents.WHEEL;
 
-type MouseEventCallback = (e: React.MouseEvent) => void;
-type KeyboardEventCallback = (e: React.KeyboardEvent) => void;
+export type MouseEventCallback = (e: React.MouseEvent) => void;
+export type KeyboardEventCallback = (e: React.KeyboardEvent) => void;
+export type WheelEventCallback = (e: React.WheelEvent) => void;
 
 export type AllEventsAsObject = 
   & Record<MouseEvents, MouseEventCallback>
-  & Record<KeyboardEvents, KeyboardEventCallback>;
+  & Record<KeyboardEvents, KeyboardEventCallback>
+  & Record<WheelEvents, WheelEventCallback>;
 
 type MapKey = number | string | Symbol;
 
 class EventManager {
   private readonly _events: 
     & Map<MouseEvents, Map<MapKey, MouseEventCallback>>
-    & Map<KeyboardEvents, Map<MapKey, KeyboardEventCallback>>;
+    & Map<KeyboardEvents, Map<MapKey, KeyboardEventCallback>>
+    & Map<WheelEvents, Map<MapKey, WheelEventCallback>>;
 
   private readonly _update: () => void;
 
@@ -35,9 +42,12 @@ class EventManager {
     this._events.set(AquinoEvents.CLICK, new Map());
     this._events.set(AquinoEvents.MOUSEDOWN, new Map());
     this._events.set(AquinoEvents.MOUSEUP, new Map());
+    this._events.set(AquinoEvents.MOUSEMOVE, new Map());
 
     this._events.set(AquinoEvents.KEYUP, new Map());
     this._events.set(AquinoEvents.KEYDOWN, new Map());
+
+    this._events.set(AquinoEvents.WHEEL, new Map());
 
     this.getEvents = this.getEvents.bind(this);
   }
@@ -52,6 +62,7 @@ class EventManager {
 
   public add(id: MapKey, event: MouseEvents, fn: MouseEventCallback): void;
   public add(id: MapKey, event: KeyboardEvents, fn: KeyboardEventCallback): void; 
+  public add(id: MapKey, event: WheelEvents, fn: WheelEventCallback): void; 
   public add(id: MapKey, event: unknown, fn: unknown) {
     if (this._events.has(event as MouseEvents)) {
       const map = this._events.get(event as MouseEvents);
@@ -64,6 +75,7 @@ class EventManager {
 
   public remove(id: MapKey, event: MouseEvents, fn: MouseEventCallback): void;
   public remove(id: MapKey, event: KeyboardEvents, fn: KeyboardEventCallback): void; 
+  public remove(id: MapKey, event: WheelEvents, fn: WheelEventCallback): void; 
   public remove(id: MapKey, event: unknown, fn: unknown) {
     if (this._events.has(event as MouseEvents)) {
       const map = this._events.get(event as MouseEvents);
