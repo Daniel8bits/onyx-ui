@@ -3,7 +3,6 @@ import useEventManager from '@hooks/useEventManager';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {type ComponentRefObject} from './ComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
-import useComponentRef from '@hooks/useComponentRef';
 
 function insertGlobalStyle() {
   const id = 'aquino-global-style';
@@ -15,12 +14,15 @@ function insertGlobalStyle() {
       padding: 0;
       margin: 0;
     }
+    body {
+      overflow: hidden;
+    }
   `;
   document.head.append(styleElement);
 }
 
 const RootContext = React.createContext<Partial<{
-  root: ComponentRefObject;
+  root: Omit<ComponentRefObject, 'super'>;
   modalRoot: ModalRootRef;
 }>>({});
 
@@ -33,7 +35,7 @@ export interface RootProps {
 }
 
 const Root: React.FC<RootProps> = props => {
-  const [rootRef, setRootRef] = useState<ComponentRefObject<HTMLDivElement>>();
+  const [rootRef, setRootRef] = useState<Omit<ComponentRefObject<HTMLDivElement>, 'super'>>();
   const [modalRootRef, setModalRootRef] = useState<ModalRootRef>();
   const ref = useRef<HTMLDivElement>(null);
 
