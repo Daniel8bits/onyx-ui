@@ -55,11 +55,12 @@ const Root: React.FC<RootProps> = props => {
         style={{
           minWidth: `${window.innerWidth}px`,
           minHeight: `${window.innerHeight}px`,
-          overflow: 'auto',
         }}
         {...events}
       >
-        <div> {props.children} </div>
+        <div style={{minWidth: 'inherit', minHeight: 'inherit', overflow: 'auto'}}> 
+          {props.children} 
+        </div>
         <ModalRoot innerRef={setModalRootRef} />
       </div>
     </RootContext.Provider>

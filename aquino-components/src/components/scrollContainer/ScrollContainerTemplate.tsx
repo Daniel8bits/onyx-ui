@@ -1,3 +1,4 @@
+/* eslint-disable function-call-argument-newline */
 import template from '@internals/template';
 import {type Theme} from '@internals/ThemeManager';
 import React from 'react';
@@ -106,6 +107,7 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
             height: `calc(100% - ${hsh}px)`,
             left: `${mw}px`,
           }}
+          role='vertical scroll bar'
         >
           <button 
             ref={verticalScrollRef} 
@@ -118,6 +120,7 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
               height,
               cursor: 'pointer',
             }}
+            role='vertical scroll button'
           />
         </div>}
         {horizontalScrollShouldBeVisible
@@ -130,6 +133,7 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
             height: `${hsh}px`,
             top: `${mh}px`,
           }}
+          role='horizontal scroll bar'
         >
           <button 
             ref={horizontalScrollRef} 
@@ -142,6 +146,7 @@ const ScrollContainerTemplate = template<ScrollContainerTemplateProps, HTMLDivEl
               height: '100%',
               cursor: 'pointer',
             }}
+            role='horizontal scroll button'
           />
         </div>}
       </div>
