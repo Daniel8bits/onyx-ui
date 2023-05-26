@@ -23,16 +23,23 @@ const Test: React.FC<JSX.IntrinsicAttributes> = () => {
   
   return (
     <Root>
-      <div ref={ref} style={{width: '60%', height: '60vh'}}>
-        <ScrollContainer>
-          <img src='https://images4.alphacoders.com/640/640956.jpg' alt='background' />
-        </ScrollContainer>
-      </div>
+      <ScrollContainer>
+        <div style={{width: `${window.innerWidth * 1.5}px`}}> 
+          something 
+        </div> 
+      </ScrollContainer>
     </Root>
   );
 };
 
 /* .
+<div style={{width: '500px', height: '500px'}}>
+        <ScrollContainer>
+          <div style={{width: '750px'}}> 
+            something 
+          </div> 
+        </ScrollContainer>
+      </div>
 {[...Array<number>(100)].map((i, k) => <div key={k}>content {k}</div>)}
 maxWidth={window.innerWidth}
 maxHeight={window.innerHeight}
@@ -44,6 +51,12 @@ const [ref, setRef] = useComponentRef<typeof MaskedTextfield>();
 <MaskedTextfield label='example 2' mask='{dddd}/{dd}/{dd}' />
 <br />      
 <DatePicker label='example' value={value} onAction={setValue} />
+
+<div ref={ref} style={{width: '60%', height: '60vh'}}>
+  <ScrollContainer>
+    <img src='https://images4.alphacoders.com/640/640956.jpg' alt='background' />
+  </ScrollContainer>
+</div>
 */
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

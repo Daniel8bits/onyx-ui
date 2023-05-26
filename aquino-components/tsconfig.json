@@ -29,14 +29,16 @@
       "@internals/*": ["./src/internals/*"],
       "@test/*": ["./src/test/*"],
       "@custom-types/*": ["./src/custom-types/*"]
-    }
+    },
+    "types": ["cypress", "cypress-real-events"]
   },
   "include": [
+    "cypress",
     "src",
-    "vite.config.ts"
+    "vite.config.ts",
+    "cypress.config.ts"
   ],
   "exclude": [
-    "src/test",
     "src/experimental"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]

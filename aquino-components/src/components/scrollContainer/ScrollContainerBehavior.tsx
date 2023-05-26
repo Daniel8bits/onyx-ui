@@ -93,7 +93,7 @@ const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof Scrol
     const minScrollPosition = 0;
     const maxScrollPosition = containerSize - scrollSize;
     
-    const newValue = currentValue + movement;
+    const newValue = currentValue + movement; 
     let goalValue = currentValue;
     
     if (movement < 0 && currentValue !== minScrollPosition) {
@@ -117,6 +117,8 @@ const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof Scrol
     if (!verticalScrollRef.current) return;
     if (!container.ref.current) return;
     if (!contentRef.current) return;
+
+    console.log(movementY);
 
     const goalValue = getGoalValue(
       movementY,
@@ -187,7 +189,7 @@ const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof Scrol
     const percentual = containerSize - (size + newPosition);
 
     const pagePosition = -(contentSize - (contentSize * percentual / absolute));
-
+    
     return {scrollPosition: newPosition, pagePosition, isAnimationEnd};
   };
 
@@ -203,7 +205,8 @@ const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof Scrol
       contentRef.current.offsetHeight, 
       verticalScrollAnimationFlagsRef.current,
     );
-
+    
+    console.log(pagePosition);
     scrollPositionRef.current.y = scrollPosition;
     verticalScrollRef.current.style.top = `${scrollPosition}px`;
     pagePositionRef.current.y = pagePosition;
@@ -296,18 +299,14 @@ const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof Scrol
   }, [rootEventManager]);
 
   const updateScrollSizes = () => {
-    if (!container.ref.current) {
-      return;
-    }
-
-    if (!contentRef.current) {
-      return;
-    }
+    if (!container.ref.current) return;
+    if (!contentRef.current) return;
 
     const contentWidth = contentRef.current.offsetWidth;
     const containerWidth = container.ref.current.offsetWidth;
     const contentHeight = contentRef.current.offsetHeight;
     const containerHeight = container.ref.current.offsetHeight;
+    
     if (contentHeight <= containerHeight) {
       setHeight(0);
     } else {
@@ -356,6 +355,7 @@ const ScrollContainerBehavior: AquinoBehavior<ScrollContainerProps, typeof Scrol
       parentObserverRef.current = parentObserver;
 
       container.eventManager.add(0, AquinoEvents.WHEEL, scrollEvent);
+      updateScrollSizes();
     }
 
     const mouseUpEvent = () => {
