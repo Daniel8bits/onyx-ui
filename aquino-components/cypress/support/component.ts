@@ -46,7 +46,19 @@ declare global {
 Cypress.Commands.add('mount', mount);
 Cypress.Commands.overwriteQuery('get', function (originalFn, alias, options) {
   const q = alias.trim();
-  return originalFn.apply(this, [q.match(/^r%(.)+$/g) ? `[role="${q.substring(2)}"]` : alias, options]);
+
+  // Role
+  if (q.match(/^r%(.)+$/g)) {
+    return originalFn.apply(this, [`[role="${q.substring(2)}"]`, options]);
+  }
+
+  // Aria label
+  if (q.match(/^l%(.)+$/g)) {
+    return originalFn.apply(this, [`[aria-label="${q.substring(2)}"]`, options]);
+  }
+
+  // Default
+  return originalFn.apply(this, [alias, options]);
 });
 
 // Example use:

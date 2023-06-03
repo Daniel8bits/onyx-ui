@@ -13,6 +13,9 @@ import NumericTextfield from '@components/textfields/numeric/NumericTextfield';
 import Textfield from '@components/textfields/standard/Textfield';
 import {FaAddressBook} from 'react-icons/fa';
 import ScrollContainer from '@components/scrollContainer/ScrollContainer';
+import Modal from '@components/modal/Modal';
+import Button from '@components/button/Button';
+import {getModal} from '@hooks/useModal';
 
 const fn = () => console.log('key up');
  
@@ -20,14 +23,14 @@ const fn = () => console.log('key up');
 const Test: React.FC<JSX.IntrinsicAttributes> = () => {
   const [value, setValue] = useState<Nullable<ExtendedDate>>(ExtendedDate.now());
   const ref = useRef<HTMLDivElement>(null);
+  const {open} = getModal('test');
   
   return (
     <Root>
-      <ScrollContainer>
-        <div style={{width: `${window.innerWidth * 1.5}px`}}> 
-          something 
-        </div> 
-      </ScrollContainer>
+      <Button onAction={open}> open modal </Button>
+      <Modal id='test'> 
+        something 
+      </Modal>
     </Root>
   );
 };

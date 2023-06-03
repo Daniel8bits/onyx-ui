@@ -3,7 +3,6 @@ import React, {useCallback, useEffect} from 'react';
 import {useModalStore} from '@store/store';
 import {type ModalProps} from './ModalTemplate';
 import type ModalTemplate from './ModalTemplate';
-import useClickOutside from '@hooks/useClickOutside';
 import {type AquinoBehavior} from '@internals/ThemeManager';
 import useCreateComponentRef from '@hooks/useCreateComponentRef';
 
@@ -17,8 +16,13 @@ const ModalBehavior: AquinoBehavior<ModalProps, typeof ModalTemplate> = props =>
     return (modal ? modal[1].open : false);
   })();
 
-  const {ref, events} = useCreateComponentRef<typeof ModalBehavior>(innerRef);
-  const [onClickOutside, removeClickOutside] = useClickOutside();
+  const {
+    ref, 
+    events: {
+      onClick, 
+      ...anotherEvents
+    },
+  } = useCreateComponentRef<typeof ModalBehavior>(innerRef);
 
   useEffect(() => {
     if (props.id) {
@@ -35,19 +39,28 @@ const ModalBehavior: AquinoBehavior<ModalProps, typeof ModalTemplate> = props =>
   }, []);
 
   const handleClose = useCallback(() => {
+    console.log('handleClose::1');
     if (props.id) {
+      console.log('handleClose::2');
       close({id: props.id});
     }
   }, []);
 
-  useEffect(() => {
-    if (props.id && currentOpenValue && ref.current && !props.disableClickOutside) {
-      removeClickOutside();
-      onClickOutside(ref.current, handleClose);
-    }
-  }, [props.id, currentOpenValue, props.disableClickOutside]);
+  const isolatedOnClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick?.(e);
+  }, [onClick]);
 
-  return <Template el={ref} events={events} open={currentOpenValue} {...templateProps} />;
+  return (
+    <Template 
+      el={ref} 
+      events={anotherEvents} 
+      open={currentOpenValue} 
+      onClickOnBackdrop={handleClose} 
+      isolatedOnClick={isolatedOnClick}
+      {...templateProps} 
+    />
+  );
 };
 
 export default ModalBehavior;
