@@ -5,8 +5,13 @@ import type ComponentRef from './ComponentRef';
 import {type ComponentRefObject} from './ComponentRef';
 
 export interface ModalRootRef extends ComponentRefObject<HTMLDivElement> {
-  render: (key: string, modal: React.ReactNode) => null;
-  update: (key: string) => void;
+  render: (key: string, open: boolean, modal: React.ReactNode) => null;
+  update: () => void;
+}
+
+interface ModalData {
+  open: boolean;
+  modal: React.ReactNode;
 }
 
 interface ModalRootProps {
@@ -15,7 +20,7 @@ interface ModalRootProps {
 
 const ModalRoot: React.FC<ModalRootProps> = props => {
   const modalRootRef = useRef<ModalRootRef>();
-  const modalsRef = useRef<Map<string, React.ReactNode>>(new Map());
+  const modalsRef = useRef<Map<string, ModalData>>(new Map());
   const ref = useRef<HTMLDivElement>(null);
   const [, update] = useUpdater();
 
@@ -26,18 +31,19 @@ const ModalRoot: React.FC<ModalRootProps> = props => {
     modalRootRef.current = {
       el: ref.current, 
       eventListeners: eventManager,
-      render(key, modal) {
-        modalsRef.current.set(key, modal);
+      render(key, open, modal) {
+        modalsRef.current.set(key, {open, modal});
         return null;
       },
       update,
+      super: undefined,
     };
     props.innerRef(modalRootRef.current);
   }, []);
 
   return (
     <div role='modal container' ref={ref} {...events}>
-      {[...modalsRef.current].map(child => <React.Fragment key={child[0]}>{child[1]}</React.Fragment>)}
+      {[...modalsRef.current].map(child => <React.Fragment key={child[0]}>{child[1].open ? child[1].modal : null}</React.Fragment>)}
     </div>
   );
 };
