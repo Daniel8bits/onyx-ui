@@ -12,6 +12,7 @@
     "cypress": "npx cypress open"
   },
   "dependencies": {
+    "events": "^3.3.0",
     "imask": "6.5.0-alpha.0",
     "immer": "^9.0.18",
     "react": "^18.2.0",

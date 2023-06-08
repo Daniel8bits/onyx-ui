@@ -1,5 +1,5 @@
 import Root from '@internals/Root';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import ReactDOM from 'react-dom/client';
 import DatePicker from '@components/datepicker/DatePicker';
 import ExtendedDate from '@components/datepicker/ExtendedDate';
@@ -8,6 +8,7 @@ import {useIMask} from 'react-imask';
 import IMask from 'imask';
 import DateFormatter from '@components/datepicker/DateFormatter';
 import useComponentRef from '@hooks/useComponentRef';
+import useNew from '@hooks/useNew';
 import {AquinoEvents} from '@internals/EventManager';
 import NumericTextfield from '@components/textfields/numeric/NumericTextfield';
 import Textfield from '@components/textfields/standard/Textfield';
@@ -15,22 +16,107 @@ import {FaAddressBook} from 'react-icons/fa';
 import ScrollContainer from '@components/scrollContainer/ScrollContainer';
 import Modal from '@components/modal/Modal';
 import Button from '@components/button/Button';
+import Table from '@components/table/Table';
+import TableDocument from '@components/table/TableDocument';
 import {getModal} from '@hooks/useModal';
 
 const fn = () => console.log('key up');
+
+interface Person {
+  id: number;
+  name: string;
+  age: number;
+  gender: 'Male' | 'Female';
+}
+
+const data: Person[] = [
+  {
+    id: 0,
+    name: 'Fulano A',
+    age: 20,
+    gender: 'Male',
+  },
+  {
+    id: 1,
+    name: 'Ciclana B',
+    age: 25,
+    gender: 'Female',
+  },
+  {
+    id: 2,
+    name: 'Beltrano C',
+    age: 32,
+    gender: 'Male',
+  },
+  {
+    id: 3,
+    name: 'Fulano D',
+    age: 20,
+    gender: 'Male',
+  },
+  {
+    id: 4,
+    name: 'Ciclana E',
+    age: 25,
+    gender: 'Female',
+  },
+  {
+    id: 5,
+    name: 'Beltrano F',
+    age: 32,
+    gender: 'Male',
+  },
+  {
+    id: 6,
+    name: 'Fulano G',
+    age: 20,
+    gender: 'Male',
+  },
+  {
+    id: 7,
+    name: 'Ciclana H',
+    age: 25,
+    gender: 'Female',
+  },
+  {
+    id: 8,
+    name: 'Beltrano I',
+    age: 32,
+    gender: 'Male',
+  },
+  {
+    id: 9,
+    name: 'Ciclana J',
+    age: 25,
+    gender: 'Female',
+  },
+];
  
 // eslint-disable-next-line arrow-body-style
 const Test: React.FC<JSX.IntrinsicAttributes> = () => {
   const [value, setValue] = useState<Nullable<ExtendedDate>>(ExtendedDate.now());
   const ref = useRef<HTMLDivElement>(null);
   const {open} = getModal('test');
-  
+
+  const document = useMemo(() => new TableDocument<Person>({
+    data,
+    columns: ['nome', 'idade', 'sexo'],
+    description(data) {
+      return {
+        id: data.id.toString(),
+        display: {
+          nome: data.name,
+          idade: data.age,
+          sexo: data.gender,
+        },
+      };
+    },
+    // . maxRows: 3,
+  }), []);
+
   return (
     <Root>
-      <Button onAction={open}> open modal </Button>
-      <Modal id='test'> 
-        something 
-      </Modal>
+      <Table document={document} />
     </Root>
   );
 };
