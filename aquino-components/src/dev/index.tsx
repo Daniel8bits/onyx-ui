@@ -111,7 +111,7 @@ const Test: React.FC<JSX.IntrinsicAttributes> = () => {
         },
       };
     },
-    // . maxRows: 3,
+    maxRows: 3,
   }), []);
 
   return (

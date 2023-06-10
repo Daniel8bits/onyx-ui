@@ -37,7 +37,7 @@ const TableBehavior: AquinoBehavior<TableProps, typeof TableTemplate> = props =>
     const v = pagingInput.current.value;
     const i = pagingInput.current.selectionStart ?? 0;
 
-    if (!(key >= '0' && key <= '9') && key !== '-' && key !== 'Backspace') return;
+    if (!(key >= '0' && key <= '9') && key !== 'Backspace') return;
 
     const newValue = key === 'Backspace'
       ? i < v.length 

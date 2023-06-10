@@ -165,6 +165,7 @@ const TableTemplate = template<TableTemplateProps, HTMLTableElement, TableTempla
                 type='button' 
                 className={style?.table[1].tfoot[1].tr[1].td[1].div[1].previous[0]}
                 onClick={props.core.previousPage} 
+                aria-label='previous page'
               >
                 <MdChevronLeft 
                   className={style?.table[1].tfoot[1].tr[1].td[1].div[1].previous[1].icon} 
@@ -184,6 +185,7 @@ const TableTemplate = template<TableTemplateProps, HTMLTableElement, TableTempla
                 type='button' 
                 className={style?.table[1].tfoot[1].tr[1].td[1].div[1].next[0]}
                 onClick={props.core.nextPage} 
+                aria-label='next page'
               >
                 <MdChevronRight 
                   className={style?.table[1].tfoot[1].tr[1].td[1].div[1].next[1].icon} 
