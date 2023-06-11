@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
-/// <reference types="vitest"  />
 /// <reference types="vite/client"  />
 
 import {defineConfig} from 'vite';
@@ -21,11 +20,6 @@ export default defineConfig({
 		rollupOptions: {
 			external: ['react', 'react-dom'],
 		},
-	},
-	test: {
-		globals: true,
-		environment: 'jsdom',
-		setupFiles: ['./src/test/setup.ts'],
 	},
 	resolve: {
 		alias: {
