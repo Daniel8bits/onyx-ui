@@ -1,32 +1,40 @@
 import ComponentCore from '@components/ComponentCore';
 import Observable from '@components/Observable';
 import ExtendedDate from './ExtendedDate';
+import {makeObservable, observable} from 'mobx';
 
-type ObservableProperties = 'minYear' | 'maxYear' | 'pivotYear' | 'yearsStep' | 'yearsRange' | 'value' | 'monthDays' | 'input';
+class DatePickerCore {
+  @observable
+  private _pivotYear: number;
+  
+  @observable
+  private _yearsRange: number[];
 
-class DatePickerCore extends ComponentCore {
-  private readonly _minYear: Observable<number>;
-  private readonly _maxYear: Observable<number>;
-  private readonly _pivotYear: Observable<number>;
-  private readonly _yearsStep: Observable<number>;
-  private readonly _yearsRange: Observable<number[]>;
-  private readonly _value: Observable<Nullable<ExtendedDate>>;
-  private readonly _monthDays: Observable<number[][]>;
-  private readonly _input: Observable<Nullable<(v?: string) => string>>;
+  @observable
+  private _value: Nullable<ExtendedDate>;
+
+  @observable
+  private _monthDays: number[][];
+
+  @observable
+  private _input: Nullable<(v?: string) => string>;
+
+  private readonly _minYear: number;
+  private readonly _maxYear: number;
+  private readonly _yearsStep: number;
+
   private readonly _triggerAction: StateSetter<Nullable<ExtendedDate>>;
-
   private _inputKeyUpEvent!: () => void;
 
   constructor(value: Nullable<ExtendedDate>, triggerAction: StateSetter<Nullable<ExtendedDate>>) {
-    super();
-    this._minYear = new Observable(this, 'minYear', 1915);
-    this._maxYear = new Observable(this, 'maxYear', new Date().getFullYear());
-    this._yearsStep = new Observable(this, 'yearsStep', 28);
-    this._pivotYear = new Observable(this, 'pivotYear', this._maxYear.get());
-    this._yearsRange = new Observable(this, 'yearsRange');
-    this._value = new Observable(this, 'value', value);
-    this._monthDays = new Observable(this, 'monthDays');
-    this._input = new Observable(this, 'input');
+    makeObservable(this);
+    this._minYear = 1915;
+    this._maxYear = new Date().getFullYear();
+    this._yearsStep = 28;
+    this._pivotYear = this._maxYear;
+    this._yearsRange = [];
+    this._value = value;
+    this._monthDays = [];
     this._triggerAction = triggerAction;
 
     this.setValue = this.setValue.bind(this);
@@ -50,9 +58,9 @@ class DatePickerCore extends ComponentCore {
   }
 
   public setValue(value: Nullable<ExtendedDate>) {
-    this._value.set(value);
+    this._value = value;
     
-    this.setInput(this._input.get());
+    this.setInput(this._input);
     this._calculateMonthDays();
     this._calculateYearPivot();
     this._calculateYearsRange();
@@ -60,8 +68,8 @@ class DatePickerCore extends ComponentCore {
   }
 
   public setInput(input: Nullable<(v?: string) => string>) {
-    this._input.set(input);
-    const value = this._value.get();
+    this._input = input;
+    const value = this._value;
     if (input && value) {
       input(value.format('<y>/<m>/<d>'));
     }
@@ -128,7 +136,7 @@ class DatePickerCore extends ComponentCore {
   }
 
   public getCurrentDate() {
-    return this._value.get() ?? ExtendedDate.now();
+    return this._value ?? ExtendedDate.now();
   }
 
   // MONTHS PANEL
@@ -162,9 +170,9 @@ class DatePickerCore extends ComponentCore {
   }
 
   public decrementYear() {
-    const pivot = this._pivotYear.get();
-    const step = this._yearsStep.get();
-    const min = this._minYear.get();
+    const pivot = this._pivotYear;
+    const step = this._yearsStep;
+    const min = this._minYear;
     if (!pivot || !step || !min) {
       return;
     }
@@ -175,19 +183,19 @@ class DatePickerCore extends ComponentCore {
 
     const newYear = pivot - step;
     if (pivot >= min) {
-      this._pivotYear.set(newYear);
+      this._pivotYear = newYear;
       this._calculateYearsRange();
       return;
     }
 
-    this._pivotYear.set(min);
+    this._pivotYear = min;
     this._calculateYearsRange();
   }
 
   public incrementYear() {
-    const pivot = this._pivotYear.get();
-    const step = this._yearsStep.get();
-    const max = this._maxYear.get();
+    const pivot = this._pivotYear;
+    const step = this._yearsStep;
+    const max = this._maxYear;
     if (!pivot || !step || !max) {
       return;
     }
@@ -198,21 +206,13 @@ class DatePickerCore extends ComponentCore {
 
     const newYear = pivot + step;
     if (newYear <= max) {
-      this._pivotYear.set(newYear);
+      this._pivotYear = newYear;
       this._calculateYearsRange();
       return;
     }
 
-    this._pivotYear.set(max);
+    this._pivotYear = max;
     this._calculateYearsRange();
-  }
-
-  public subscribe(properties: ObservableProperties[], componentUpdater: () => void): void {
-    super.subscribe(properties, componentUpdater);
-  }
-
-  public unsubscribe(properties: ObservableProperties[], componentUpdater: () => void): void {
-    super.unsubscribe(properties, componentUpdater);
   }
 
   private _calculateMonthDays() {
@@ -248,12 +248,12 @@ class DatePickerCore extends ComponentCore {
       }
     }
 
-    this._monthDays.set(monthDays);
+    this._monthDays = monthDays;
   }
 
   private _setEvents() {
     this._inputKeyUpEvent = () => {
-      const input = this._input.get();
+      const input = this._input;
       if (!input) {
         return;
       }
@@ -267,16 +267,16 @@ class DatePickerCore extends ComponentCore {
   }
 
   private _calculateYearPivot() {
-    const currentPivot = this._pivotYear.get()!;
-    const step = this._yearsStep.get()!;
-    const value = this._value.get();
-    const pivot = value ? currentPivot - step * Math.floor((currentPivot - value.getYear()) / step) : this._maxYear.get();
-    this._pivotYear.set(pivot);
+    const currentPivot = this._pivotYear;
+    const step = this._yearsStep;
+    const value = this._value;
+    const pivot = value ? currentPivot - step * Math.floor((currentPivot - value.getYear()) / step) : this._maxYear;
+    this._pivotYear = pivot;
   }
 
   private _calculateYearsRange() {
-    const pivot = this._pivotYear.get();
-    const step = this._yearsStep.get();
+    const pivot = this._pivotYear;
+    const step = this._yearsStep;
     if (!pivot || !step) {
       return;
     }
@@ -286,7 +286,7 @@ class DatePickerCore extends ComponentCore {
       yearsRange.push(i);
     }
 
-    this._yearsRange.set(yearsRange);
+    this._yearsRange = yearsRange;
   }
 }
 

@@ -35,7 +35,7 @@ const DatePickerMonthsTemplate = template<DatePickerMonthsTemplateProps, HTMLDiv
         {props.activeMonth.getYear()}
       </Button>
     </div>
-    <ScrollContainer className='months' maxHeight={235}>
+    <ScrollContainer>
       {
         [...Array<number>(12)].map((v, i) => i).map((value, key) => (
             <button

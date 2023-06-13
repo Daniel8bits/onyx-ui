@@ -5,7 +5,6 @@ import type TableTemplate from './TableTemplate';
 import useCreateComponentRef from '@hooks/useCreateComponentRef';
 import useNew from '@hooks/useNew';
 import TableCore from './TableCore';
-import {observer} from 'mobx-react-lite';
 import behavior from '@internals/behavior';
 
 const TableBehavior = behavior<TableProps, typeof TableTemplate>(props => {
@@ -71,4 +70,4 @@ const TableBehavior = behavior<TableProps, typeof TableTemplate>(props => {
   );
 });
 
-export default observer(TableBehavior);
+export default TableBehavior;

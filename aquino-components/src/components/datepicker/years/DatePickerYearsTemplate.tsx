@@ -34,8 +34,8 @@ export type DatePickerYearsTemplateStyle = typeof initialStyleValue;
 
 const DatePickerYearsTemplate = template<DatePickerYearsTemplateProps, HTMLDivElement, DatePickerYearsTemplateStyle>((props, style) => {
   const activeYear = props.core.getCurrentDate();
-  const rangeOfYears = props.core.yearsRange.get() ?? [];
-  const step = props.core.yearsStep.get() ?? 0;
+  const rangeOfYears = props.core.yearsRange ?? [];
+  const step = props.core.yearsStep ?? 0;
 
   return (
     <div className={style?.panel[0]} aria-label='years panel' {...props.events}>

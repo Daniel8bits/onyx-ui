@@ -37,7 +37,7 @@ export type DatePickerWeeksTemplateStyle = typeof initialStyleValue;
 
 const DatePickerWeeksTemplate = template<DatePickerWeeksProps, HTMLDivElement, DatePickerWeeksTemplateStyle>((props, style) => {
   const currentMonth = props.core.getCurrentDate();
-  const monthDays = props.core.monthDays.get() ?? [];
+  const monthDays = props.core.monthDays ?? [];
 
   return (
     <div className={style?.panel[0]} aria-label='weeks panel' {...props.events}>

@@ -120,7 +120,7 @@ const Test: React.FC<JSX.IntrinsicAttributes> = () => {
     <Root>
       <Row>
         <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
-          <Table document={document} />
+          <DatePicker label='example' value={value} onAction={setValue} />
         </Column>
         <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
           <Table document={document} />
