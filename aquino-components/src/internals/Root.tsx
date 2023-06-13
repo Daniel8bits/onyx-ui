@@ -3,23 +3,7 @@ import useEventManager from '@hooks/useEventManager';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {type ComponentRefObject} from './ComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
-
-function insertGlobalStyle() {
-  const id = 'aquino-global-style';
-  if (document.getElementById(id)) return;
-  const styleElement = document.createElement('style');
-  styleElement.id = id;
-  styleElement.innerText = `
-    * {
-      padding: 0;
-      margin: 0;
-    }
-    body {
-      overflow: hidden;
-    }
-  `;
-  document.head.append(styleElement);
-}
+import {generate} from './AquinoStyles';
 
 const RootContext = React.createContext<Partial<{
   root: Omit<ComponentRefObject, 'super'>;
@@ -44,7 +28,7 @@ const Root: React.FC<RootProps> = props => {
   useEffect(() => {
     if (!ref.current) return;
     setRootRef({el: ref.current, eventListeners: eventManager});
-    insertGlobalStyle();
+    generate();
   }, []);
 
   return (
