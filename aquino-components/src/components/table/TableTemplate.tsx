@@ -7,7 +7,6 @@ import template from '@internals/template';
 import type ComponentRef from '@internals/ComponentRef';
 import NumericTextfield from '@components/textfields/numeric/NumericTextfield';
 import type TableCore from './TableCore';
-import {$if} from '@utils/boolean';
 
 export interface TableProps {
   document: TableDocument<any>;

@@ -1,33 +1,25 @@
 /* eslint-disable react/prop-types */
-import {type AquinoBehavior} from '@internals/ThemeManager';
 import React, {useEffect, useRef, useState} from 'react';
 import {type TableProps} from './TableTemplate';
 import type TableTemplate from './TableTemplate';
 import useCreateComponentRef from '@hooks/useCreateComponentRef';
-import useComponentRef from '@hooks/useComponentRef';
 import useNew from '@hooks/useNew';
-import type MaskedTextfield from '@components/textfields/masked/MaskedTextfield';
 import TableCore from './TableCore';
+import {observer} from 'mobx-react-lite';
+import behavior from '@internals/behavior';
 
-const TableBehavior: AquinoBehavior<TableProps, typeof TableTemplate> = props => {
+const TableBehavior = behavior<TableProps, typeof TableTemplate>(props => {
   const {Template, innerRef, ...templateProps} = props;
     
   const {ref, events} = useCreateComponentRef<typeof TableBehavior>(innerRef);
-  const [, setUpdater] = useState<boolean>(false);
-  // .const [pagingInput, setPagingInput] = useComponentRef<typeof MaskedTextfield>();
   const pagingInput = useRef<HTMLInputElement>(null);
 
   const core = useNew(TableCore, [props.document]);
 
   useEffect(() => {
-    core.setComponentUpdaterTrigger(() => setUpdater(update => !update));
-    core.on('page', (page: number) => {
-      if (pagingInput.current) {
-        pagingInput.current.value = String(page);
-      }
-    });
-    core.emit('page', [core.getPageNumber()]);
-  }, []);
+    if (!pagingInput.current) return;
+    pagingInput.current.value = String(core.getPage());
+  }, [core.getPage()]);
 
   const onPageChange = (e: React.KeyboardEvent) => {
     if (!pagingInput.current) return;
@@ -53,7 +45,7 @@ const TableBehavior: AquinoBehavior<TableProps, typeof TableTemplate> = props =>
 
     if (isNaN(newValueAsNumber)) return;
 
-    if (newValue === '') {
+    if (newValue === '' || newValue === String(core.getPage())) {
       pagingInput.current.value = newValue;
       return;
     }
@@ -62,14 +54,9 @@ const TableBehavior: AquinoBehavior<TableProps, typeof TableTemplate> = props =>
   };
 
   const onPagingInputBlur = () => {
-    core.emit('page', [core.getPageNumber()]);
+    if (!pagingInput.current) return;
+    pagingInput.current.value = String(core.getPage());
   };
-  
-/* .
-  useEffect(() => {
-    if (pagingInput) pagingInput.el.value = String(core.getPageNumber());
-  }, [pagingInput]);
-*/
 
   return (
     <Template 
@@ -82,6 +69,6 @@ const TableBehavior: AquinoBehavior<TableProps, typeof TableTemplate> = props =>
       {...templateProps} 
     />
   );
-};
+});
 
-export default TableBehavior;
+export default observer(TableBehavior);

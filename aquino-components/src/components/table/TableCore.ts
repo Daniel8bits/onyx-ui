@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import type TableDocument from './TableDocument';
+import {makeObservable, observable, action} from 'mobx';
 
 export interface RowDataType {
   id: string;
@@ -10,17 +11,25 @@ export interface RowType<T> extends RowDataType {
   data: T;
 }
 
-class TableCore extends EventEmitter {
-  private readonly _document: TableDocument<unknown>;
-  private readonly _rows: Map<unknown, RowType<unknown>>;
-  private _rowsAsArray: Array<RowType<unknown>>;
+class TableCore {
+  @observable
   private _page: number;
+
+  @observable
   private _selectedRow?: RowType<unknown>;
+  
+  @observable
+  private readonly _rows: Map<unknown, RowType<unknown>>;
+
+  @observable
+  private _rowsAsArray: Array<RowType<unknown>>;
+
+  private readonly _document: TableDocument<unknown>;
 
   private _updateComponent?: () => void;
 
   constructor(document: TableDocument<unknown>) {
-    super();
+    makeObservable(this);
     this._document = document;
     this._rows = new Map();
     this._rowsAsArray = [];
@@ -35,6 +44,33 @@ class TableCore extends EventEmitter {
     this.triggerOnRowDoubleClicked = this.triggerOnRowDoubleClicked.bind(this);
   }
 
+  @action
+  public nextPage() {
+    const nextPage = this._page + 1;
+    const maxPage = this.getMaxPage();
+    if (nextPage < maxPage + 1) {
+        this.setPage(nextPage);
+    }
+  }
+
+  @action
+  public previousPage() {
+    const previousPage = this._page - 1;
+    if (previousPage > 0) {
+        this.setPage(previousPage);
+    }
+  }
+
+  @action
+  public setPage(pageNumber: number) {
+    if (this.getMaxPage() < pageNumber || pageNumber < 1) {
+      return;
+    }
+
+    this.pageNumber(pageNumber);
+    this.update();
+  }
+
   public update() {
     this._rows.clear();
     this._rowsAsArray = [];
@@ -44,7 +80,7 @@ class TableCore extends EventEmitter {
         this._rows.set(transformedRowData.id, data);
         this._rowsAsArray.push(data);
     });
-    this._updateComponent?.();
+    // . this._updateComponent?.();
   }
 
   public rowMapping(fn: (row: RowType<unknown>) => JSX.Element): JSX.Element[] {
@@ -60,38 +96,14 @@ class TableCore extends EventEmitter {
     return this._document.getColumns().map((value, i) => fn(value, i));
   }
 
-  public getPageNumber(): number {
+  public getPage(): number {
     return this._page;
-  }
-
-  public setPage(pageNumber: number) {
-    if (this.getMaxPage() < pageNumber || pageNumber < 1) {
-      return;
-    }
-
-    this.pageNumber(pageNumber);
-    this.update();
   }
 
   public getMaxPage(): number {
     const maxPage = Math.ceil(this._document.getData().length / this._document.getMaxRows());
     if (maxPage === 0) return 1;
     return maxPage;
-  }
-
-  public nextPage() {
-    const nextPage = this._page + 1;
-    const maxPage = this.getMaxPage();
-    if (nextPage < maxPage + 1) {
-        this.setPage(nextPage);
-    }
-  }
-
-  public previousPage() {
-    const previousPage = this._page - 1;
-    if (previousPage > 0) {
-        this.setPage(previousPage);
-    }
   }
 
   public setComponentUpdaterTrigger(updateComponent: () => void) {
@@ -133,7 +145,6 @@ class TableCore extends EventEmitter {
 
   private pageNumber(value: number) {
     this._page = value;
-    this.emit('page', value);
   }
 }
 

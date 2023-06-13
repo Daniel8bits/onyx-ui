@@ -9,7 +9,7 @@ import {resolve} from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react(), dts()],
+	plugins: [react({tsDecorators: true}), dts()],
 	build: {
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
@@ -19,6 +19,7 @@ export default defineConfig({
 		},
 		rollupOptions: {
 			external: ['react', 'react-dom'],
+
 		},
 	},
 	resolve: {
