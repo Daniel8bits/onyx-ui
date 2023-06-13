@@ -28,7 +28,7 @@ const Column: React.FC<ColumnProps> = props => {
   ]);
 
   return (
-    <div className={`column ${sizes} ${props.className ?? ''}`}>
+    <div data-aquino='column' className={`${sizes} ${props.className ?? ''}`}>
       {props.children}
     </div>
   );

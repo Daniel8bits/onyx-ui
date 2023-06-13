@@ -19,6 +19,8 @@ import Button from '@components/button/Button';
 import Table from '@components/table/Table';
 import TableDocument from '@components/table/TableDocument';
 import {getModal} from '@hooks/useModal';
+import Row from '@layouts/grid/Row';
+import Column from '@layouts/grid/Column';
 
 const fn = () => console.log('key up');
 
@@ -116,7 +118,20 @@ const Test: React.FC<JSX.IntrinsicAttributes> = () => {
 
   return (
     <Root>
-      <Table document={document} />
+      <Row>
+        <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
+          <Table document={document} />
+        </Column>
+        <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
+          <Table document={document} />
+        </Column>
+        <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
+          <Table document={document} />
+        </Column>
+        <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
+          <Table document={document} />
+        </Column>
+      </Row>
     </Root>
   );
 };
