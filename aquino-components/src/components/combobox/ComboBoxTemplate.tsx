@@ -6,12 +6,14 @@ import PopOver from '@components/popover/PopOver';
 import template from '@internals/template';
 import {type Theme} from '@internals/ThemeManager';
 import {type ComboItemData, type ComboItemType} from './ComboBoxCore';
+import {type AllEventsAsObject} from '@internals/EventManager';
 
 interface ComboBoxItemProps {
   value: string;
   active: boolean;
   onClick: (e: React.MouseEvent) => void;
   className?: string;
+  height: number;
 }
 
 const ComboBoxItem: React.FC<ComboBoxItemProps> = props => (
@@ -19,6 +21,7 @@ const ComboBoxItem: React.FC<ComboBoxItemProps> = props => (
     type='button'
     className={`${props.className ?? ''} ${props.active ? 'active' : ''}`}
     onClick={props.onClick}
+    style={{height: props.height, width: '100%'}}
   >
     {props.value}
   </button>
@@ -39,6 +42,7 @@ export interface ComboBoxProps {
 
 export interface ComboBoxTemplateProps extends ComboBoxProps {
   core: ComboBoxCore;
+  inputEvents: Partial<AllEventsAsObject>;
 }
 
 const initialThemeValue = {
@@ -73,7 +77,7 @@ const initialThemeValue = {
 export type ComboBoxTemplateStyle = typeof initialThemeValue;
 
 const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, ComboBoxTemplateStyle>((props, style) => {
-  const popOverId = `${props.id}__popOver`;
+  const popOverId = `${props.id}__popover`;
   const popover = usePopOver(popOverId);
   const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -87,16 +91,17 @@ const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, Combo
   }, []);
 
   function getOptions(): JSX.Element {
-    if (!props.core.dividedByCategories) {
+    if (!props.core.getDividedByCategories()) {
       return (
         <div className={style?.div[1].popover[1].nonCategorized[0]}>
-          {props.core.displayItems.map(item => (
+          {props.core.getDisplayItems().map(item => (
               <ComboBoxItem
                 key={item.value}
                 value={item.label}
                 active={item.value === props.value?.value}
                 onClick={() => props.core.setValue(item)}
                 className={`${style?.div[1].popover[1].item ?? ''} ${style?.div[1].popover[1].nonCategorized[1].item ?? ''}`}
+                height={props.core.getItemHeight()}
               />
             ))}
         </div>
@@ -105,7 +110,7 @@ const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, Combo
 
     return (
       <div className={style?.div[1].popover[1].categorized[0]}>
-        {[...props.core.categories].map(collection => (
+        {[...props.core.getCategories()].map(collection => (
           <div key={collection[0]} className={style?.div[1].popover[1].categorized[1].div[0]}>
             <h5 className={style?.div[1].popover[1].categorized[1].div[1].h5}> {collection[0]} </h5>
             <div className={style?.div[1].popover[1].categorized[1].div[1].div[0]}>
@@ -116,6 +121,7 @@ const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, Combo
                     active={item.value === props.value?.value}
                     onClick={() => props.core.setValue(item)}
                     className={style?.div[1].popover[1].categorized[1].div[1].div[1].item}
+                    height={props.core.getItemHeight()}
                   />
                 ))}
             </div>
@@ -137,8 +143,8 @@ const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, Combo
           readOnly={!props.allowSearch}
           id={props.id}
           type='text'
-          onKeyUp={props.core.search}
           className={style?.div[1].div[1].input}
+          {...props.inputEvents}
         />
         <input name={props.name ?? props.id} type='hidden' value={props.value?.value} />
         {Boolean(props.allowNull) && props.value
@@ -152,9 +158,8 @@ const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, Combo
       <PopOver
         id={popOverId}
         anchor={anchorRef}
-        template='primary'
         width='anchor'
-        height={props.core.height}
+        height={props.core.getHeight()}
         position='bottom'
         scroll
         className={style?.div[1].popover[0]}
@@ -165,6 +170,7 @@ const ComboBoxTemplate = template<ComboBoxTemplateProps, HTMLInputElement, Combo
             active={props.value === null}
             onClick={() => props.core.setValue(null)}
             className={style?.div[1].popover[1].item}
+            height={props.core.getItemHeight()}
           />}
         {getOptions()}
       </PopOver>

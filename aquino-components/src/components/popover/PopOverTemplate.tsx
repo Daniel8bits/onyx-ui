@@ -44,16 +44,34 @@ const PopOverTemplate = template<PopOverTemplateProps, HTMLDivElement, PopOverTe
     }}
     className={`${style?.div ?? ''} ${props.className ?? ''}`}
   >
-    {props.open && (
+    {
       props.scroll && props.height !== 'auto' 
-      ? <ScrollContainer role='popover' maxHeight={props.height - 16}>
-        {props.children}
-      </ScrollContainer>
-      : <div role='popover'>
-        {props.children}
-      </div>
-    )}
+        ? (
+          <ScrollContainer>
+            {props.open && (
+              <div role='popover' style={{width: '100%'}}>
+                {props.children}
+              </div>
+            )}
+          </ScrollContainer>
+        )
+        : props.open && (
+          <div role='popover'>
+            {props.children}
+          </div>
+        )
+    }
   </div>
 ), initialStyleValue);
-
+/*
+{props.open && (
+  props.scroll && props.height !== 'auto' 
+  ? <ScrollContainer role='popover'>
+    {props.children}
+  </ScrollContainer>
+  : <div role='popover'>
+    {props.children}
+  </div>
+)}
+*/
 export default PopOverTemplate;

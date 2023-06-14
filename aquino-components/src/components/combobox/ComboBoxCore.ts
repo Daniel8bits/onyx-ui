@@ -1,8 +1,23 @@
-/* eslint-disable max-params */
+import type EventManager from '@internals/EventManager';
+import {AquinoEvents} from '@internals/EventManager';
+import {makeObservable, observable, action} from 'mobx';
+
 export type ComboItemData = {value: string; label: string};
 export type ComboItemType = ComboItemData[] | Record<string, ComboItemData[]>;
 
+interface ComboBoxCoreConfig {
+	value: Nullable<ComboItemData>;
+	items: ComboItemType;
+	allowSearch: boolean;
+	actionTrigger: StateSetter<Nullable<ComboItemData>>;
+	inputEventManager: EventManager;
+	itemHeight?: number;
+}
+
 class ComboBoxCore {
+	@observable
+	private _itemHeight: number;
+
 	private _value: Nullable<ComboItemData>;
 	private _height!: number | 'auto';
 	private _items: ComboItemType;
@@ -10,30 +25,31 @@ class ComboBoxCore {
 	private _input?: HTMLInputElement;
 
 	private _dividedByCategories: boolean;
-
 	private _categories!: Map<string, Set<ComboItemData>>;
 	private _displayItems!: ComboItemData[];
 
-	private readonly _componentUpdater: StateSetter<boolean>;
 	private _actionTrigger: StateSetter<Nullable<ComboItemData>>;
-
 	private _onChange?: (core: ComboBoxCore) => void;
 	private _onBlur?: (core: ComboBoxCore) => void;
-
 	private _inputBlurEvent!: () => void;
+	private readonly _inputEventManager: EventManager;
 
-	constructor(
-		value: Nullable<ComboItemData>,
-		items: ComboItemType,
-		allowSearch: boolean,
-		actionTrigger: StateSetter<Nullable<ComboItemData>>,
-		componentUpdater: StateSetter<boolean>,
-	) {
+	constructor({
+		value,
+		items,
+		allowSearch,
+		actionTrigger,
+		inputEventManager,
+		itemHeight,
+	}: ComboBoxCoreConfig) {
+		makeObservable(this);
 		this._items = items;
 		this._allowSearch = allowSearch ?? false;
 		this._value = value;
 		this._dividedByCategories = !(items instanceof Array);
 		this._actionTrigger = actionTrigger;
+		this._inputEventManager = inputEventManager;
+		this._itemHeight = itemHeight ?? 40;
 
 		this.search = this.search.bind(this);
 		this.resetSearch = this.resetSearch.bind(this);
@@ -42,7 +58,16 @@ class ComboBoxCore {
 		this._setEvents();
 		this._resetCategorySets();
 		this._resetDisplayItems();
-		this._componentUpdater = componentUpdater;
+	}
+
+	@action
+	public setItemHeight(itemHeight: number) {
+		this._itemHeight = itemHeight;
+		this.recalculateComboBoxHeight();
+	}
+
+	public getItemHeight() {
+		return this._itemHeight;
 	}
 
 	public setAllowSearch(allowSearch: boolean) {
@@ -57,7 +82,6 @@ class ComboBoxCore {
 		if (input) {
 			this._input = input;
 			input.value = this._value?.label ?? '';
-			input.addEventListener('blur', this._inputBlurEvent);
 		}
 	}
 
@@ -81,17 +105,14 @@ class ComboBoxCore {
 
 	public recalculateComboBoxHeight() {
 		const maxItemsToBeAuto = 5;
-		this._height = this._displayItems.length <= maxItemsToBeAuto ? 'auto' : 200;
+		this._height = this._displayItems.length <= maxItemsToBeAuto 
+			? 'auto' 
+			: maxItemsToBeAuto * this._itemHeight;
 	}
 
 	public search() {
-		if (!this._allowSearch) {
-			return;
-		}
-
-		if (!this._input) {
-			return;
-		}
+		if (!this._allowSearch) return;
+		if (!this._input) return;
 
 		const input = this._input;
 		this._displayItems = [];
@@ -106,7 +127,6 @@ class ComboBoxCore {
 		}
 
 		this.recalculateComboBoxHeight();
-		this._componentUpdater(v => !v);
 	}
 
 	public resetSearch() {
@@ -116,36 +136,34 @@ class ComboBoxCore {
 
 		this._input.value = this._value?.label ?? '';
 		this._resetDisplayItems();
-		this._componentUpdater(v => !v);
 	}
 
 	public destroy() {
-		if (this._input) {
-			this._input.removeEventListener('blur', this._inputBlurEvent);
-		}
+		this._inputEventManager.remove(0, AquinoEvents.BLUR, this._inputBlurEvent);
+		this._inputEventManager.remove(0, AquinoEvents.KEYUP, this.search);
 	}
 
-	public get value() {
+	public getValue() {
 		return this._value;
 	}
 
-	public get height() {
+	public getHeight() {
 		return this._height;
 	}
 
-	public get displayItems() {
+	public getDisplayItems() {
 		return this._displayItems;
 	}
 
-	public get allowSearch() {
+	public getAllowSearch() {
 		return this._allowSearch;
 	}
 
-	public get dividedByCategories() {
+	public getDividedByCategories() {
 		return this._dividedByCategories;
 	}
 
-	public get categories() {
+	public getCategories() {
 		return this._categories;
 	}
 
@@ -162,6 +180,9 @@ class ComboBoxCore {
 			this.resetSearch();
 			this._onBlur?.(this);
 		};
+
+		this._inputEventManager.add(0, AquinoEvents.BLUR, this._inputBlurEvent);
+		this._inputEventManager.add(0, AquinoEvents.KEYUP, this.search);
 	}
 
 	private _resetDisplayItems() {

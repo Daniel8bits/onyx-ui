@@ -10,20 +10,26 @@ export enum AquinoEvents {
   KEYDOWN = 'onKeyDown',
 
   WHEEL = 'onWheel',
+
+  FOCUS = 'onFocus',
+  BLUR = 'onBlur',
 }
 
 export type MouseEvents = AquinoEvents.CLICK | AquinoEvents.MOUSEDOWN | AquinoEvents.MOUSEUP | AquinoEvents.MOUSEMOVE;
 export type KeyboardEvents = AquinoEvents.KEYUP | AquinoEvents.KEYDOWN;
 export type WheelEvents = AquinoEvents.WHEEL;
+export type FocusEvents = AquinoEvents.FOCUS | AquinoEvents.BLUR;
 
 export type MouseEventCallback = (e: React.MouseEvent) => void;
 export type KeyboardEventCallback = (e: React.KeyboardEvent) => void;
 export type WheelEventCallback = (e: React.WheelEvent) => void;
+export type FocusEventCallback = (e: React.FocusEvent) => void;
 
 export type AllEventsAsObject = 
   & Record<MouseEvents, MouseEventCallback>
   & Record<KeyboardEvents, KeyboardEventCallback>
-  & Record<WheelEvents, WheelEventCallback>;
+  & Record<WheelEvents, WheelEventCallback>
+  & Record<FocusEvents, FocusEventCallback>;
 
 type MapKey = number | string | Symbol;
 
@@ -31,7 +37,8 @@ class EventManager {
   private readonly _events: 
     & Map<MouseEvents, Map<MapKey, MouseEventCallback>>
     & Map<KeyboardEvents, Map<MapKey, KeyboardEventCallback>>
-    & Map<WheelEvents, Map<MapKey, WheelEventCallback>>;
+    & Map<WheelEvents, Map<MapKey, WheelEventCallback>>
+    & Map<FocusEvents, Map<MapKey, FocusEventCallback>>;
 
   private readonly _update: () => void;
 
@@ -63,6 +70,7 @@ class EventManager {
   public add(id: MapKey, event: MouseEvents, fn: MouseEventCallback): void;
   public add(id: MapKey, event: KeyboardEvents, fn: KeyboardEventCallback): void; 
   public add(id: MapKey, event: WheelEvents, fn: WheelEventCallback): void; 
+  public add(id: MapKey, event: FocusEvents, fn: FocusEventCallback): void; 
   public add(id: MapKey, event: unknown, fn: unknown) {
     if (this._events.has(event as MouseEvents)) {
       const map = this._events.get(event as MouseEvents);
@@ -76,6 +84,7 @@ class EventManager {
   public remove(id: MapKey, event: MouseEvents, fn: MouseEventCallback): void;
   public remove(id: MapKey, event: KeyboardEvents, fn: KeyboardEventCallback): void; 
   public remove(id: MapKey, event: WheelEvents, fn: WheelEventCallback): void; 
+  public remove(id: MapKey, event: FocusEvents, fn: FocusEventCallback): void; 
   public remove(id: MapKey, event: unknown, fn: unknown) {
     if (this._events.has(event as MouseEvents)) {
       const map = this._events.get(event as MouseEvents);

@@ -1,5 +1,3 @@
-import ComponentCore from '@components/ComponentCore';
-import Observable from '@components/Observable';
 import ExtendedDate from './ExtendedDate';
 import {makeObservable, observable} from 'mobx';
 
