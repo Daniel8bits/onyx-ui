@@ -16,11 +16,13 @@ import {FaAddressBook} from 'react-icons/fa';
 import ScrollContainer from '@components/scrollContainer/ScrollContainer';
 import Modal from '@components/modal/Modal';
 import Button from '@components/button/Button';
+import ComboBox from '@components/combobox/ComboBox';
 import Table from '@components/table/Table';
 import TableDocument from '@components/table/TableDocument';
 import {getModal} from '@hooks/useModal';
 import Row from '@layouts/grid/Row';
 import Column from '@layouts/grid/Column';
+import {type ComboItemData} from '@components/combobox/ComboBoxCore';
 
 const fn = () => console.log('key up');
 
@@ -93,10 +95,20 @@ const data: Person[] = [
     gender: 'Female',
   },
 ];
+
+const items = [
+  {value: '0', label: 'cachorro'},
+  {value: '1', label: 'gato'},
+  {value: '2', label: 'galinha'},
+  {value: '3', label: 'pato'},
+  {value: '4', label: 'lagarto'},
+  // {value: '5', label: 'jacaré'},
+];
  
 // eslint-disable-next-line arrow-body-style
 const Test: React.FC<JSX.IntrinsicAttributes> = () => {
   const [value, setValue] = useState<Nullable<ExtendedDate>>(ExtendedDate.now());
+  const [item, setItem] = useState<Nullable<ComboItemData>>(items[0]);
   const ref = useRef<HTMLDivElement>(null);
   const {open} = getModal('test');
 
@@ -120,10 +132,10 @@ const Test: React.FC<JSX.IntrinsicAttributes> = () => {
     <Root>
       <Row>
         <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
-          <Table document={document} />
+          <DatePicker label='example' value={value} onAction={setValue} />
         </Column>
         <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
-          <Table document={document} />
+          <ComboBox id='test' items={items} value={item} onAction={setItem} />
         </Column>
         <Column sm={6} md={4} lg={4} xl={4} xxl={3}>
           <Table document={document} />

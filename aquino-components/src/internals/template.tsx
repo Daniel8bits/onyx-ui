@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import React, {useMemo} from 'react';
 import styleManager, {
 	type AquinoTemplate, 
 	type Theme, 
@@ -6,6 +6,7 @@ import styleManager, {
 	type ThemeConfig, 
 	ThemeExtensor, 
 } from './ThemeManager';
+import {observer} from 'mobx-react-lite';
 
 function template<
 	P,
@@ -17,12 +18,13 @@ function template<
 ): AquinoTemplate<P, E, S> {
 	type TemplateProps = AquinoTemplateProps<P, E, S>;
 
-	const c: any = (props: TemplateProps): React.ReactNode => {
+	const d: React.FC<TemplateProps> = props => {
 		const theme = props.theme ?? styleManager.getStyle(c.id);
 		const style = useMemo(() => theme?.theme(props), theme?.deps(props)) as S;
-		return component(props, style);
+		return <>{component(props, style)}</>;
 	};
 
+	const c: any = observer(d);
 	c.id = Symbol('');
 	c.theme = (style: ThemeConfig<AquinoTemplateProps<any>, Theme>) => styleManager.setStyle(c.id, style);
 	c.extends = (theme?: ThemeConfig<AquinoTemplateProps<any>, Theme>) => 
