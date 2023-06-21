@@ -1,8 +1,9 @@
+import {css} from './css';
 
 function generateMaxWidthGridMedia(className: string, minWidth: string) {
-  let css = '';
+  let style = '';
   for (let i = 0; i < 12; i++) {
-    css += `
+    style += css`
       @media (max-width: ${minWidth}) {
         [data-aquino="column"].${className}\\:w-${i}\\/12 {
           width: calc( ((100 / 12 * ${i}) * 1%) - 2rem );
@@ -11,13 +12,13 @@ function generateMaxWidthGridMedia(className: string, minWidth: string) {
     `;
   }
 
-  return css;
+  return style;
 }
 
 function generateMinWidthGridMedia(className: string, minWidth: string) {
-  let css = '';
+  let style = '';
   for (let i = 0; i < 12; i++) {
-    css += `
+    style += css`
       @media (min-width: ${minWidth}) {
         [data-aquino="column"].${className}\\:w-${i}\\/12 {
           width: calc( ((100 / 12 * ${i}) * 1%) - 2rem );
@@ -26,11 +27,11 @@ function generateMinWidthGridMedia(className: string, minWidth: string) {
     `;
   }
   
-  return css;
+  return style;
 }
 
 function generateGridMedia() {
-  return `
+  return css`
     [data-aquino="row"] {
       display: flex;
       flex-wrap: wrap;
@@ -50,7 +51,7 @@ function generateGridMedia() {
 }
 
 function generateGlobalStyle() {
-  return `
+  return css`
     * {
       padding: 0;
       margin: 0;
@@ -61,7 +62,7 @@ function generateGlobalStyle() {
   `;
 }
 
-function createStyle(id: string, css: string) {
+export function createStyle(id: string, css: string) {
   if (document.getElementById(id)) return;
   const styleElement = document.createElement('style');
   styleElement.id = id;

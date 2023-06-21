@@ -91,7 +91,15 @@ export type AquinoTemplate<
 
 export type AquinoBehavior<P, T extends AquinoTemplate<any, any, any>, R = {}> = React.FC<AquinoBehaviorProps<P, T, R> & {
 	Template: React.FC<Props<T>>;
-}>;
+}> & {
+	use: BehaviorHook<P, T, R>;
+};
+
+export type BehaviorHook<
+  P, 
+  T extends AquinoTemplate<any, any, any>, 
+  R = {},
+> = (props: Omit<Props<AquinoBehavior<P, T, R>>, 'Template'>) => Props<T>;
 
 class StyleManager {
 	private readonly _styles: Map<Symbol, ThemeConfig<AquinoTemplateProps<any>, Theme>>;

@@ -1,6 +1,6 @@
 
 import useEventManager from '@hooks/useEventManager';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useInsertionEffect, useRef, useState} from 'react';
 import {type ComponentRefObject} from './ComponentRef';
 import ModalRoot, {type ModalRootRef} from './ModalRoot';
 import {generate} from './AquinoStyles';
@@ -25,17 +25,18 @@ const Root: React.FC<RootProps> = props => {
 
   const {eventManager, events} = useEventManager();
 
+  useInsertionEffect(generate, []);
+
   useEffect(() => {
     if (!ref.current) return;
     setRootRef({el: ref.current, eventListeners: eventManager});
-    generate();
   }, []);
 
   return (
     <RootContext.Provider value={{root: rootRef, modalRoot: modalRootRef}}>
       <div 
+        data-aquino='root'
         ref={ref} 
-        className='aquino-root'
         style={{
           minWidth: `${window.innerWidth}px`,
           minHeight: `${window.innerHeight}px`,

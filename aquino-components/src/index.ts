@@ -1,42 +1,41 @@
 
 // Components
-import Box from '@components/box/Box';
-import Button from '@components/button/Button';
-import Card from '@components/card/Card';
-import CheckBox from '@components/checkbox/CheckBox';
-import ComboBox from '@components/combobox/ComboBox';
-import DatePicker from '@components/datepicker/DatePicker';
-import Modal from '@components/modal/Modal';
-import PopOver from '@components/popover/PopOver';
-import ScrollContainer from '@components/scrollContainer/ScrollContainer';
-import Table from '@components/table/Table';
+import Box from '@components/Box';
+import Button from '@components/Button';
+import Card from '@components/Card';
+import CheckBox from '@components/CheckBox';
+import ComboBox from '@components/ComboBox';
+import DatePicker from '@components/DatePicker';
+import Modal from '@components/Modal';
+import PopOver from '@components/PopOver';
+import ScrollContainer from '@components/ScrollContainer';
+import Table from '@components/Table';
 import Textfield from '@components/textfields/standard/Textfield';
 
 // Prop types
-
-import {type BoxProps} from '@components/box/BoxTemplate';
-import {type ButtonProps} from '@components/button/ButtonTemplate';
-import {type CardProps} from '@components/card/CardTemplate';
-import {type CheckBoxProps} from '@components/checkbox/CheckBoxTemplate';
-import {type ComboBoxProps} from '@components/combobox/ComboBoxTemplate';
+import {type BoxProps} from '@components/Box/template';
+import {type ButtonProps} from '@components/Button/template';
+import {type CardProps} from '@components/Card/template';
+import {type CheckBoxProps} from '@components/CheckBox/template';
+import {type ComboBoxProps} from '@components/ComboBox/template';
 import {type DatePickerProps} from '@components/datepicker/DatePickerTemplate';
 import {type ModalProps} from '@components/modal/ModalTemplate';
-import {type PopOverProps} from '@components/popover/PopOverTemplate';
+import {type PopOverProps} from '@components/PopOver/template';
 import {type ScrollContainerProps} from '@components/scrollContainer/ScrollContainerTemplate';
-import {type TableProps} from '@components/table/TableTemplate';
+import {type TableProps} from '@components/Table/template';
 import {type TextfieldProps} from '@components/textfields/standard/TextfieldTemplate';
 
 // Templates
-import BoxTemplate from '@components/box/BoxTemplate';
-import ButtonTemplate from '@components/button/ButtonTemplate';
-import CardTemplate from '@components/card/CardTemplate';
-import CheckboxTemplate from '@components/checkbox/CheckBoxTemplate';
-import ComboBoxTemplate from '@components/combobox/ComboBoxTemplate';
+import BoxTemplate from '@components/Box/template';
+import ButtonTemplate from '@components/Button/template';
+import CardTemplate from '@components/Card/template';
+import CheckboxTemplate from '@components/CheckBox/template';
+import ComboBoxTemplate from '@components/ComboBox/template';
 import DatePickerTemplate from '@components/datepicker/DatePickerTemplate';
 import ModalTemplate from '@components/modal/ModalTemplate';
-import PopOverTemplate from '@components/popover/PopOverTemplate';
+import PopOverTemplate from '@components/PopOver/template';
 import ScrollContainerTemplate from '@components/scrollContainer/ScrollContainerTemplate';
-import TableTemplate from '@components/table/TableTemplate';
+import TableTemplate from '@components/Table/template';
 import TextfieldTemplate from '@components/textfields/standard/TextfieldTemplate';
 
 // Layouts

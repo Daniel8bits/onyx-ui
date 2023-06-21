@@ -7,21 +7,24 @@ import styleManager, {
 	ThemeExtensor, 
 } from './ThemeManager';
 import {observer} from 'mobx-react-lite';
+import {createStyle} from './AquinoStyles';
 
 function template<
 	P,
 	E extends HTMLElement = HTMLElement,
 	S extends Theme = Theme,
->(
-	component: (props: AquinoTemplateProps<P, E, S>, style: S | undefined) => React.ReactNode,
-	initialStyleValue: S,
-): AquinoTemplate<P, E, S> {
+>(params: {
+	name: string;
+	jsx: (props: AquinoTemplateProps<P, E, S>, data: {theme: S | undefined; dataAquino: string}) => React.ReactNode;
+	theme: S;
+	css?: string;
+}): AquinoTemplate<P, E, S> {
 	type TemplateProps = AquinoTemplateProps<P, E, S>;
 
 	const d: React.FC<TemplateProps> = props => {
-		const theme = props.theme ?? styleManager.getStyle(c.id);
-		const style = useMemo(() => theme?.theme(props), theme?.deps(props)) as S;
-		return <>{component(props, style)}</>;
+		const themeGetter = props.theme ?? styleManager.getStyle(c.id);
+		const theme = useMemo(() => themeGetter?.theme(props), themeGetter?.deps(props)) as S;
+		return <>{params.jsx(props, {theme, dataAquino: params.name})}</>;
 	};
 
 	const c: any = observer(d);
@@ -32,8 +35,10 @@ function template<
 		? new ThemeExtensor(theme.theme, theme.deps) 
 		: new ThemeExtensor();
 	
+	if (params.css) createStyle('aquino-' + params.name, params.css);
+
 	styleManager.setStyle(c.id, {
-		theme: () => initialStyleValue,
+		theme: () => params.theme,
 		deps: () => [],
 	});
   

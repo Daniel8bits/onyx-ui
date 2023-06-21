@@ -1,28 +1,28 @@
 import Root from '@internals/Root';
 import React, {useEffect, useState, useRef, useMemo} from 'react';
 import ReactDOM from 'react-dom/client';
-import DatePicker from '@components/datepicker/DatePicker';
-import ExtendedDate from '@components/datepicker/ExtendedDate';
-import MaskedTextfield from '@components/textfields/masked/MaskedTextfield';
+import DatePicker from '@components/DatePicker';
+import ExtendedDate from '@components/DatePicker/common/ExtendedDate';
+import MaskedTextfield from '@components/textfields/MaskedTextfield';
 import {useIMask} from 'react-imask';
 import IMask from 'imask';
-import DateFormatter from '@components/datepicker/DateFormatter';
+import DateFormatter from '@components/DatePicker/common/DateFormatter';
 import useComponentRef from '@hooks/useComponentRef';
 import useNew from '@hooks/useNew';
 import {AquinoEvents} from '@internals/EventManager';
 import NumericTextfield from '@components/textfields/numeric/NumericTextfield';
 import Textfield from '@components/textfields/standard/Textfield';
 import {FaAddressBook} from 'react-icons/fa';
-import ScrollContainer from '@components/scrollContainer/ScrollContainer';
-import Modal from '@components/modal/Modal';
-import Button from '@components/button/Button';
-import ComboBox from '@components/combobox/ComboBox';
-import Table from '@components/table/Table';
+import ScrollContainer from '@components/ScrollContainer';
+import Modal from '@components/Modal';
+import Button from '@components/Button';
+import ComboBox from '@components/ComboBox';
+import Table from '@components/Table';
 import TableDocument from '@components/table/TableDocument';
 import {getModal} from '@hooks/useModal';
 import Row from '@layouts/grid/Row';
 import Column from '@layouts/grid/Column';
-import {type ComboItemData} from '@components/combobox/ComboBoxCore';
+import {type ComboItemData} from '@components/ComboBox/common/ComboBoxCore';
 
 const fn = () => console.log('key up');
 

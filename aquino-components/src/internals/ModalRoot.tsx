@@ -42,7 +42,7 @@ const ModalRoot: React.FC<ModalRootProps> = props => {
   }, []);
 
   return (
-    <div role='modal container' ref={ref} {...events}>
+    <div data-aquino='modal-container' role='modal container' ref={ref} {...events}>
       {[...modalsRef.current].map(child => <React.Fragment key={child[0]}>{child[1].open ? child[1].modal : null}</React.Fragment>)}
     </div>
   );
